@@ -1,0 +1,15 @@
+<%= form_for @site do |f| %>
+  <div class="sibu_field">
+    <%= f.label :name, 'Nom du site' %>
+    <%= f.text_field :name, placeholder: "Ex : Site de l'Hôtel du Lac" %>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :site_template_id, 'Modèle' %>
+    <%= f.collection_select(:site_template_id, Sibu::SiteTemplate.all, :id, :name, {prompt: 'Sélectionnez un modèle de site'}) %>
+  </div>
+  <%= f.hidden_field :user_id %>
+  <div class="sibu_actions">
+    <%= f.submit 'Valider' %>
+    <%= link_to 'Annuler', :back %>
+  </div>
+<% end %>

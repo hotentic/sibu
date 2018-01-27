@@ -1,0 +1,13 @@
+<header>
+  <%= section('header', @site) do |elts| %>
+    <h1><%= elts["main_title"]["value"] %></h1>
+  <% end %>
+  <nav>
+    <%= section('main_menu', @site) do |elts| %>
+      <% elts.values.each do |e| %>
+        <%= link_to e["label"], e["value"], id: e["id"] %>
+      <% end %>
+    <% end %>
+  </nav>
+</header>
+<%= render "shared/#{@site.page_template(@page)}" %>

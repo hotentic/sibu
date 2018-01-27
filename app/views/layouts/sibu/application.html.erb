@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= conf.sibu_title %></title>
+  <%= render(conf.sibu_head_tags) unless conf.sibu_head_tags.blank? %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<%= render(conf.sibu_top_panel) unless conf.sibu_top_panel.blank? %>
+<%= render(conf.sibu_side_panel) unless conf.sibu_side_panel.blank? %>
+<%= yield %>
+<%= render(conf.sibu_bottom_panel) unless conf.sibu_bottom_panel.blank? %>
+</body>
+</html>

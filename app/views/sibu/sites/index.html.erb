@@ -1,0 +1,34 @@
+<div id="sites" class="sibu_panel">
+  <%= link_to 'Créer un site', new_site_path, id: 'new_site' %>
+  <h2>Liste des sites</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Modèle</th>
+        <th>Mise à jour</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @sites.each do |s| %>
+      <tr>
+        <td><%= s.name %></td>
+        <td><%= s.site_template.name if s.site_template %></td>
+        <td><%= l s.updated_at %></td>
+        <td>
+          <%= link_to 'Voir', site_path(s), target: '_blank' %> |
+          <%= link_to 'Modifier', edit_site_path(s) %> |
+          <%= link_to 'Supprimer', site_path(s), method: :delete, data: {confirm: "Supprimer le site \"#{s.name}\" ?"} %>
+        </td>
+      </tr>
+    <% end %>
+    <% if @sites.empty? %>
+    <tr>
+      <td colspan="4">Aucun site créé pour le moment.</td>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
