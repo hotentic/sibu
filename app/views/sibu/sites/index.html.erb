@@ -1,5 +1,7 @@
-<div id="sites" class="sibu_panel">
-  <%= link_to 'Créer un site', new_site_path, id: 'new_site' %>
+<div class="sibu_view">
+  <div class="actions">
+    <%= link_to 'Créer un site', new_site_path %>
+  </div>
   <h2>Liste des sites</h2>
   <table>
     <thead>
@@ -18,6 +20,7 @@
         <td><%= l s.updated_at %></td>
         <td>
           <%= link_to 'Voir', site_path(s), target: '_blank' %> |
+          <%= link_to 'Pages', site_pages_path(s) %> |
           <%= link_to 'Modifier', edit_site_path(s) %> |
           <%= link_to 'Supprimer', site_path(s), method: :delete, data: {confirm: "Supprimer le site \"#{s.name}\" ?"} %>
         </td>

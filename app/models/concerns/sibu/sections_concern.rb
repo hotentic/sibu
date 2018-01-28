@@ -2,17 +2,6 @@ module Sibu
   module SectionsConcern
     include ActiveSupport::Concern
 
-    class Section
-
-      def initialize(hsh)
-
-      end
-
-      def elements
-
-      end
-    end
-
     def section(id)
       s = nil
       if sections.blank?
@@ -25,12 +14,16 @@ module Sibu
         self.sections << s
         save
       end
-      s["elements"]
+      s
     end
 
     def element(section_id, element_id)
       elt = section(section_id).select {|e| e["id"] == element_id}.first
       elt || {}
+    end
+
+    def update_section(*ids, value)
+    #   Todo
     end
   end
 end

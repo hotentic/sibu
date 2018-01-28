@@ -1,2 +1,39 @@
-<h1>Pages#index</h1>
-<p>Find me in app/views/sibu/pages/index.html.erb</p>
+<div id="pages" class="sibu_view">
+  <div class="actions">
+    <%= link_to 'Créer une page', new_site_page_path(@site.id) %> | <%= link_to 'Retour', :back %>
+  </div>
+  <h2>Pages du site "<%= @site.name %>"</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Modèle</th>
+      <th>Chemin d'accès</th>
+      <th>Mise à jour</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @pages.each do |p| %>
+      <tr>
+        <td><%= p.name %></td>
+        <td><%= p.template %></td>
+        <td><%= p.path %></td>
+        <td><%= l p.updated_at %></td>
+        <td>
+          <%= link_to 'Voir', site_page_path(@site.id, p), target: '_blank' %> |
+          <%= link_to 'Editer', site_page_edit_content_path(site_id: @site.id, page_id: p.id) %> |
+          <%= link_to 'Modifier', edit_site_page_path(@site.id, p) %> |
+          <%= link_to 'Supprimer', site_page_path(@site.id, p), method: :delete, data: {confirm: "Supprimer la page \"#{p.name}\" ?"} %>
+        </td>
+      </tr>
+    <% end %>
+    <% if @pages.empty? %>
+      <tr>
+        <td colspan="4">Aucune page créée pour le moment.</td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+

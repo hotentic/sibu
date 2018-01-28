@@ -1,0 +1,31 @@
+<%= form_for([@site, @page]) do |f| %>
+  <div class="sibu_field">
+    <%= f.label :name, 'Nom de la page' %>
+    <%= f.text_field :name, placeholder: "Ex : Accueil, contact..." %>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :template, 'Modèle' %>
+    <%= f.select(:template, page_templates, {prompt: 'Sélectionnez un modèle de page'}) %>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :path, "Chemin d'accès" %>
+    <%= f.text_field :path, placeholder: "Adresse de la page" %>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :language, "Langue" %>
+    <%= f.select(:language, page_languages, {prompt: 'Sélectionnez une langue'})  %>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :title, 'Titre' %>
+    <%= f.text_field :title, placeholder: "Titre de la page" %>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :description, 'Description' %>
+    <%= f.text_area :description, placeholder: "Description de la page" %>
+  </div>
+  <%= f.hidden_field :site_id %>
+  <div class="sibu_actions">
+    <%= f.submit 'Valider' %>
+    <%= link_to 'Annuler', :back %>
+  </div>
+<% end %>

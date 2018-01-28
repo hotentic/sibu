@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= conf[:title] %></title>
+  <%= stylesheet_link_tag conf[:stylesheet], media: 'all' %>
+  <%= javascript_include_tag conf[:javascript] %>
+  <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
+  <%= javascript_include_tag 'sibu/sibu' %>
+  <% if @site %>
+    <%= stylesheet_link_tag @site.site_template.path, media: "all" %>
+    <%= javascript_include_tag @site.site_template.path %>
+  <% end %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<% [:top_panel, :side_panel, :content_panel, :bottom_panel].each do |panel| %>
+  <% unless conf[panel].blank? %>
+    <div class="<%= 'sibu_panel' unless panel == :content_panel %>">
+      <%= render conf[panel] %>
+    </div>
+  <% end %>
+<% end %>
+
+<script>
+  $(function() {
+    initOverlays();
+  });
+
+  function initOverlays() {
+      $("[class*='sb-']").append(
+          '<div class="sb-overlay">' +
+            '<%= link_to 'Modifier', edit_element_site_page_path(@site.id, @page.id), remote: true %>' +
+          '</div>'
+      );
+  }
+</script>
+<%= yield :scripts %>
+</body>
+</html>

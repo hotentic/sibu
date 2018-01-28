@@ -22,6 +22,10 @@ Or install it yourself as:
 $ gem install sibu
 ```
 
+## Improvements
+  - Use a specific controller & helper for site display
+  - Move page templates to SiteTemplate model
+
 ## Contributing
 Contribution directions go here.
 

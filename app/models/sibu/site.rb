@@ -19,8 +19,12 @@ module Sibu
       pages.where(path: path).first
     end
 
+    def page_by_id(page_id)
+      pages.where(id: page_id).first
+    end
+
     def init_data(source)
-      site_data = Rails.application.config.sibu_site_data[source]
+      site_data = Rails.application.config.sibu[:site_data][source]
       self.sections = site_data.sections
       site_data.pages.each do |p|
         self.pages << Sibu::Page.new(p)

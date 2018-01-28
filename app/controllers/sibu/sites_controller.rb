@@ -3,19 +3,19 @@ require_dependency "sibu/application_controller"
 module Sibu
   class SitesController < ApplicationController
     before_action :set_site, only: [:show, :edit, :update, :destroy]
-    skip_before_action Rails.application.config.sibu_auth_filter, only: [:show]
+    skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
-      @sites = Sibu::Site.where(user_id: send(Rails.application.config.sibu_current_user).id)
+      @sites = Sibu::Site.where(user_id: send(Rails.application.config.sibu[:current_user]).id)
     end
 
     def show
       @page = @site.page('')
-      render :show, layout: 'sibu/site'
+      redirect_to site_page_path(@site.id, @page.id)
     end
 
     def new
-      @site = Sibu::Site.new(user_id: send(Rails.application.config.sibu_current_user).id)
+      @site = Sibu::Site.new(user_id: send(Rails.application.config.sibu[:current_user]).id)
     end
 
     def create
