@@ -1,0 +1,19 @@
+<h2>Modifier l'élément</h2>
+<div id="edit_msg"></div>
+<div class="sibu_form">
+  <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
+    <div class="sibu_field">
+      <%= label_tag 'element[text]', 'Texte' %>
+      <%= text_area_tag 'element[text]' %>
+    </div>
+    <%= hidden_field_tag :section_id, @section_id %>
+    <%= hidden_field_tag :element_id, @element_id %>
+    <%= hidden_field_tag :entity, @entity_type %>
+    <div class="sibu_actions">
+      <%= submit_tag 'Valider' %>
+      <%= link_to 'Annuler', '#', onclick: '$("#edit_panel").slideUp("fast"); return false;' %>
+    </div>
+  <% end %>
+</div>
+
+

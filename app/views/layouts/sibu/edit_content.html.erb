@@ -20,6 +20,7 @@
     </div>
   <% end %>
 <% end %>
+<div id="edit_panel" class="sibu_view"></div>
 
 <script>
   $(function() {
@@ -27,11 +28,20 @@
   });
 
   function initOverlays() {
-      $("[class*='sb-']").append(
-          '<div class="sb-overlay">' +
-            '<%= link_to 'Modifier', edit_element_site_page_path(@site.id, @page.id), remote: true %>' +
-          '</div>'
-      );
+      var elts = $("[class*='sb-']");
+      elts.each(function() {
+          var elt = $(this);
+          elt.find(".sb-overlay").remove();
+          var section = elt.parents("sb-edit").first();
+          var eltId = elt.data("id"), sectionId = section.data("id"), entity = section.data("entity");
+          elt.append(
+              '<div class="sb-overlay sibu_panel">' +
+                '<a href="<%= edit_element_site_page_path(@site.id, @page.id) %>?element_id=' + eltId + '&section_id=' + sectionId +
+                  '&entity=' + entity + '" data-remote="true">Modifier</a>' +
+              '</div>'
+          );
+      });
+
   }
 </script>
 <%= yield :scripts %>

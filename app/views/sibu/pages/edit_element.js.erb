@@ -1,0 +1,4 @@
+var editPanel = $("#edit_panel");
+editPanel.html("<%= j(render 'edit_panel') %>");
+editPanel.find("#element").val("<%= @entity.element(@section_id, @element_id)["text"] %>");
+editPanel.slideDown("fast");

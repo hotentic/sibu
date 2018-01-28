@@ -20,4 +20,17 @@ sb-edit,
   align-items: center;
   justify-content: center;
   text-align: center;
+
+  > * {
+    flex: 1 1 0%;
+  }
+}
+
+#edit_panel {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  display: none;
+  z-index: 1000;
 }

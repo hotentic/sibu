@@ -2,8 +2,9 @@ require_dependency "sibu/application_controller"
 
 module Sibu
   class PagesController < ApplicationController
-    before_action :set_page, only: [:edit, :update, :destroy, :update_content]
+    before_action :set_page, only: [:edit, :update, :destroy, :edit_element, :update_element, :edit_section]
     before_action :set_site, only: [:index, :new]
+    before_action :set_edit_context, only: [:edit_element, :update_element]
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
@@ -67,6 +68,7 @@ module Sibu
     end
 
     def update_element
+      @updated = @entity.update_element(@section_id, @element_id, element_params)
     end
 
     def edit_section
@@ -86,8 +88,19 @@ module Sibu
       @site = Sibu::Site.find(params[:site_id])
     end
 
+    def set_edit_context
+      @entity_type = params[:entity]
+      @section_id = params[:section_id]
+      @element_id = params[:element_id]
+      @entity = @entity_type == 'site' ? @site : @page
+    end
+
     def page_params
       params.require(:page).permit!
+    end
+
+    def element_params
+      params.require(:element).permit!
     end
   end
 end

@@ -5,13 +5,13 @@ module Sibu
     def section(id)
       s = nil
       if sections.blank?
-        self.sections = []
+        self.sections = {}
       else
-        s = sections.select {|sc| sc["id"] == id}.first
+        s = sections[id]
       end
       if s.nil?
-        s = {"id" => id, "elements" => []}
-        self.sections << s
+        s = []
+        self.sections[id] = s
         save
       end
       s
@@ -23,7 +23,20 @@ module Sibu
     end
 
     def update_section(*ids, value)
-    #   Todo
+    end
+
+    # Note : only 2 levels supported for now
+    def update_element(*ids, value)
+      updated = nil
+      if ids.length > 1
+        if self.sections[ids[0]].any? {|elt| elt["id"] == ids[1]}
+          self.sections[ids[0]].map! {|elt| elt["id"] == ids[1] ? elt.value : elt}
+        else
+          self.sections[ids[0]] << {"id" => ids[1]}.merge(value)
+        end
+        updated = value if save
+      end
+      updated
     end
   end
 end
