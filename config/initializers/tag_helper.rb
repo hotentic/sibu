@@ -34,7 +34,7 @@ module ActionView
         end
 
         def lnk(id)
-          @elements[id] || {"href" => "#", "text" => "Nouveau lien"}
+          @elements[id] || {"value" => "", "text" => "Nouveau lien"}
         end
 
         # def subsection(id, &block)
