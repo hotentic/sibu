@@ -2,19 +2,30 @@ module Sibu
   module SectionsConcern
     include ActiveSupport::Concern
 
-    def section(id)
-      s = nil
-      if sections.blank?
-        self.sections = {}
-      else
-        s = sections[id]
+    def section(*ids)
+      if ids.length == 1
+        s = nil
+        if sections.blank?
+          self.sections = {}
+        else
+          s = sections[ids[0]]
+        end
+        if s.nil?
+          s = []
+          self.sections[ids[0]] = s
+          save
+        end
+        s
+      elsif ids.length == 2
+        s = section(ids[0])
+        sub = s.select {|elt| elt["id"] == ids[1]}
+        unless sub
+          sub = {"id" => ids[1], "elements" => []}
+          self.sections[ids[0]] << sub
+          save
+        end
+        sub
       end
-      if s.nil?
-        s = []
-        self.sections[id] = s
-        save
-      end
-      s
     end
 
     def element(section_id, element_id)
