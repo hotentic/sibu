@@ -28,20 +28,27 @@
   });
 
   function initOverlays() {
+      const textTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'span'];
+
       var elts = $("[class*='sb-']");
       elts.each(function() {
-          var elt = $(this);
-          elt.find(".sb-overlay").remove();
+          var previous;
+          var elt = $(this), tag = elt.prop("tagName").toLowerCase(), width = elt.innerWidth(), height = elt.innerHeight();
           var section = elt.parents("sb-edit").first();
           var eltId = elt.data("id"), sectionId = section.data("id"), entity = section.data("entity");
-          elt.append(
-              '<div class="sb-overlay sibu_panel">' +
-                '<a href="<%= edit_element_site_page_path(@site.id, @page.id) %>?element_id=' + eltId + '&section_id=' + sectionId +
-                  '&entity=' + entity + '" data-remote="true">Modifier</a>' +
-              '</div>'
-          );
+          elt.hover(function() {
+            $(this).addClass("sb-edit-active sibu_panel");
+            previous = $(this).html();
+            if(textTags.indexOf(tag) !== -1) {
+              $(this).html('<a style="width: ' + width + 'px; height: ' + height + 'px; line-height: ' + height + 'px;" ' +
+                  'href="<%= edit_element_site_page_path(@site.id, @page.id) %>?element_id=' + eltId +
+                  '&section_id=' + sectionId + '&entity=' + entity + '" data-remote="true">Modifier</a>');
+            }
+          }, function() {
+              $(this).removeClass("sb-edit-active sibu_panel");
+              $(this).html(previous);
+          });
       });
-
   }
 </script>
 <%= yield :scripts %>

@@ -11,7 +11,7 @@ module ActionView
         [:h1, :h2, :h3, :h4, :h5, :h6, :p, :span, :div].each do |t|
           define_method(t) do |id, html_opts = {}|
             html_opts.merge!({class: "sb-#{t} #{html_opts[:class]}", data: {id: id}}) if @edit
-            content_tag(t, (@elements.dig(id, "text") || "Texte à modifier"), html_opts)
+            content_tag(t, raw(@elements.dig(id, "text") || "Texte à modifier").html_safe, html_opts)
           end
         end
 

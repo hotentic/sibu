@@ -68,7 +68,7 @@ module Sibu
     end
 
     def update_element
-      @updated = @entity.update_element(@section_id, @element_id, element_params)
+      @updated = @entity.update_element(@section_id, element_params)
     end
 
     def edit_section

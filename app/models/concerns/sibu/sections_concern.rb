@@ -37,17 +37,13 @@ module Sibu
     end
 
     # Note : only 2 levels supported for now
-    def update_element(*ids, value)
-      updated = nil
-      if ids.length > 1
-        if self.sections[ids[0]].any? {|elt| elt["id"] == ids[1]}
-          self.sections[ids[0]].map! {|elt| elt["id"] == ids[1] ? elt.value : elt}
-        else
-          self.sections[ids[0]] << {"id" => ids[1]}.merge(value)
-        end
-        updated = value if save
+    def update_element(section_id, value)
+      if self.sections[section_id].any? {|elt| elt["id"] == value["id"]}
+        self.sections[section_id].map! {|elt| elt["id"] == value["id"] ? value : elt}
+      else
+        self.sections[section_id] << value
       end
-      updated
+      value if save
     end
   end
 end

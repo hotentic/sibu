@@ -1,4 +1,12 @@
 var editPanel = $("#edit_panel");
 editPanel.html("<%= j(render 'edit_panel') %>");
-editPanel.find("#element").val("<%= @entity.element(@section_id, @element_id)["text"] %>");
+editPanel.find("#element_text").val("<%= j(raw @entity.element(@section_id, @element_id)["text"]) %>");
 editPanel.slideDown("fast");
+tinyMCE.remove();
+tinyMCE.init({
+    selector: 'textarea.tinymce',
+    branding: false,
+    menubar: false,
+    toolbar: 'bold italic underline alignleft aligncenter alignright alignjustify',
+    forced_root_block : false
+});

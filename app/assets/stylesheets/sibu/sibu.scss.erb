@@ -1,33 +1,11 @@
-sb-edit,
-[class*='sb-'] {
-  position: relative;
-
-  &:hover > .sb-overlay {
+sb-edit {
+  .sb-edit-active {
     cursor: pointer;
-    display: flex;
-  }
-}
-
-.sb-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 999;
-  width: 100%;
-  height: 100%;
-  display: none;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-
-  > * {
-    flex: 1 1 0%;
   }
 }
 
 #edit_panel {
-  position: absolute;
+  position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;

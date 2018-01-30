@@ -1,0 +1,6 @@
+default:
+  toolbar:
+    - styleselect | bold italic
+    - link
+  plugins:
+    - link
