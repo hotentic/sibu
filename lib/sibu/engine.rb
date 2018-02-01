@@ -1,4 +1,4 @@
-require 'tinymce-rails'
+require 'trix'
 
 module Sibu
   class Engine < ::Rails::Engine

@@ -1,12 +1,5 @@
 var editPanel = $("#edit_panel");
 editPanel.html("<%= j(render 'edit_panel') %>");
-editPanel.find("#element_text").val("<%= j(raw @entity.element(@section_id, @element_id)["text"]) %>");
+var editorElt = editPanel.find("trix-editor")[0];
+editorElt.editor.loadHTML("<%= raw(@entity.element(@section_id, @element_id)["text"].gsub("\n", "<br/>")) %>");
 editPanel.slideDown("fast");
-tinyMCE.remove();
-tinyMCE.init({
-    selector: 'textarea.tinymce',
-    branding: false,
-    menubar: false,
-    toolbar: 'bold italic underline alignleft aligncenter alignright alignjustify',
-    forced_root_block : false
-});

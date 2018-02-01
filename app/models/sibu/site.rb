@@ -12,7 +12,7 @@ module Sibu
     end
 
     def not_found
-      "#{site_template.path}/not_found"
+      "shared/#{site_template.path}/not_found"
     end
 
     def page(path)

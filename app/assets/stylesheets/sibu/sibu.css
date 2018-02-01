@@ -1,0 +1,21 @@
+/*
+ *= require trix
+ *= require_self
+ */
+
+sb-edit .sb-edit-active {
+    cursor: pointer;
+}
+
+#edit_panel {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    display: none;
+    z-index: 1000;
+}
+
+.trix-button-group--block-tools {
+    display: none !important;
+}

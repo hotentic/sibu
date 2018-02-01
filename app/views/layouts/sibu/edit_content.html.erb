@@ -3,8 +3,8 @@
 <head>
   <title><%= conf[:title] %></title>
   <%= stylesheet_link_tag conf[:stylesheet], media: 'all' %>
-  <%= javascript_include_tag conf[:javascript] %>
   <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
+  <%= javascript_include_tag conf[:javascript] %>
   <%= javascript_include_tag 'sibu/sibu' %>
   <% if @site %>
     <%= stylesheet_link_tag @site.site_template.path, media: "all" %>

@@ -42,21 +42,27 @@ module Sibu
     end
 
     def element(section_id, element_id)
-      elt = section(section_id)[element_id]
+      elt = section(section_id).select {|e| e["id"] == element_id}.first
       elt || {}
     end
 
     def update_section(*ids, value)
     end
 
-    # Note : only 2 levels supported for now
     def update_element(section_id, value)
+      sanitize_value(value)
       if self.sections[section_id].any? {|elt| elt["id"] == value["id"]}
         self.sections[section_id].map! {|elt| elt["id"] == value["id"] ? value : elt}
       else
         self.sections[section_id] << value
       end
       value if save
+    end
+
+    def sanitize_value(value)
+      unless value["text"].blank?
+        value["text"].gsub!(/<\/?(div|p|ul|li)>/, '')
+      end
     end
   end
 end

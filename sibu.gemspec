@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 5.1"
   s.add_dependency "pg", "~> 0.2"
   s.add_dependency "shrine", "~> 2.8"
-  s.add_dependency "jquery-rails", "~> 4.3.1"
-  s.add_dependency "tinymce-rails", "~> 4.7.6"
-  s.add_dependency "tinymce-rails-langs"
+  s.add_dependency "jquery-rails", "~> 4.3"
+  s.add_dependency "trix", "~> 0.11"
 end

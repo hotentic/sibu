@@ -2,9 +2,7 @@
 <div id="edit_msg"></div>
 <div class="sibu_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
-    <div class="sibu_field">
-      <%= text_area_tag 'element[text]', '', class: 'tinymce' %>
-    </div>
+    <%= trix_editor_tag 'element[text]', '', input: 'element_text' %>
     <%= hidden_field_tag 'element[id]', @element_id %>
     <%= hidden_field_tag :section_id, @section_id %>
     <%= hidden_field_tag :entity, @entity_type %>

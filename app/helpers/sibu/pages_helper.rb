@@ -1,6 +1,8 @@
 module Sibu
   module PagesHelper
     include Sibu::Engine.routes.url_helpers
+    include TrixEditorHelper
+
 
     def link_path(page_id)
       p = @site.page_by_id(page_id)
@@ -34,13 +36,13 @@ module Sibu
     def site_section(id, &block)
       @sb_entity = @site
       @sb_section = id
-      capture(self, &block)
+      "<sb-edit data-id='#{id}'>#{capture(self, &block)}</sb-edit>".html_safe
     end
 
     def section(id, &block)
       @sb_entity = @page
       @sb_section = id
-      capture(self, &block)
+      "<sb-edit data-id='#{id}'>#{capture(self, &block)}</sb-edit>".html_safe
     end
 
     def each
