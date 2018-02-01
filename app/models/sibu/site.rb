@@ -23,12 +23,30 @@ module Sibu
       pages.where(id: page_id).first
     end
 
-    def init_data(source)
+    def save_and_init(source)
+      ActiveRecord::Base.transaction do
+        save!
+        init_pages(source)
+        init_sections(source)
+      end
+    end
+
+    def internal_links
+      Hash[pages.collect {|p| [p.id, p.path]}]
+    end
+
+    def init_pages(source)
       site_data = Rails.application.config.sibu[:site_data][source]
-      self.sections = site_data.sections
       site_data.pages.each do |p|
         self.pages << Sibu::Page.new(p)
       end
+      save!
+    end
+
+    def init_sections(source)
+      site_data = Rails.application.config.sibu[:site_data][source]
+      self.sections = site_data.sections(self)
+      save!
     end
   end
 end

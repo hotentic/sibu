@@ -20,8 +20,7 @@ module Sibu
 
     def create
       @site = Sibu::Site.new(site_params)
-      @site.init_data(:default)
-      if @site.save
+      if @site.save_and_init(:default)
         redirect_to sites_url, notice: "Le site a bien été créé."
       else
         flash.now[:alert] = "Une erreur s'est produite lors de la création du site."

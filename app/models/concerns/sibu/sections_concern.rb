@@ -2,34 +2,47 @@ module Sibu
   module SectionsConcern
     include ActiveSupport::Concern
 
-    def section(*ids)
-      if ids.length == 1
+    def section(id)
+      # elts = nil
+      # if ids.length == 1
         s = nil
         if sections.blank?
           self.sections = {}
         else
-          s = sections[ids[0]]
+          s = sections[id]
         end
         if s.nil?
           s = []
-          self.sections[ids[0]] = s
+          self.sections[id] = s
           save
         end
         s
-      elsif ids.length == 2
-        s = section(ids[0])
-        sub = s.select {|elt| elt["id"] == ids[1]}
-        unless sub
-          sub = {"id" => ids[1], "elements" => []}
-          self.sections[ids[0]] << sub
-          save
-        end
-        sub
+      # elsif ids.length == 2
+      #   s = section(ids[0])
+      #   sub = s.select {|elt| elt["id"] == ids[1]}
+      #   unless sub
+      #     sub = {"id" => ids[1], "elements" => []}
+      #     self.sections[ids[0]] << sub
+      #     save
+      #   end
+      #   elts = sub
+      # end
+      # elts.blank? ? {"default" => {}} : Hash[elts.map {|e| [e["id"], e.except("id")]}]
+    end
+
+    def subsection(id, subid)
+      s = section(id)
+      sub = s.select {|elt| elt["id"] == ids[1]}
+      unless sub
+        sub = {"id" => ids[1], "elements" => []}
+        self.sections[ids[0]] << sub
+        save
       end
+      elts = sub
     end
 
     def element(section_id, element_id)
-      elt = section(section_id).select {|e| e["id"] == element_id}.first
+      elt = section(section_id)[element_id]
       elt || {}
     end
 
