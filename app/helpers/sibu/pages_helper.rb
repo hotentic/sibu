@@ -15,7 +15,7 @@ module Sibu
       [['Français', 'fr'], ['Anglais', 'en']]
     end
 
-    [:h1, :h2, :h3, :h4, :h5, :h6, :p, :span, :div, :label].each do |t|
+    [:h1, :h2, :h3, :h4, :h5, :h6, :p, :span, :div].each do |t|
       define_method(t) do |id_or_elt, html_opts = {}|
         content = id_or_elt.is_a?(Hash) ? (id_or_elt || {"text" => "Texte à modifier"}) : (select(id_or_elt) || {"text" => "Texte à modifier"})
         html_opts.merge!({class: "sb-#{t} #{html_opts[:class]}", data: {id:  id_or_elt.is_a?(Hash) ? id_or_elt["id"] : id_or_elt}}) if action_name != 'show'
@@ -75,6 +75,12 @@ module Sibu
       else
         content_tag(:a, content["text"], {href: href}.merge(html_opts))
       end
+    end
+
+    def form_label(id_or_elt, html_opts = {}, &block)
+      content = id_or_elt.is_a?(Hash) ? (id_or_elt || {"text" => "Texte à modifier"}) : (select(id_or_elt) || {"text" => "Texte à modifier"})
+      html_opts.merge!({class: "sb-label #{html_opts[:class]}", data: {id:  id_or_elt.is_a?(Hash) ? id_or_elt["id"] : id_or_elt}}) if action_name != 'show'
+      content_tag(:label, raw(content["text"]).html_safe, html_opts)
     end
   end
 end
