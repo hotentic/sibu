@@ -1,4 +1,4 @@
-<h2>Modifier l'élément</h2>
+<h2>Modifier le texte</h2>
 <div id="edit_msg"></div>
 <div class="sibu_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
@@ -8,7 +8,7 @@
     <%= hidden_field_tag :entity, @entity_type %>
     <div class="sibu_actions">
       <%= submit_tag 'Valider' %>
-      <%= link_to 'Annuler', '#', onclick: '$("#edit_panel").slideUp("fast"); return false;' %>
+      <%= link_to 'Annuler', '#', onclick: 'cancelEdit(); return false;' %>
     </div>
   <% end %>
 </div>

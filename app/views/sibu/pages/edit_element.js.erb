@@ -1,5 +1,18 @@
 var editPanel = $("#edit_panel");
-editPanel.html("<%= j(render 'edit_panel') %>");
-var editorElt = editPanel.find("trix-editor")[0];
-editorElt.editor.loadHTML("<%= raw(@entity.element(@section_id, @element_id)["text"].gsub("\n", "<br/>")) %>");
+editPanel.html("");
+<% if @content_type == 'text' %>
+  <% text_value = @entity.element(@section_id, @element_id)["text"] || 'Texte à modifier' %>
+  editPanel.html("<%= j(render 'text_edit_panel') %>");
+  var editorElt = editPanel.find("trix-editor")[0];
+  editorElt.editor.loadHTML("<%= raw(text_value.gsub("\n", "<br/>")) %>");
+<% elsif @content_type == 'media' %>
+  editPanel.html("<%= j(render 'media_edit_panel') %>");
+  editPanel.find(".sibu_image img").click(function() {
+    $("#element_src").val($(this).attr("src"));
+  });
+<% elsif @content_type == 'link' %>
+  editPanel.html("<%= j(render 'link_edit_panel') %>");
+<% end %>
+
+
 editPanel.slideDown("fast");

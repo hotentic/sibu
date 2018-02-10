@@ -12,6 +12,8 @@ Sibu::Engine.routes.draw do
         patch 'update_element', on: :member
         patch 'update_section', on: :member
       end
+
+      resources :images
     end
   end
 end

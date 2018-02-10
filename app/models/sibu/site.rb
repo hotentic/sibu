@@ -4,6 +4,7 @@ module Sibu
 
     belongs_to :site_template, :class_name => 'Sibu::SiteTemplate'
     has_many :pages, :class_name => 'Sibu::Page', dependent: :destroy
+    has_many :images, :class_name => 'Sibu::Image', dependent: :destroy
 
     validates_presence_of :name, :site_template
 

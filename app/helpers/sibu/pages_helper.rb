@@ -18,9 +18,9 @@ module Sibu
     end
 
     [:h1, :h2, :h3, :h4, :h5, :h6, :p, :span, :div].each do |t|
-      define_method(t) do |id_or_elt, html_opts = {}|
-        content = id_or_elt.is_a?(Hash) ? (id_or_elt || {"text" => "Texte à modifier"}) : (select(id_or_elt) || {"text" => "Texte à modifier"})
-        html_opts.merge!({class: "sb-#{t} #{html_opts[:class]}", data: {id:  id_or_elt.is_a?(Hash) ? id_or_elt["id"] : id_or_elt}}) if action_name != 'show'
+      define_method(t) do |elt, html_opts = {}|
+        content = elt.is_a?(Hash) ? (elt || {"text" => "Texte à modifier"}) : (select(elt) || {"text" => "Texte à modifier"})
+        html_opts.merge!({class: "sb-#{t} #{html_opts[:class]}", data: {id:  elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
         content_tag(t, raw(content["text"]).html_safe, html_opts)
       end
     end
@@ -36,13 +36,21 @@ module Sibu
     def site_section(id, &block)
       @sb_entity = @site
       @sb_section = id
-      "<sb-edit data-id='#{id}'>#{capture(self, &block)}</sb-edit>".html_safe
+      if block_given?
+        "<sb-edit data-id='#{id}' data-entity='site'>#{capture(self, &block)}</sb-edit>".html_safe
+      else
+        self
+      end
     end
 
     def section(id, &block)
       @sb_entity = @page
       @sb_section = id
-      "<sb-edit data-id='#{id}'>#{capture(self, &block)}</sb-edit>".html_safe
+      "<sb-edit data-id='#{id}' data-entity='page'>#{capture(self, &block)}</sb-edit>".html_safe
+    end
+
+    def site_sections(id)
+      @site.section(id).map {|s| s["id"]}
     end
 
     def each
@@ -58,14 +66,14 @@ module Sibu
       end
     end
 
-    def img(id_or_elt, html_opts = {})
-      content = id_or_elt.is_a?(Hash) ? (id_or_elt || {"src" => "/default.jpg"}) : (select(id_or_elt) || {"src" => "/default.jpg"})
-      opts = action_name == 'show' ? html_opts.merge({class: "sb-img #{html_opts[:class]}", data: {id: id_or_elt.is_a?(Hash) ? id_or_elt["id"] : id_or_elt}}) : html_opts
-      content_tag(:img, nil, content.except("id").merge(opts))
+    def img(elt, html_opts = {})
+      content = elt.is_a?(Hash) ? ((elt && !elt["src"].blank?) ? elt : {"src" => "/default.jpg"}) : ((select(elt) && !select(elt)["src"].blank?) ? select(elt) : {"src" => "/default.jpg"})
+      html_opts.merge!({class: "sb-img #{html_opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
+      content_tag(:img, nil, content.except("id").merge(html_opts))
     end
 
-    def link(id_or_elt, html_opts = {}, &block)
-      content = id_or_elt.is_a?(Hash) ? (id_or_elt || {"value" => "", "text" => "Nouveau lien"}) : (select(id_or_elt) || {"value" => "", "text" => "Nouveau lien"})
+    def link(elt, html_opts = {}, &block)
+      content = elt.is_a?(Hash) ? (elt || {"value" => "", "text" => "Nouveau lien"}) : (select(elt) || {"value" => "", "text" => "Nouveau lien"})
       val = content["value"] || ""
       if val.to_s.include?('http')
         href = val
@@ -79,9 +87,9 @@ module Sibu
       end
     end
 
-    def form_label(id_or_elt, html_opts = {}, &block)
-      content = id_or_elt.is_a?(Hash) ? (id_or_elt || {"text" => "Texte à modifier"}) : (select(id_or_elt) || {"text" => "Texte à modifier"})
-      html_opts.merge!({class: "sb-label #{html_opts[:class]}", data: {id:  id_or_elt.is_a?(Hash) ? id_or_elt["id"] : id_or_elt}}) if action_name != 'show'
+    def form_label(elt, html_opts = {}, &block)
+      content = elt.is_a?(Hash) ? (elt || {"text" => "Texte à modifier"}) : (select(elt) || {"text" => "Texte à modifier"})
+      html_opts.merge!({class: "sb-label #{html_opts[:class]}", data: {id:  elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
       content_tag(:label, raw(content["text"]).html_safe, html_opts)
     end
   end

@@ -1,11 +1,12 @@
 <header>
-  <%= section('header', @site) do |elts| %>
-    <h1><%= elts["main_title"]["value"] %></h1>
+  <%= site_section('header') do %>
+    <%= sb.h1('title') %>
+    <%= sb.img('top_logo_img', id: 'logo') %>
   <% end %>
   <nav>
-    <%= section('main_menu', @site) do |elts| %>
-      <% elts.values.each do |e| %>
-        <%= link_to e["label"], e["value"], id: e["id"] %>
+    <% site_sections('main_menu').each do |menu_item| %>
+      <%= site_section(menu_item) do |s| %>
+        <%= sb.link(menu_item) %>
       <% end %>
     <% end %>
   </nav>

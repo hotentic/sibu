@@ -1,0 +1,11 @@
+<%= form_for([@site, @image]) do |f| %>
+  <div class="sibu_field">
+    <%= f.hidden_field :file, value: @image.cached_file_data %>
+    <%= f.file_field :file %>
+  </div>
+  <%= f.hidden_field :site_id %>
+  <div class="sibu_actions">
+    <%= f.submit 'Valider' %>
+    <%= link_to 'Annuler', :back %>
+  </div>
+<% end %>

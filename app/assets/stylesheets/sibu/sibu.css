@@ -3,8 +3,65 @@
  *= require_self
  */
 
-sb-edit .sb-edit-active {
+sb-edit {
+    position: relative;
+}
+
+sb-edit div.sb-overlay {
+    position: absolute;
+    z-index: 999;
+    opacity: 0;
+    background-color: rgba(0, 0, 0, 0.5);
     cursor: pointer;
+    top: 0;
+    left: 0;
+}
+
+sb-edit div.sb-overlay a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+sb-edit .sb-editable {
+    cursor: pointer;
+    outline: dashed rgba(94, 219, 255, 0.8) 2px;
+}
+
+#edit_mode_overlay {
+    display: none;
+}
+
+#edit_mode_overlay > div {
+    position: absolute;
+    z-index: 999;
+}
+
+#edit_mode_overlay .overlay_top,
+#edit_mode_overlay .overlay_bottom,
+#edit_mode_overlay .overlay_left,
+#edit_mode_overlay .overlay_right {
+    background-color: rgba(94, 219, 255, 0.5);
+}
+
+#edit_mode_overlay > .overlay_top {
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+#edit_mode_overlay > .overlay_bottom {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+#edit_mode_overlay > .overlay_left {
+    left: 0;
+}
+
+#edit_mode_overlay > .overlay_right {
+    right: 0;
 }
 
 #edit_panel {
@@ -14,6 +71,7 @@ sb-edit .sb-edit-active {
     width: 100%;
     display: none;
     z-index: 1000;
+    background-color: white;
 }
 
 .trix-button-group--block-tools {

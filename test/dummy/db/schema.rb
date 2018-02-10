@@ -10,17 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180124145030) do
+ActiveRecord::Schema.define(version: 20180208125024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "sibu_images", force: :cascade do |t|
+    t.integer "site_id"
+    t.text "metadata"
+    t.text "file_data"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "sibu_pages", force: :cascade do |t|
     t.string "name"
     t.integer "site_id"
     t.text "metadata"
     t.string "language"
-    t.string "url"
+    t.string "path"
     t.string "template"
     t.jsonb "sections"
     t.datetime "created_at", null: false
@@ -41,6 +49,8 @@ ActiveRecord::Schema.define(version: 20180124145030) do
     t.jsonb "sections"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.string "domain"
   end
 
 end

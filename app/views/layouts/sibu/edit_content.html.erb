@@ -21,65 +21,119 @@
   <% end %>
 <% end %>
 <div id="edit_panel" class="sibu_view"></div>
+<div id="edit_mode_overlay">
+  <div class="overlay_top"></div>
+  <div class="overlay_right"></div>
+  <div class="overlay_left"></div>
+  <div class="overlay_bottom"></div>
+  <div class="edit_mode_actions">
+    <button onclick="cancelEditMode()">Fermer</button>
+  </div>
+</div>
 
 <script>
+    const TEXT_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'span'];
+    const IMG_TAGS = ['img'];
+    const LINK_TAGS = ['a'];
+
     $(function () {
         initOverlays();
     });
 
-    function initOverlays() {
-        const textTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'span'];
+    function setEditMode(elt) {
+        var offset = elt.offset();
+        var width = elt.width(), height = elt.height();
+        var overlay = $("#edit_mode_overlay");
+        overlay.find(".overlay_top").css("height", offset.top);
+        overlay.find(".overlay_bottom").css("top", offset.top + height);
+        overlay.find(".overlay_left").css({"height": height, "width": offset.left, "top": offset.top});
+        overlay.find(".overlay_right").css({"height": height, "left": offset.left + width, "top": offset.top});
+        overlay.find(".edit_mode_actions").css({"top": (offset.top <= 40 ? (offset.top + height) : (offset.top - 40)), left: offset.left, width: width});
+        overlay.show();
+        initInnerOverlays(elt);
+        elt.remove();
+    }
 
-        var elts = $("[class*='sb-']");
-        elts.each(function () {
-            var previous;
-            var elt = $(this), tag = elt.prop("tagName").toLowerCase(), width = elt.width(),
-                height = elt.height(), display = elt.css("display"), padding = elt.css("padding"), margin = elt.css("margin");
+    function cancelEditMode() {
+        $("#edit_mode_overlay").hide();
+        cancelEdit();
+        initOverlays();
+    }
+
+    function cancelEdit() {
+        $("#edit_panel").slideUp("fast");
+    }
+
+    function editContent(eltId, sectionId, entity, contentType) {
+        $.ajax({
+            url: "<%= edit_element_site_page_path(@site.id, @page.id) %>",
+            method: "GET",
+            data: {
+                element_id: eltId,
+                section_id: sectionId,
+                entity: entity,
+                content_type: contentType
+            }
+        })
+    }
+
+    function initInnerOverlays(elt) {
+        var editables = elt.parents("sb-edit").first().find("[class*='sb-']");
+        editables.off();
+        editables.hover(function() {
+            $(this).addClass("sb-editable");
+        }, function() {
+            $(this).removeClass("sb-editable");
+        });
+        editables.click(function(evt) {
+            evt.preventDefault();
+            var elt = $(this), tag = elt.prop("tagName").toLowerCase();
             var section = elt.parents("sb-edit").first();
             var eltId = elt.data("id"), sectionId = section.data("id"), entity = section.data("entity");
-            var overlayElt = $(editOverlay(width, height, display, padding, margin));
-            bindMouseEnter(elt, overlayElt, eltId, sectionId, entity);
-        });
+            if (TEXT_TAGS.indexOf(tag) !== -1) {
+                editContent(eltId, sectionId, entity, 'text');
+            } else if (IMG_TAGS.indexOf(tag) !== -1) {
+                editContent(eltId, sectionId, entity, 'media');
+            } else if (LINK_TAGS.indexOf(tag) !== -1) {
+                editContent(eltId, sectionId, entity, 'link');
+            } else {
+                console.log('Sibu - Unsupported tag type : ' + tag);
+            }
+        })
+    }
 
-        function bindMouseEnter(element, overlay, elementId, sectionId, entity) {
-            element.mouseenter(function () {
-                overlay.replaceAll(element);
-                overlay.addClass("sb-edit-active sibu_panel");
-                overlay.click(function() {
-                  editContent(elementId, sectionId, entity)
-                });
-                bindMouseLeave(element, overlay, elementId, sectionId, entity);
+    function initOverlays() {
+        $("div.sb-overlay").remove();
+        $("sb-edit").each(function() {
+            var elt = $(this);
+            elt.prepend("<div class='sb-overlay'><a>Modifier</a></div>");
+            var overlay = elt.find(".sb-overlay");
+            var dimensions = overlayDimensions(overlay, elt);
+            console.log("id : " + elt.data("id") + " - " + JSON.stringify(dimensions));
+            overlay.width(dimensions.width);
+            overlay.height(dimensions.height);
+
+            elt.hover(function() {
+                overlay.css("opacity", 1);
+            }, function() {
+                overlay.css("opacity", 0);
             });
-        }
 
-        function bindMouseLeave(element, overlay, elementId, sectionId, entity) {
-            overlay.mouseleave(function() {
-                overlay.removeClass("sb-edit-active sibu_panel");
-                element.replaceAll(overlay);
-                bindMouseEnter(element, overlay, elementId, sectionId, entity);
-            });
-        }
-
-        function editOverlay(width, height, display, padding, margin) {
-            return '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" ' +
-                      'style="box-sizing: content-box; display: ' + display + '; padding: ' + padding + '; margin: ' + margin + ';"' +
-                      'viewBox="0 0 ' + width + ' ' + height + '" width="' + width + 'px" height="' + height + 'px">' +
-                      '<rect width="' + width + '" height="' + height + '" x="0" y="0" fill="#dedede"/>' +
-                   '</svg>';
-        }
-
-        function editContent(eltId, sectionId, entity) {
-            $.ajax({
-                url: "<%= edit_element_site_page_path(@site.id, @page.id) %>",
-                method: "GET",
-                data: {
-                    element_id: eltId,
-                    section_id: sectionId,
-                    entity: entity
-                }
+            overlay.click(function() {
+                setEditMode($(this));
             })
-        }
+        });
+    }
 
+    function overlayDimensions(overlay, element) {
+        var children = element.find("> *:not(.sb-overlay)");
+        var width = - +children.first().css("margin-left").replace("px", ""), height = - +children.first().css("margin-top").replace("px", "");
+        var maxWidth = element.parent().outerWidth(true), maxHeight = element.parent().outerHeight(true);
+        element.find("> *:not(.sb-overlay)").each(function() {
+            width = width + $(this).outerWidth(true);
+            height = height + $(this).outerHeight(true);
+        });
+        return {width: Math.min(width, maxWidth), height: Math.min(height, maxHeight)};
     }
 </script>
 <%= yield :scripts %>

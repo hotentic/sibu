@@ -1,8 +1,17 @@
-<%= section('page_title') do |elts| %>
-  <h2><%= elts["page_title"]["value"] %></h2>
+<%= section('title') do %>
+  <%= sb.h2('main_title') %>
 <% end %>
 
-<%= section('page_section') do |elts| %>
-  <h3><%= elts["subtitle"]["value"] %></h3>
-  <p><%= elts["paragraph"]["value"] %></p>
-<% end %>
+<div style="display: inline-block; width: 40%;">
+  <%= section('section1') do %>
+    <%= sb.h3('subtitle') %>
+    <%= sb.p('paragraph') %>
+  <% end %>
+</div>
+
+<div style="display: inline-block; width: 30%;">
+  <%= section('section2') do %>
+    <%= sb.h3('subtitle') %>
+    <%= sb.p('paragraph') %>
+  <% end %>
+</div>

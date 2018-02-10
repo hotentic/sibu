@@ -13,3 +13,17 @@
  *= require_tree .
  *= require_self
  */
+
+.sibu_image {
+    display: inline-block;
+}
+
+.sibu_image img {
+    width: auto;
+    height: 80px;
+    padding-right: 10px;
+}
+
+img {
+    max-width: 200px;
+}

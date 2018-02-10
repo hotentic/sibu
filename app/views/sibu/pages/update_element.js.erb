@@ -2,5 +2,13 @@
   $("#edit_panel #edit_msg").html("<p class='sibu_alert'>Une erreur s'est produite lors de l'enregistrement.</p>");
 <% else %>
   $("#edit_panel").slideUp();
-  $("sb-edit[data-id='<%= @section_id %>']").find("[data-id='<%= @updated["id"] %>']").html("<%= j(raw @updated["text"]) %>");
+  var updatedElt = $("sb-edit[data-id='<%= @section_id %>']").find("[data-id='<%= @updated["id"] %>']");
+  <% if @updated["text"] %>
+    updatedElt.html("<%= j(raw @updated["text"]) %>");
+  <% end %>
+  <% unless @updated.except("id", "text").blank? %>
+    <% @updated.except("id", "text").each_pair do |attr, val| %>
+      updatedElt.attr("<%= attr %>", "<%= val %>");
+    <% end %>
+  <% end %>
 <% end %>
