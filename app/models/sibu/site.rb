@@ -32,7 +32,7 @@ module Sibu
       end
     end
 
-    def internal_links
+    def pages_path_by_id
       Hash[pages.collect {|p| [p.id, p.path]}]
     end
 

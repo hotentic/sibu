@@ -16,7 +16,7 @@ module Sibu
         @site = Sibu::Site.find_by_domain(request.domain)
         if @site
           @page = @site.page(params[:path])
-          @links = @site.internal_links
+          @links = @site.pages_path_by_id
           view_template = @page ? 'show' : @site.not_found
         else
           view_template = Rails.application.config.sibu[:not_found]
@@ -24,7 +24,7 @@ module Sibu
       else
         @site = Sibu::Site.find(params[:site_id])
         @page = Sibu::Page.find(params[:id])
-        @links = @site.internal_links
+        @links = @site.pages_path_by_id
         view_template = 'show'
       end
 
@@ -63,12 +63,13 @@ module Sibu
     def edit_content
       @page = Sibu::Page.find(params[:page_id])
       @site = Sibu::Site.includes(:pages).find(@page.site_id) if @page
-      @links = @site.internal_links if @site
+      @links = @site.pages_path_by_id if @site
       render :edit_content, layout: 'sibu/edit_content'
     end
 
     def edit_element
       @content_type = params[:content_type]
+      @links = @site.pages_path_by_id if @site
     end
 
     def update_element

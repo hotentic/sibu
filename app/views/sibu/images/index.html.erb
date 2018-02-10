@@ -1,0 +1,10 @@
+<div id="pages" class="sibu_view">
+  <div class="actions">
+    <%= link_to 'Télécharger une image', new_site_image_path(@site.id) %> | <%= link_to 'Retour', :back %>
+  </div>
+  <h2>Images du site "<%= @site.name %>"</h2>
+  <% @images.each do |image| %>
+    <div class="sibu_image"><%= image_tag image.file_url(:small) %></div>
+  <% end %>
+</div>
+
