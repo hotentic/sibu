@@ -24,16 +24,18 @@ module Sibu
       pages.where(id: page_id).first
     end
 
-    def save_and_init(source)
-      ActiveRecord::Base.transaction do
-        save!
-        init_pages(source)
-        init_sections(source)
+    def save_and_init
+      if valid?
+        self.sections = site_template.sections
+        site_template.pages.each do |p|
+          self.pages << Sibu::Page.new(p)
+        end
       end
+      save!
     end
 
     def pages_path_by_id
-      Hash[pages.collect {|p| [p.id, p.path]}]
+      Hash[pages.collect {|p| [p.id.to_s, p.path]}]
     end
 
     def init_pages(source)

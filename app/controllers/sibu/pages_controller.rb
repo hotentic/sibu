@@ -70,6 +70,7 @@ module Sibu
     def edit_element
       @content_type = params[:content_type]
       @links = @site.pages_path_by_id if @site
+      @element = @entity.element(@section_id, @element_id)
     end
 
     def update_element

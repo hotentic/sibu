@@ -15,7 +15,7 @@
 <body>
 <% [:top_panel, :side_panel, :content_panel, :bottom_panel].each do |panel| %>
   <% unless conf[panel].blank? %>
-    <div class="<%= 'sibu_panel' unless panel == :content_panel %>">
+    <div class="<%= panel == :content_panel ? 'sibu_content_panel' : 'sibu_panel' %>">
       <%= render conf[panel] %>
     </div>
   <% end %>
@@ -32,7 +32,7 @@
 </div>
 
 <script>
-    const TEXT_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p', 'span'];
+    const TEXT_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span'];
     const IMG_TAGS = ['img'];
     const LINK_TAGS = ['a'];
 
@@ -92,7 +92,7 @@
             var eltId = elt.data("id"), sectionId = section.data("id"), entity = section.data("entity");
             if (TEXT_TAGS.indexOf(tag) !== -1) {
                 editContent(eltId, sectionId, entity, 'text');
-            } else if (IMG_TAGS.indexOf(tag) !== -1) {
+            } else if (IMG_TAGS.indexOf(tag) !== -1 || elt.hasClass('sb-img')) {
                 editContent(eltId, sectionId, entity, 'media');
             } else if (LINK_TAGS.indexOf(tag) !== -1) {
                 editContent(eltId, sectionId, entity, 'link');
@@ -109,7 +109,6 @@
             elt.prepend("<div class='sb-overlay'><a>Modifier</a></div>");
             var overlay = elt.find(".sb-overlay");
             var dimensions = overlayDimensions(overlay, elt);
-            console.log("id : " + elt.data("id") + " - " + JSON.stringify(dimensions));
             overlay.width(dimensions.width);
             overlay.height(dimensions.height);
 

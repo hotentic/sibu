@@ -1,0 +1,7 @@
+# Improvements
+
+- Fix the jQuery conflicts issues (-core assets etc)
+- Find a way to NEVER repeat an identifier twice (parent & sub ids for ex.)
+- Find the proper generic names to represent a block/section and a list/group/repeat
+- Select the size of the image when assigning it to a section
+- Remove the hardcoded 2 limit on most slideshows

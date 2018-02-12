@@ -3,6 +3,10 @@
  *= require_self
  */
 
+.sibu_content_panel {
+    position: relative
+}
+
 sb-edit {
     position: relative;
 }
@@ -26,6 +30,7 @@ sb-edit div.sb-overlay a {
 sb-edit .sb-editable {
     cursor: pointer;
     outline: dashed rgba(94, 219, 255, 0.8) 2px;
+    outline-offset: -3px;
 }
 
 #edit_mode_overlay {

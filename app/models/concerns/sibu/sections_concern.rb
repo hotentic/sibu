@@ -2,22 +2,24 @@ module Sibu
   module SectionsConcern
     include ActiveSupport::Concern
 
-    def section(id)
+    def section(*ids)
       # elts = nil
-      # if ids.length == 1
+      if ids.length == 1
         s = nil
         if sections.blank?
           self.sections = {}
         else
-          s = sections[id]
+          s = sections[ids[0]]
         end
         if s.nil?
           s = []
-          self.sections[id] = s
+          self.sections[ids[0]] = s
           save
         end
         s
-      # elsif ids.length == 2
+      elsif ids.length == 2
+        subsection(*ids)
+      end
       #   s = section(ids[0])
       #   sub = s.select {|elt| elt["id"] == ids[1]}
       #   unless sub
@@ -32,13 +34,13 @@ module Sibu
 
     def subsection(id, subid)
       s = section(id)
-      sub = s.select {|elt| elt["id"] == ids[1]}
+      sub = s.select {|elt| elt["id"] == subid}.first
       unless sub
-        sub = {"id" => ids[1], "elements" => []}
-        self.sections[ids[0]] << sub
+        sub = {"id" => subid, "elements" => []}
+        self.sections[id] << sub
         save
       end
-      elts = sub
+      sub["elements"]
     end
 
     def element(section_id, element_id)

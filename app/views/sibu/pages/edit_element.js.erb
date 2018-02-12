@@ -1,7 +1,7 @@
 var editPanel = $("#edit_panel");
 editPanel.html("");
 <% if @content_type == 'text' %>
-  <% text_value = @entity.element(@section_id, @element_id)["text"] || 'Texte à modifier' %>
+  <% text_value = @element["text"] || 'Texte à modifier' %>
   editPanel.html("<%= j(render 'text_edit_panel') %>");
   var editorElt = editPanel.find("trix-editor")[0];
   editorElt.editor.loadHTML("<%= raw(text_value.gsub("\n", "<br/>")) %>");

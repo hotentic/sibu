@@ -20,16 +20,6 @@ ActiveSupport.on_load(:action_controller) do
   end
 end
 
-class DefaultSite
-  def sections(site)
-    {}
-  end
-
-  def pages
-    [{name: 'Home', template: 'test', path: '', language: 'en', sections: {}}]
-  end
-end
-
 Rails.application.config.sibu = {
     title: 'Sibu test site',
     stylesheet: 'application',
@@ -41,6 +31,5 @@ Rails.application.config.sibu = {
     current_user: :dummy_user,
     domain: 'localhost',
     not_found: 'shared/not_found',
-    site_data: {default: DefaultSite.new},
     images: {large: 1024, medium: 640, small: 320}
 }

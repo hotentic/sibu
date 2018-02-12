@@ -11,10 +11,10 @@
     </div>
     <div class="sibu_field">
       <%= label_tag 'element[alt]', 'Texte alternatif' %>
-      <%= text_field_tag 'element[alt]' %>
+      <%= text_field_tag 'element[alt]', @element["alt"] %>
     </div>
-    <%= hidden_field_tag 'element[id]', @element_id %>
-    <%= hidden_field_tag 'element[src]' %>
+    <%= hidden_field_tag 'element[id]', @element["id"] %>
+    <%= hidden_field_tag 'element[src]', @element["src"] %>
     <%= hidden_field_tag :section_id, @section_id %>
     <%= hidden_field_tag :entity, @entity_type %>
     <div class="sibu_actions">
