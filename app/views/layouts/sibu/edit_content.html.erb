@@ -2,9 +2,9 @@
 <html>
 <head>
   <title><%= conf[:title] %></title>
-  <%= stylesheet_link_tag conf[:stylesheet], media: 'all' %>
+  <%= stylesheet_link_tag "#{conf[:stylesheet]}-edit", media: 'all' %>
   <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
-  <%= javascript_include_tag conf[:javascript] %>
+  <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
   <%= javascript_include_tag 'sibu/sibu' %>
   <% if @site %>
     <%= stylesheet_link_tag @site.site_template.path, media: "all" %>
@@ -17,20 +17,22 @@
   <% unless conf[panel].blank? %>
     <div class="<%= panel == :content_panel ? 'sibu_content_panel' : 'sibu_panel' %>">
       <%= render conf[panel] %>
+      <% if panel == :content_panel %>
+        <div id="edit_panel" class="sibu_panel sibu_view"></div>
+        <div id="edit_mode_overlay" class="sibu_panel sibu_view">
+          <div class="overlay_top"></div>
+          <div class="overlay_right"></div>
+          <div class="overlay_left"></div>
+          <div class="overlay_bottom"></div>
+          <div class="edit_mode_actions">
+            <p>Modifier la section</p>
+            <button onclick="cancelEditMode()">Fermer</button>
+          </div>
+        </div>
+      <% end %>
     </div>
   <% end %>
 <% end %>
-<div id="edit_panel" class="sibu_view"></div>
-<div id="edit_mode_overlay">
-  <div class="overlay_top"></div>
-  <div class="overlay_right"></div>
-  <div class="overlay_left"></div>
-  <div class="overlay_bottom"></div>
-  <div class="edit_mode_actions">
-    <button onclick="cancelEditMode()">Fermer</button>
-  </div>
-</div>
-
 <script>
     const TEXT_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span'];
     const IMG_TAGS = ['img'];
@@ -44,12 +46,14 @@
         var offset = elt.offset();
         var width = elt.width(), height = elt.height();
         var overlay = $("#edit_mode_overlay");
-        overlay.find(".overlay_top").css("height", offset.top);
-        overlay.find(".overlay_bottom").css("top", offset.top + height);
-        overlay.find(".overlay_left").css({"height": height, "width": offset.left, "top": offset.top});
-        overlay.find(".overlay_right").css({"height": height, "left": offset.left + width, "top": offset.top});
-        overlay.find(".edit_mode_actions").css({"top": (offset.top <= 40 ? (offset.top + height) : (offset.top - 40)), left: offset.left, width: width});
+        var yPosition = offset.top - $(".sibu_content_panel").offset().top;
+        overlay.find(".overlay_top").css("height", yPosition);
+        overlay.find(".overlay_bottom").css("top", yPosition + height);
+        overlay.find(".overlay_left").css({"height": height, "width": offset.left, "top": yPosition});
+        overlay.find(".overlay_right").css({"height": height, "left": offset.left + width, "top": yPosition});
+        overlay.find(".edit_mode_actions").css({"top": (yPosition <= 40 ? (yPosition + height) : (yPosition - 40)), left: offset.left, width: width});
         overlay.show();
+        window.scrollTo(0, yPosition);
         initInnerOverlays(elt);
         elt.remove();
     }

@@ -36,9 +36,9 @@ module Sibu
 
     def site_section(id, sub_id = nil, &block)
       @sb_entity = @site
-      @sb_section = sub_id ? [id, sub_id] : id
+      @sb_section = sub_id ? [id, sub_id] : [id]
       if block_given?
-        "<sb-edit data-id='#{id}' data-entity='site'>#{capture(self, &block)}</sb-edit>".html_safe
+        "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='site'>#{capture(self, &block)}</sb-edit>".html_safe
       else
         self
       end
@@ -46,8 +46,8 @@ module Sibu
 
     def section(id, sub_id = nil, &block)
       @sb_entity = @page
-      @sb_section = sub_id ? [id, sub_id] : id
-      "<sb-edit data-id='#{id}' data-entity='page'>#{capture(self, &block)}</sb-edit>".html_safe
+      @sb_section = sub_id ? [id, sub_id] : [id]
+      "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='page'>#{capture(self, &block)}</sb-edit>".html_safe
     end
 
     def site_sections(id)
@@ -64,13 +64,13 @@ module Sibu
 
     def each
       # Todo : init array when empty
-      @sb_entity.section(@sb_section).each do |elt|
+      @sb_entity.section(*@sb_section).each do |elt|
         yield(elt.except("elements"), elt["elements"])
       end
     end
 
     def each_elements
-      @sb_entity.section(@sb_section).each do |elt|
+      @sb_entity.section(*@sb_section).each do |elt|
         yield(*elt["elements"])
       end
     end

@@ -20,22 +20,14 @@ module Sibu
       elsif ids.length == 2
         subsection(*ids)
       end
-      #   s = section(ids[0])
-      #   sub = s.select {|elt| elt["id"] == ids[1]}
-      #   unless sub
-      #     sub = {"id" => ids[1], "elements" => []}
-      #     self.sections[ids[0]] << sub
-      #     save
-      #   end
-      #   elts = sub
-      # end
-      # elts.blank? ? {"default" => {}} : Hash[elts.map {|e| [e["id"], e.except("id")]}]
     end
 
     def subsection(id, subid)
       s = section(id)
-      sub = s.select {|elt| elt["id"] == subid}.first
-      unless sub
+      sub_idx = s.index {|elt| elt["id"] == subid}
+      if sub_idx
+        sub = s[sub_idx]
+      else
         sub = {"id" => subid, "elements" => []}
         self.sections[id] << sub
         save
@@ -43,21 +35,23 @@ module Sibu
       sub["elements"]
     end
 
-    def element(section_id, element_id)
-      elt = section(section_id).select {|e| e["id"] == element_id}.first
+    def element(*ids, element_id)
+      elt = section(*ids).select {|e| e["id"] == element_id}.first
       elt || {}
     end
 
     def update_section(*ids, value)
     end
 
-    def update_element(section_id, value)
+    def update_element(*ids, value)
       sanitize_value(value)
-      if self.sections[section_id].any? {|elt| elt["id"] == value["id"]}
-        self.sections[section_id].map! {|elt| elt["id"] == value["id"] ? value : elt}
+      parent_section = section(*ids)
+      if parent_section.any? {|elt| elt["id"] == value["id"]}
+        parent_section.map! {|elt| elt["id"] == value["id"] ? value : elt}
       else
-        self.sections[section_id] << value
+        parent_section << value
       end
+
       value if save
     end
 

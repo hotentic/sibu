@@ -6,4 +6,14 @@
   <div class="sibu_form">
     <%= render 'form' %>
   </div>
+  <h2>Aperçu des modèles</h2>
+  <div>
+    <% Sibu::SiteTemplate.all.each do |st| %>
+      <div class="sibu_template">
+        <h3><%= st.name %></h3>
+        <%= image_tag "#{st.path}1" %>
+        <%= image_tag "#{st.path}2" %>
+      </div>
+    <% end %>
+  </div>
 </div>

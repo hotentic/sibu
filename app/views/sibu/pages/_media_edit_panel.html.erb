@@ -1,8 +1,9 @@
 <h2>Modifier l'image</h2>
 <div id="edit_msg"></div>
-<div class="sibu_form">
+<div class="sibu_edit_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
-    <div class="sibu_select_images">
+    <div class="sibu_select_images sibu_field">
+      <p>Sélectionnez ou <%= link_to 'téléchargez', new_site_image_path(@site.id) %> une image</p>
       <% @site.images.each do |image| %>
       <div class="sibu_image">
         <%= image_tag image.file_url(:small) %>
