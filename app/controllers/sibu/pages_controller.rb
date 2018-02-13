@@ -38,7 +38,7 @@ module Sibu
 
     def create
       @page = Sibu::Page.new(page_params)
-      if @page.save
+      if @page.save_and_init
         redirect_to site_pages_url(@page.site_id), notice: "La page a bien été créée."
       else
         flash.now[:alert] = "Une erreur s'est produite lors de la création de la page."

@@ -31,7 +31,7 @@ module Sibu
           self.pages << Sibu::Page.new(p)
         end
       end
-      save!
+      save
     end
 
     def pages_path_by_id
