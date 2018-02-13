@@ -25,8 +25,10 @@
           <div class="overlay_left"></div>
           <div class="overlay_bottom"></div>
           <div class="edit_mode_actions">
-            <p>Modifier la section</p>
-            <button onclick="cancelEditMode()">Fermer</button>
+            <p id="edit_section_msg">Modifier la section</p>
+            <button id="clone_section" onclick="cloneSection()">Dupliquer</button>
+            <button id="delete_section" onclick="deleteSection()">Supprimer</button>
+            <button onclick="cancelEditMode()">Annuler</button>
           </div>
         </div>
       <% end %>
@@ -47,13 +49,23 @@
         var width = elt.width(), height = elt.height();
         var overlay = $("#edit_mode_overlay");
         var yPosition = offset.top - $(".sibu_content_panel").offset().top;
+        var section = elt.parents("sb-edit").first();
         overlay.find(".overlay_top").css("height", yPosition);
         overlay.find(".overlay_bottom").css("top", yPosition + height);
         overlay.find(".overlay_left").css({"height": height, "width": offset.left, "top": yPosition});
         overlay.find(".overlay_right").css({"height": height, "left": offset.left + width, "top": yPosition});
         overlay.find(".edit_mode_actions").css({"top": (yPosition <= 40 ? (yPosition + height) : (yPosition - 40)), left: offset.left, width: width});
+        overlay.find("#edit_section_msg").text("Modifier la section");
         overlay.show();
+        if(!section.data('duplicate')) {
+            overlay.find("#clone_section").hide();
+            overlay.find("#delete_section").hide();
+        } else {
+            overlay.find("#clone_section").show();
+            overlay.find("#delete_section").show();
+        }
         window.scrollTo(0, yPosition);
+        section.addClass('sb-editing');
         initInnerOverlays(elt);
         elt.remove();
     }
@@ -61,7 +73,36 @@
     function cancelEditMode() {
         $("#edit_mode_overlay").hide();
         cancelEdit();
+        $("sb-edit.sb-editing").removeClass("sb-editing");
         initOverlays();
+    }
+
+    function cloneSection() {
+        if (window.confirm("Dupliquer la section ?")) {
+            var section = $("sb-edit.sb-editing");
+            $.ajax({
+                url: "<%= clone_section_site_page_path(@site.id, @page.id) %>",
+                method: "POST",
+                data: {
+                    section_id: section.data("id"),
+                    entity: section.data("entity")
+                }
+            })
+        }
+    }
+
+    function deleteSection() {
+        if (window.confirm("Supprimer la section ?")) {
+            var section = $("sb-edit.sb-editing");
+            $.ajax({
+                url: "<%= delete_section_site_page_path(@site.id, @page.id) %>",
+                method: "DELETE",
+                data: {
+                    section_id: section.data("id"),
+                    entity: section.data("entity")
+                }
+            })
+        }
     }
 
     function cancelEdit() {

@@ -2,9 +2,10 @@ require_dependency "sibu/application_controller"
 
 module Sibu
   class PagesController < ApplicationController
-    before_action :set_page, only: [:edit, :update, :destroy, :edit_element, :update_element, :edit_section]
+    before_action :set_page, only: [:edit, :update, :destroy, :edit_element, :update_element, :edit_section,
+                                    :clone_section, :delete_section]
     before_action :set_site, only: [:index, :new]
-    before_action :set_edit_context, only: [:edit_element, :update_element]
+    before_action :set_edit_context, only: [:edit_element, :update_element, :clone_section, :delete_section]
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
@@ -81,6 +82,16 @@ module Sibu
     end
 
     def update_section
+    end
+
+    def clone_section
+      @section_id = params[:section_id]
+      @cloned = @entity.clone_section(*@section_id.split('|'))
+    end
+
+    def delete_section
+      @section_id = params[:section_id]
+      @deleted = @entity.delete_section(*@section_id.split('|'))
     end
 
     private

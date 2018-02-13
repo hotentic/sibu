@@ -47,8 +47,21 @@ module Sibu
     def section(id, sub_id = nil, &block)
       @sb_entity = @page
       @sb_section = sub_id ? [id, sub_id] : [id]
-      "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='page'>#{capture(self, &block)}</sb-edit>".html_safe
+      "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='page' data-duplicate='#{!sub_id.nil?}'>#{capture(self, &block)}</sb-edit>".html_safe
     end
+
+    # def site_sections(id, &block)
+      # @site.section(id).map {|s| s["id"]}.each do |s|
+      #   site_section(id, sub_id, &block)
+      # end
+    #   out = ''
+    #   @sb_entity = @site
+    #   @site.section(id).map do |s|
+    #     @sb_section = [id, s["id"]]
+    #     out += "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='site' data-duplicate='true'>#{capture(self, &block)}</sb-edit>".html_safe
+    #   end
+    #   out.html_safe
+    # end
 
     def site_sections(id)
       @site.section(id).map {|s| s["id"]}

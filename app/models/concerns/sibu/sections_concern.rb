@@ -12,6 +12,7 @@ module Sibu
           s = sections[ids[0]]
         end
         if s.nil?
+          logger.debug("init section #{ids[0]}")
           s = []
           self.sections[ids[0]] = s
           save
@@ -28,6 +29,7 @@ module Sibu
       if sub_idx
         sub = s[sub_idx]
       else
+        logger.debug("init section #{subid}")
         sub = {"id" => subid, "elements" => []}
         self.sections[id] << sub
         save
@@ -37,8 +39,11 @@ module Sibu
 
     def element(*ids, element_id)
       elt = section(*ids).select {|e| e["id"] == element_id}.first
-      elt || {}
+      elt || {"id" => element_id}
     end
+
+    # Todo : add an "elements" method
+    # and make section and subsection return sections
 
     def update_section(*ids, value)
     end
@@ -53,6 +58,26 @@ module Sibu
       end
 
       value if save
+    end
+
+    def clone_section(*ids)
+      siblings = section(ids.first)
+      ref_index = siblings.index {|s| s["id"] == ids.last}
+      new_section = siblings[ref_index].deep_dup
+      new_section["id"] = ids.last + '§'
+      siblings.insert(ref_index + 1, new_section)
+      save ? new_section : nil
+    end
+
+    def delete_section(*ids)
+      siblings = section(ids.first)
+      if siblings.length == 1
+        nil
+      else
+        ref_index = siblings.index {|s| s["id"] == ids.last}
+        siblings.delete_at(ref_index)
+        save
+      end
     end
 
     def sanitize_value(value)

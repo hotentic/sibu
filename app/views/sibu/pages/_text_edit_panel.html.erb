@@ -1,6 +1,6 @@
 <h2>Modifier le texte</h2>
 <div id="edit_msg"></div>
-<div class="sibu_form">
+<div class="sibu_edit_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
     <%= trix_editor_tag 'element[text]', '', input: 'element_text' %>
     <%= hidden_field_tag 'element[id]', @element["id"] %>

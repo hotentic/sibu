@@ -1,0 +1,7 @@
+<% if @deleted %>
+$(".sibu_content_panel").find("[data-id='<%= @section_id %>']").first().remove();
+cancelEditMode();
+<% else %>
+$("#edit_section_msg").text("Une erreur s'est produite lors de la suppression.");
+<% end %>
+
