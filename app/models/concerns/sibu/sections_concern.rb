@@ -60,6 +60,22 @@ module Sibu
       value if save
     end
 
+    def clone_element(*ids, element_id)
+      siblings = section(*ids)
+      ref_index = siblings.index {|s| s["id"] == element_id}
+      new_elt = siblings[ref_index].deep_dup
+      new_elt["id"] = element_id + '§'
+      siblings.insert(ref_index + 1, new_elt)
+      save ? new_elt : nil
+    end
+
+    def delete_element(*ids, element_id)
+      siblings = section(*ids)
+      ref_index = siblings.index {|s| s["id"] == element_id}
+      siblings.delete_at(ref_index)
+      save
+    end
+
     def clone_section(*ids)
       siblings = section(ids.first)
       ref_index = siblings.index {|s| s["id"] == ids.last}

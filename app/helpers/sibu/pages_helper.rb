@@ -19,7 +19,7 @@ module Sibu
 
     [:h1, :h2, :h3, :h4, :h5, :h6, :p, :span, :div].each do |t|
       define_method(t) do |elt, html_opts = {}|
-        defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt,"text" => "Texte à modifier"}
+        defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => "Texte à modifier"}
         content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
         html_opts.merge!({class: "sb-#{t} #{html_opts[:class]}", data: {id:  elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
         content_tag(t, raw(content["text"]).html_safe, html_opts)
@@ -38,7 +38,11 @@ module Sibu
       @sb_entity = @site
       @sb_section = sub_id ? [id, sub_id] : [id]
       if block_given?
-        "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='site'>#{capture(self, &block)}</sb-edit>".html_safe
+        if action_name != 'show'
+          "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='site'>#{capture(self, &block)}</sb-edit>".html_safe
+        else
+          capture(self, &block)
+        end
       else
         self
       end
@@ -47,7 +51,11 @@ module Sibu
     def section(id, sub_id = nil, &block)
       @sb_entity = @page
       @sb_section = sub_id ? [id, sub_id] : [id]
-      "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='page' data-duplicate='#{!sub_id.nil?}'>#{capture(self, &block)}</sb-edit>".html_safe
+      if action_name != 'show'
+        "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='page' data-duplicate='#{!sub_id.nil?}'>#{capture(self, &block)}</sb-edit>".html_safe
+      else
+        capture(self, &block)
+      end
     end
 
     # def site_sections(id, &block)
@@ -88,19 +96,60 @@ module Sibu
       end
     end
 
-    def img(elt, html_opts = {})
+    def img(elt, opts = {})
+      wrapper = opts.delete(:wrapper)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => "/default.jpg"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({class: "sb-img #{html_opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
-      content_tag(:img, nil, content.except("id").merge(html_opts))
+      opts.merge!({class: "sb-img #{opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
+      wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts) : content_tag(:img, nil, content.except("id").merge(opts))
     end
 
-    def bg_img(elt, html_opts = {})
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => "/default.jpg"}
-      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({class: "sb-img #{html_opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
-      content_tag(:div, content_tag(:img, nil, content.except("id")), html_opts)
+    # Note : see ActionView::OutputBuffer
+    def sb_page
+      @sb_entity = @page
+      self
     end
+    alias page sb_page
+
+    def sb_site
+      @sb_entity = @site
+      self
+    end
+    alias site sb_site
+
+    def repeat(&block)
+      ((action_name != 'show' ? "<sb-edit data-id='#{@sb_section}' data-entity='#{@sb_entity == @site ? 'site' : 'page'}'>" : '') +
+          @sb_entity.section(@sb_section).map {|elt| capture(elt, &block)}.join('') +
+        (action_name != 'show' ? "</sb-edit>" : '')).html_safe
+    end
+
+    def secsion(id)
+      @sb_section = id
+      if block_given?
+        if current_action != 'show'
+          "<sb-edit data-id='#{@sb_section}' data-entity='#{@sb_entity == @site ? 'site' : 'page'}'>#{capture(self, &block)}</sb-edit>".html_safe
+        else
+          capture(self, &block)
+        end
+      else
+        self
+      end
+    end
+
+    def secsions(id)
+
+    end
+
+    def elts
+
+    end
+
+    # def bg_img(elt, html_opts = {})
+    #   defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => "/default.jpg"}
+    #   content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
+    #   html_opts.merge!({class: "sb-img #{html_opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
+    #   content_tag(:div, content_tag(:img, nil, content.except("id")), html_opts)
+    # end
 
     def link(elt, html_opts = {}, &block)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "value" => "", "text" => "Nouveau lien"}

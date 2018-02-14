@@ -11,6 +11,7 @@
     <%= javascript_include_tag @site.site_template.path %>
   <% end %>
   <%= csrf_meta_tags %>
+  <%= yield :styles %>
 </head>
 <body>
 

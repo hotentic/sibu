@@ -4,6 +4,7 @@
     <%= f.file_field :file %>
   </div>
   <%= f.hidden_field :site_id %>
+  <%= hidden_field_tag :page_id, @page_id %>
   <div class="sibu_actions">
     <%= f.submit 'Valider' %>
     <%= link_to 'Annuler', :back %>

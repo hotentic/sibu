@@ -9,6 +9,8 @@
 
 sb-edit {
     position: relative;
+    display: inherit;
+    width: 100%;
 }
 
 sb-edit div.sb-overlay {

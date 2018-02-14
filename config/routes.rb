@@ -10,6 +10,8 @@ Sibu::Engine.routes.draw do
         get :edit_element, on: :member
         get :edit_section, on: :member
         patch 'update_element', on: :member
+        post 'clone_element', on: :member
+        delete 'delete_element', on: :member
         patch 'update_section', on: :member
         post 'clone_section', on: :member
         delete 'delete_section', on: :member

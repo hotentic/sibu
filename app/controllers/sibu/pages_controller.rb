@@ -2,10 +2,11 @@ require_dependency "sibu/application_controller"
 
 module Sibu
   class PagesController < ApplicationController
-    before_action :set_page, only: [:edit, :update, :destroy, :edit_element, :update_element, :edit_section,
-                                    :clone_section, :delete_section]
+    before_action :set_page, only: [:edit, :update, :destroy, :edit_element, :update_element, :clone_element,
+                                    :delete_element, :edit_section, :clone_section, :delete_section]
     before_action :set_site, only: [:index, :new]
-    before_action :set_edit_context, only: [:edit_element, :update_element, :clone_section, :delete_section]
+    before_action :set_edit_context, only: [:edit_element, :update_element, :clone_element, :delete_element,
+                                            :clone_section, :delete_section]
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
@@ -78,6 +79,14 @@ module Sibu
       @updated = @entity.update_element(*@section_id.split('|'), element_params)
     end
 
+    def clone_element
+      @cloned = @entity.clone_element(*@section_id.split('|'), @element_id)
+    end
+
+    def delete_element
+      @deleted = @entity.delete_element(*@section_id.split('|'), @element_id)
+    end
+
     def edit_section
     end
 
@@ -85,12 +94,10 @@ module Sibu
     end
 
     def clone_section
-      @section_id = params[:section_id]
       @cloned = @entity.clone_section(*@section_id.split('|'))
     end
 
     def delete_section
-      @section_id = params[:section_id]
       @deleted = @entity.delete_section(*@section_id.split('|'))
     end
 

@@ -4,12 +4,61 @@
     <%= f.text_field :name, placeholder: "Ex : Site de l'Hôtel du Lac" %>
   </div>
   <div class="sibu_field">
+    <%= f.label :name, 'Nom de domaine' %>
+    <%= f.text_field :domain, placeholder: "Ex : www.monsite.com (utilisé lors de la mise en ligne du site)" %>
+  </div>
+  <div class="sibu_field">
     <%= f.label :site_template_id, 'Modèle' %>
-    <%= f.collection_select(:site_template_id, Sibu::SiteTemplate.all, :id, :name, {prompt: 'Sélectionnez un modèle de site'}) %>
+    <%= f.collection_select(:site_template_id, Sibu::SiteTemplate.all, :id, :name, {prompt: 'Sélectionnez un modèle de site'}, disabled: @site.persisted?) %>
+  </div>
+  <div class="sibu_field sibu_colors">
+    <%= f.label :primary_color, 'Couleur principale' %>
+    <div>
+      <% primary_colors.each do |c| %>
+        <span class="sibu_color <%= 'selected' if f.object.primary_color == c %>" data-color="<%= c %>" style="background-color: <%= c %>;"></span>
+      <% end %>
+    </div>
+    <%= f.hidden_field :primary_color %>
+  </div>
+  <div class="sibu_field sibu_colors">
+    <%= f.label :secondary_color, 'Couleur secondaire' %>
+    <div>
+      <% secondary_colors.each do |c| %>
+        <span class="sibu_color <%= 'selected' if f.object.secondary_color == c %>" data-color="<%= c %>" style="background-color: <%= c %>;"></span>
+      <% end %>
+    </div>
+    <%= f.hidden_field :secondary_color %>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :name, 'Police de caractères (titres)' %>
+
+  </div>
+  <div class="sibu_field">
+    <%= f.label :name, 'Police de caractères (corps)' %>
+
   </div>
   <%= f.hidden_field :user_id %>
   <div class="sibu_actions">
     <%= f.submit 'Valider' %>
     <%= link_to 'Annuler', :back %>
   </div>
+<% end %>
+
+<% content_for :scripts do %>
+  <script>
+      $(".sibu_colors").each(function () {
+          var colors = $(this).find(".sibu_color");
+          var input = $(this).find("input");
+          colors.click(function () {
+              if($(this).hasClass('selected')) {
+                  $(this).removeClass("selected");
+                  input.val('');
+              } else {
+                  colors.removeClass("selected");
+                  $(this).addClass('selected');
+                  input.val($(this).data("color"));
+              }
+          });
+      });
+  </script>
 <% end %>

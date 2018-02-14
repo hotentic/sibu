@@ -17,7 +17,7 @@
     <% @pages.each do |p| %>
       <tr>
         <td><%= p.name %></td>
-        <td><%= p.template %></td>
+        <td><%= t "sibu.templates.#{p.template}" %></td>
         <td><%= p.path %></td>
         <td><%= l p.updated_at %></td>
         <td colspan="2">

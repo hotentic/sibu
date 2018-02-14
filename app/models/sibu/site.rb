@@ -2,6 +2,8 @@ module Sibu
   class Site < ApplicationRecord
     include Sibu::SectionsConcern
 
+    store :custom_data, accessors: [:primary_font, :secondary_font, :primary_color, :secondary_color], coder: JSON
+
     belongs_to :site_template, :class_name => 'Sibu::SiteTemplate'
     has_many :pages, :class_name => 'Sibu::Page', dependent: :destroy
     has_many :images, :class_name => 'Sibu::Image', dependent: :destroy
