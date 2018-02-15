@@ -7,9 +7,13 @@ editPanel.html("");
   editorElt.editor.loadHTML("<%= j(raw(text_value.gsub("\n", "<br/>"))) %>");
 <% elsif @content_type == 'media' %>
   editPanel.html("<%= j(render 'media_edit_panel') %>");
-  editPanel.find(".sibu_image img").click(function() {
-    $(this).toggleClass('selected');
-    $("#element_src").val($(this).attr("src"));
+  var images = editPanel.find(".sibu_image img");
+  images.click(function() {
+    if(!$(this).hasClass('selected')) {
+      images.removeClass('selected');
+      $(this).addClass('selected');
+      $("#element_src").val($(this).attr("src"));
+    }
   });
 <% elsif @content_type == 'link' %>
   editPanel.html("<%= j(render 'link_edit_panel') %>");

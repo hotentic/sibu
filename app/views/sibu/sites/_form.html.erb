@@ -31,11 +31,11 @@
   </div>
   <div class="sibu_field">
     <%= f.label :name, 'Police de caractères (titres)' %>
-
+    <%= f.select :primary_font, primary_fonts, {prompt: 'Police par défaut'} %>
   </div>
   <div class="sibu_field">
     <%= f.label :name, 'Police de caractères (corps)' %>
-
+    <%= f.select :secondary_font, secondary_fonts, {prompt: 'Police par défaut'} %>
   </div>
   <%= f.hidden_field :user_id %>
   <div class="sibu_actions">

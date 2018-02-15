@@ -72,19 +72,20 @@ module Sibu
     def edit_element
       @content_type = params[:content_type]
       @links = @site.pages_path_by_id if @site
-      @element = @entity.element(*@section_id.split('|'), @element_id)
+      @element = @entity.element(*@section_id.split('|'), *@element_id.split('|'))
     end
 
     def update_element
-      @updated = @entity.update_element(*@section_id.split('|'), element_params)
+      ids = (@section_id.split('|') + @element_id.split('|')).uniq[0...-1]
+      @updated = @entity.update_element(*ids, element_params)
     end
 
     def clone_element
-      @cloned = @entity.clone_element(*@section_id.split('|'), @element_id)
+      @cloned = @entity.clone_element(*@section_id.split('|'), *@element_id.split('|'))
     end
 
     def delete_element
-      @deleted = @entity.delete_element(*@section_id.split('|'), @element_id)
+      @deleted = @entity.delete_element(*@section_id.split('|'), *@element_id.split('|'))
     end
 
     def edit_section

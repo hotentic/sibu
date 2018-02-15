@@ -9,11 +9,11 @@ module Sibu
     end
 
     def primary_fonts
-      Rails.application.config.sibu[:primary_fonts]
+      [''] + Rails.application.config.sibu[:primary_fonts]
     end
 
     def secondary_fonts
-      Rails.application.config.sibu[:secondary_fonts]
+      [''] + Rails.application.config.sibu[:secondary_fonts]
     end
   end
 end

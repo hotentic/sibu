@@ -21,7 +21,7 @@ module Sibu
       define_method(t) do |elt, html_opts = {}|
         defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => "Texte à modifier"}
         content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-        html_opts.merge!({class: "sb-#{t} #{html_opts[:class]}", data: {id:  elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
+        html_opts.merge!({class: "sb-#{t} #{html_opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
         content_tag(t, raw(content["text"]).html_safe, html_opts)
       end
     end
@@ -100,7 +100,7 @@ module Sibu
       wrapper = opts.delete(:wrapper)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => "/default.jpg"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      opts.merge!({class: "sb-img #{opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
+      opts.merge!({class: "sb-img #{opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
       wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts) : content_tag(:img, nil, content.except("id").merge(opts))
     end
 
@@ -117,31 +117,53 @@ module Sibu
     end
     alias site sb_site
 
-    def repeat(&block)
-      ((action_name != 'show' ? "<sb-edit data-id='#{@sb_section}' data-entity='#{@sb_entity == @site ? 'site' : 'page'}'>" : '') +
-          @sb_entity.section(@sb_section).map {|elt| capture(elt, &block)}.join('') +
-        (action_name != 'show' ? "</sb-edit>" : '')).html_safe
+    # def repeat(id, tag, html_opts = {}, &block)
+    #   @sb_section = [id]
+    #   opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => id, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
+    #   ((action_name != 'show' ? "<sb-edit data-id='#{@sb_section}' data-entity='#{@sb_entity == @site ? 'site' : 'page'}'>" : '') +
+    #       @sb_entity.section(@sb_section).map {|elt| capture(elt, &block)}.join('') +
+    #     (action_name != 'show' ? "</sb-edit>" : '')).html_safe
+    # end
+
+    # def secsion(id)
+    #   @sb_section = id
+    #   if block_given?
+    #     if current_action != 'show'
+    #       "<sb-edit data-id='#{@sb_section}' data-entity='#{@sb_entity == @site ? 'site' : 'page'}'>#{capture(self, &block)}</sb-edit>".html_safe
+    #     else
+    #       capture(self, &block)
+    #     end
+    #   else
+    #     self
+    #   end
+    # end
+    #
+    # def secsions(id)
+    #
+    # end
+
+    def secsion(id, tag, html_opts = {}, &block)
+      @sb_section = [id]
+      opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => id, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
+      content_tag(tag, capture(self, &block), opts)
     end
 
-    def secsion(id)
-      @sb_section = id
-      if block_given?
-        if current_action != 'show'
-          "<sb-edit data-id='#{@sb_section}' data-entity='#{@sb_entity == @site ? 'site' : 'page'}'>#{capture(self, &block)}</sb-edit>".html_safe
-        else
-          capture(self, &block)
-        end
-      else
-        self
+    def secsions(id, tag, html_opts = {}, &block)
+      (@sb_entity.section(id).map.with_index do |elt, i|
+        @sb_section = [id, elt["id"]]
+        opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => @sb_section.join('|'), "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
+        content_tag(tag, capture(self, i, &block), opts)
+      end).join('').html_safe
+    end
+
+    # Note : could work well - set the ids hierarchy in elements retrieved from the db
+    def elts(id)
+      items = []
+      @sb_entity.section(*@sb_section, id).each do |item|
+        item["id"] = [id, item["id"]].join("|")
+        items << item
       end
-    end
-
-    def secsions(id)
-
-    end
-
-    def elts
-
+      items
     end
 
     # def bg_img(elt, html_opts = {})
@@ -154,7 +176,7 @@ module Sibu
     def link(elt, html_opts = {}, &block)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "value" => "", "text" => "Nouveau lien"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({class: "sb-link #{html_opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
+      html_opts.merge!({class: "sb-link #{html_opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
       val = content["value"] || ""
       if val.to_s.include?('http')
         href = val
@@ -171,15 +193,19 @@ module Sibu
     def form_label(elt, html_opts = {}, &block)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => "Texte à modifier"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({class: "sb-label #{html_opts[:class]}", data: {id:  elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
+      html_opts.merge!({class: "sb-label #{html_opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
       content_tag(:label, raw(content["text"]).html_safe, html_opts)
     end
 
     def interactive_map(elt, html_opts = {}, &block)
       defaults = {"data-lat" => "45.68854", "data-lng" => "5.91587", "data-title" => "Titre marqueur"}
       content = elt.is_a?(Hash) ? defaults.merge(elt) : (select_element(elt) || {"id" => elt}).merge(defaults)
-      html_opts.merge!({class: "sb-map #{html_opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
+      html_opts.merge!({class: "sb-map #{html_opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
       content_tag(:div, nil, content.merge(html_opts))
+    end
+
+    def elt_id(elt)
+      elt.is_a?(Hash) ? elt["id"] : elt
     end
   end
 end

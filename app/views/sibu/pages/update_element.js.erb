@@ -2,13 +2,18 @@
   $("#edit_panel #edit_msg").html("<p class='sibu_alert'>Une erreur s'est produite lors de l'enregistrement.</p>");
 <% else %>
   $("#edit_panel").slideUp();
-  var updatedElt = $("sb-edit[data-id='<%= @section_id %>']").find("[data-id='<%= @updated["id"] %>']");
+  var updatedElt = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']");
   <% if @updated["text"] %>
     updatedElt.html("<%= j(raw @updated["text"]) %>");
   <% end %>
   <% unless @updated.except("id", "text").blank? %>
+    var tag = updatedElt.prop("tagName").toLowerCase();
     <% @updated.except("id", "text").each_pair do |attr, val| %>
-      updatedElt.attr("<%= attr %>", "<%= val %>");
+      if(("<%= attr %>" === 'src' || "<%= attr %>" === 'alt') && tag !== 'img') {
+        updatedElt.find("img").attr("<%= attr %>", "<%= val %>");
+      } else {
+        updatedElt.attr("<%= attr %>", "<%= val %>");
+      }
     <% end %>
   <% end %>
 <% end %>

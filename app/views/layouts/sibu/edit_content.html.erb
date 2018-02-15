@@ -10,6 +10,12 @@
     <%= stylesheet_link_tag @site.site_template.path, media: "all" %>
     <%= javascript_include_tag "#{@site.site_template.path}-core" %>
   <% end %>
+  <% unless @site.primary_font.blank? %>
+    <%= stylesheet_link_tag "fonts/#{@site.primary_font.downcase}", media: "all" %>
+  <% end %>
+  <% unless @site.secondary_font.blank? %>
+    <%= stylesheet_link_tag "fonts/#{@site.secondary_font.downcase}", media: "all" %>
+  <% end %>
   <%= csrf_meta_tags %>
   <%= yield :styles %>
 </head>
@@ -29,10 +35,11 @@
             <p id="edit_section_msg">Modifier la section</p>
             <button id="clone_section" onclick="cloneSection()">Dupliquer</button>
             <button id="delete_section" onclick="deleteSection()">Supprimer</button>
-            <button onclick="cancelEditMode()">Annuler</button>
+            <button onclick="cancelEditMode()">Fermer</button>
           </div>
         </div>
-      <% end %>
+        <div id="edit_overlays"></div>
+    <% end %>
     </div>
   <% end %>
 <% end %>
@@ -45,48 +52,48 @@
         initOverlays();
     });
 
-    function setEditMode(elt) {
-        var offset = elt.offset();
-        var width = elt.width(), height = elt.height();
-        var overlay = $("#edit_mode_overlay");
-        var yPosition = offset.top - $(".sibu_content_panel").offset().top;
-        var section = elt.parents("sb-edit").first();
-        overlay.find(".overlay_top").css("height", yPosition);
-        overlay.find(".overlay_bottom").css("top", yPosition + height);
-        overlay.find(".overlay_left").css({"height": height, "width": offset.left, "top": yPosition});
-        overlay.find(".overlay_right").css({"height": height, "left": offset.left + width, "top": yPosition});
-        overlay.find(".edit_mode_actions").css({"top": (yPosition <= 40 ? (yPosition + height) : (yPosition - 40)), left: offset.left, width: width});
-        overlay.find("#edit_section_msg").text("Modifier la section");
-        overlay.show();
+    function setEditMode(section, overlay, left, top, width, height) {
+        // var offset = elt.offset();
+        // var width = elt.width(), height = elt.height();
+        var editMode = $("#edit_mode_overlay");
+        // var yPosition = offset.top - $(".sibu_content_panel").offset().top;
+        // var section = elt.parents("sb-edit").first();
+        editMode.find(".overlay_top").css("height", top);
+        editMode.find(".overlay_bottom").css("top", top + height);
+        editMode.find(".overlay_left").css({"height": height, "width": left, "top": top});
+        editMode.find(".overlay_right").css({"height": height, "left": left + width, "top": top});
+        editMode.find(".edit_mode_actions").css({"top": (top <= 40 ? (top + height) : (top - 40)), left: left, width: width});
+        editMode.find("#edit_section_msg").text("Modifier la section");
+        editMode.show();
         if(!section.data('duplicate')) {
-            overlay.find("#clone_section").hide();
-            overlay.find("#delete_section").hide();
+            editMode.find("#clone_section").hide();
+            editMode.find("#delete_section").hide();
         } else {
-            overlay.find("#clone_section").show();
-            overlay.find("#delete_section").show();
+            editMode.find("#clone_section").show();
+            editMode.find("#delete_section").show();
         }
-        window.scrollTo(0, yPosition);
+        window.scrollTo(0, top);
         section.addClass('sb-editing');
-        initInnerOverlays(elt);
-        elt.remove();
+        initInnerOverlays(section);
+        $("#edit_overlays").html("");
     }
 
     function cancelEditMode() {
         $("#edit_mode_overlay").hide();
         cancelEdit();
-        $("sb-edit.sb-editing").removeClass("sb-editing");
+        $(".sb-editing").removeClass("sb-editing");
         initOverlays();
     }
 
     function cloneSection() {
         if (window.confirm("Dupliquer la section ?")) {
-            var section = $("sb-edit.sb-editing");
+            var section = $(".sb-editing").first();
             $.ajax({
                 url: "<%= clone_section_site_page_path(@site.id, @page.id) %>",
                 method: "POST",
                 data: {
-                    section_id: section.data("id"),
-                    entity: section.data("entity")
+                    section_id: section.data("sb-id"),
+                    entity: section.data("sb-entity")
                 }
             })
         }
@@ -94,13 +101,13 @@
 
     function deleteSection() {
         if (window.confirm("Supprimer la section ?")) {
-            var section = $("sb-edit.sb-editing");
+            var section = $(".sb-editing").first();
             $.ajax({
                 url: "<%= delete_section_site_page_path(@site.id, @page.id) %>",
                 method: "DELETE",
                 data: {
-                    section_id: section.data("id"),
-                    entity: section.data("entity")
+                    section_id: section.data("sb-id"),
+                    entity: section.data("sb-entity")
                 }
             })
         }
@@ -123,8 +130,8 @@
         })
     }
 
-    function initInnerOverlays(elt) {
-        var editables = elt.parents("sb-edit").first().find("[class*='sb-']");
+    function initInnerOverlays(section) {
+        var editables = section.find("[class*='sb-']");
         editables.off();
         editables.hover(function() {
             $(this).addClass("sb-editable");
@@ -134,8 +141,7 @@
         editables.click(function(evt) {
             evt.preventDefault();
             var elt = $(this), tag = elt.prop("tagName").toLowerCase();
-            var section = elt.parents("sb-edit").first();
-            var eltId = elt.data("id"), sectionId = section.data("id"), entity = section.data("entity");
+            var eltId = elt.data("id"), sectionId = section.data("sb-id"), entity = section.data("sb-entity");
             if (TEXT_TAGS.indexOf(tag) !== -1) {
                 editContent(eltId, sectionId, entity, 'text');
             } else if (IMG_TAGS.indexOf(tag) !== -1 || elt.hasClass('sb-img')) {
@@ -149,25 +155,55 @@
     }
 
     function initOverlays() {
-        $("div.sb-overlay").remove();
-        $("sb-edit").each(function() {
-            var elt = $(this);
-            elt.prepend("<div class='sb-overlay'><a>Modifier</a></div>");
-            var overlay = elt.find(".sb-overlay");
-            var dimensions = overlayDimensions(overlay, elt);
-            overlay.width(dimensions.width);
-            overlay.height(dimensions.height);
-
-            elt.hover(function() {
-                overlay.css("opacity", 1);
-            }, function() {
-                overlay.css("opacity", 0);
-            });
-
-            overlay.click(function() {
-                setEditMode($(this));
-            })
+        // $("div.sb-overlay").remove();
+        // $("sb-edit").each(function() {
+        //     var elt = $(this);
+        //     elt.prepend("<div class='sb-overlay'><a>Modifier</a></div>");
+        //     var overlay = elt.find(".sb-overlay");
+        //     var dimensions = overlayDimensions(overlay, elt);
+        //     overlay.width(dimensions.width);
+        //     overlay.height(dimensions.height);
+        //
+        //     elt.hover(function() {
+        //         overlay.css("opacity", 1);
+        //     }, function() {
+        //         overlay.css("opacity", 0);
+        //     });
+        //
+        //     overlay.click(function() {
+        //         setEditMode($(this));
+        //     })
+        // });
+        var container = $("#edit_overlays");
+        container.html("");
+        $("[data-sb-id]").each(function() {
+          var section = $(this);
+          var offset = section.offset();
+          var yOffset = offset.top - $(".sibu_content_panel").offset().top;
+          var width = section.outerWidth(), height = (section.outerHeight() === 0 ? childrenHeight(section) : section.outerHeight());
+          var overlay = $("<div>Modifier</div>");
+          container.append(overlay);
+          overlay.css({top: yOffset, left: offset.left, width: width, height: height});
+          overlay.hover(function() {
+              $(this).css("opacity", 1);
+          }, function() {
+              $(this).css("opacity", 0);
+          });
+          overlay.click(function() {
+              setEditMode(section, $(this), offset.left, yOffset, width, height);
+          })
         });
+    }
+
+    function childrenHeight(parentElt) {
+        var height = 0;
+        parentElt.find("*").each(function() {
+            var childHeight = $(this).height();
+            if(childHeight > height) {
+                height = childHeight;
+            }
+        });
+        return height;
     }
 
     function overlayDimensions(overlay, element) {
