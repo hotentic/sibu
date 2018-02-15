@@ -1,7 +1,7 @@
 <% if @cloned %>
-var section = $(".sibu_content_panel").find("[data-id='<%= @section_id %>']").first();
+var section = $(".sibu_content_panel").find("[data-sb-id='<%= @section_id %>']").first();
 var newSection = section.clone();
-newSection.data("id", "<%= [@section_id.split('|')[0], @cloned["id"]].join('|') %>");
+newSection.data("sb-id", "<%= [@section_id.split('|')[0], @cloned["id"]].join('|') %>");
 section.after(newSection);
 cancelEditMode();
 <% else %>

@@ -65,7 +65,7 @@
         editMode.find(".edit_mode_actions").css({"top": (top <= 40 ? (top + height) : (top - 40)), left: left, width: width});
         editMode.find("#edit_section_msg").text("Modifier la section");
         editMode.show();
-        if(!section.data('duplicate')) {
+        if(!section.data('sb-repeat')) {
             editMode.find("#clone_section").hide();
             editMode.find("#delete_section").hide();
         } else {

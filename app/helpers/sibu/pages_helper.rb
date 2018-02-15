@@ -144,14 +144,15 @@ module Sibu
 
     def secsion(id, tag, html_opts = {}, &block)
       @sb_section = [id]
-      opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => id, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
+      rpt = html_opts.delete(:repeat)
+      opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => id, "data-sb-repeat" => rpt, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
       content_tag(tag, capture(self, &block), opts)
     end
 
     def secsions(id, tag, html_opts = {}, &block)
       (@sb_entity.section(id).map.with_index do |elt, i|
         @sb_section = [id, elt["id"]]
-        opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => @sb_section.join('|'), "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
+        opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => @sb_section.join('|'), "data-sb-repeat" => true, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
         content_tag(tag, capture(self, i, &block), opts)
       end).join('').html_safe
     end
