@@ -20,6 +20,10 @@ module Sibu
         s
       elsif ids.length == 2
         subsection(*ids)
+      elsif ids.length == 3
+        sub = subsection(*ids[0..1])
+        elt_idx = sub.index {|elt| elt["id"] == ids.last}
+        sub[elt_idx]["elements"]
       end
     end
 

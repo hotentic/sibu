@@ -1,5 +1,6 @@
 <h2>Modifier le lien</h2>
 <div id="edit_msg"></div>
+<%= render 'element_actions' %>
 <div class="sibu_edit_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
     <div class="sibu_field">

@@ -1,0 +1,7 @@
+<% if @deleted %>
+$("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']").first().remove();
+cancelEditMode();
+<% else %>
+$("#edit_section_msg").text("Une erreur s'est produite lors de la suppression.");
+<% end %>
+

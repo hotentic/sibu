@@ -6,4 +6,5 @@ var clonedElt = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @elem
 var newElt = clonedElt.clone();
 newElt.data("id", "<%= @cloned["id"] %>");
 clonedElt.after(newElt);
+cancelEditMode();
 <% end %>

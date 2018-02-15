@@ -18,5 +18,9 @@ editPanel.html("");
 <% elsif @content_type == 'link' %>
   editPanel.html("<%= j(render 'link_edit_panel') %>");
 <% end %>
-
+<% if @repeat %>
+$("#element_actions").show();
+<% else %>
+$("#element_actions").hide();
+<% end %>
 editPanel.slideDown("fast");

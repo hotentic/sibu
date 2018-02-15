@@ -81,6 +81,10 @@
     background-color: white;
 }
 
+#element_actions {
+    display: none;
+}
+
 #edit_overlays > * {
     position: absolute;
     z-index: 999;

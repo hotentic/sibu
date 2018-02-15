@@ -98,9 +98,10 @@ module Sibu
 
     def img(elt, opts = {})
       wrapper = opts.delete(:wrapper)
+      repeat = opts.delete(:repeat)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => "/default.jpg"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      opts.merge!({class: "sb-img #{opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
+      opts.merge!({class: "sb-img #{opts[:class]}", data: {id: elt_id(elt), repeat: repeat}}) if action_name != 'show'
       wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts) : content_tag(:img, nil, content.except("id").merge(opts))
     end
 
@@ -175,9 +176,10 @@ module Sibu
     # end
 
     def link(elt, html_opts = {}, &block)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "value" => "", "text" => "Nouveau lien"}
+      repeat = html_opts.delete(:repeat)
+      defaults = {"id" => elt_id(elt), "value" => "", "text" => "Nouveau lien"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({class: "sb-link #{html_opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
+      html_opts.merge!({class: "sb-link #{html_opts[:class]}", data: {id: elt_id(elt), repeat: repeat}}) if action_name != 'show'
       val = content["value"] || ""
       if val.to_s.include?('http')
         href = val

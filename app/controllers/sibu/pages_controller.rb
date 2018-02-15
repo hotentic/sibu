@@ -73,6 +73,7 @@ module Sibu
       @content_type = params[:content_type]
       @links = @site.pages_path_by_id if @site
       @element = @entity.element(*@section_id.split('|'), *@element_id.split('|'))
+      @repeat = params[:repeat]
     end
 
     def update_element
