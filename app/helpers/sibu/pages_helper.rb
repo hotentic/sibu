@@ -98,7 +98,7 @@ module Sibu
       if val.to_s.include?('http')
         href = val
       else
-        href = @links.keys.include?(val) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
+        href = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
       end
       if block_given?
         content_tag(:a, {href: href}.merge(html_opts), &block)
