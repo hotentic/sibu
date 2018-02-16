@@ -34,66 +34,8 @@ module Sibu
       @sb_entity.section(*@sb_section).select {|elt| elt["id"] == id}.first
     end
 
-    def site_section(id, sub_id = nil, &block)
-      @sb_entity = @site
-      @sb_section = sub_id ? [id, sub_id] : [id]
-      if block_given?
-        if action_name != 'show'
-          "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='site'>#{capture(self, &block)}</sb-edit>".html_safe
-        else
-          capture(self, &block)
-        end
-      else
-        self
-      end
-    end
-
-    def section(id, sub_id = nil, &block)
-      @sb_entity = @page
-      @sb_section = sub_id ? [id, sub_id] : [id]
-      if action_name != 'show'
-        "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='page' data-duplicate='#{!sub_id.nil?}'>#{capture(self, &block)}</sb-edit>".html_safe
-      else
-        capture(self, &block)
-      end
-    end
-
-    # def site_sections(id, &block)
-      # @site.section(id).map {|s| s["id"]}.each do |s|
-      #   site_section(id, sub_id, &block)
-      # end
-    #   out = ''
-    #   @sb_entity = @site
-    #   @site.section(id).map do |s|
-    #     @sb_section = [id, s["id"]]
-    #     out += "<sb-edit data-id='#{@sb_section.join('|')}' data-entity='site' data-duplicate='true'>#{capture(self, &block)}</sb-edit>".html_safe
-    #   end
-    #   out.html_safe
-    # end
-
-    def site_sections(id)
-      @site.section(id).map {|s| s["id"]}
-    end
-
-    def sections(id)
-      @page.section(id).map {|s| s["id"]}
-    end
-
     def elements(id = nil)
       id ? select_element(id)["elements"] : @sb_entity.section(*@sb_section)
-    end
-
-    def each
-      # Todo : init array when empty
-      @sb_entity.section(*@sb_section).each do |elt|
-        yield(elt.except("elements"), elt["elements"])
-      end
-    end
-
-    def each_elements
-      @sb_entity.section(*@sb_section).each do |elt|
-        yield(*elt["elements"])
-      end
     end
 
     def img(elt, opts = {})
@@ -118,44 +60,23 @@ module Sibu
     end
     alias site sb_site
 
-    # def repeat(id, tag, html_opts = {}, &block)
-    #   @sb_section = [id]
-    #   opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => id, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
-    #   ((action_name != 'show' ? "<sb-edit data-id='#{@sb_section}' data-entity='#{@sb_entity == @site ? 'site' : 'page'}'>" : '') +
-    #       @sb_entity.section(@sb_section).map {|elt| capture(elt, &block)}.join('') +
-    #     (action_name != 'show' ? "</sb-edit>" : '')).html_safe
-    # end
-
-    # def secsion(id)
-    #   @sb_section = id
-    #   if block_given?
-    #     if current_action != 'show'
-    #       "<sb-edit data-id='#{@sb_section}' data-entity='#{@sb_entity == @site ? 'site' : 'page'}'>#{capture(self, &block)}</sb-edit>".html_safe
-    #     else
-    #       capture(self, &block)
-    #     end
-    #   else
-    #     self
-    #   end
-    # end
-    #
-    # def secsions(id)
-    #
-    # end
-
-    def secsion(id, tag, html_opts = {}, &block)
+    def section(id, tag, html_opts = {}, &block)
       @sb_section = [id]
       rpt = html_opts.delete(:repeat)
       opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => id, "data-sb-repeat" => rpt, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
       content_tag(tag, capture(self, &block), opts)
     end
 
-    def secsions(id, tag, html_opts = {}, &block)
+    def sections(id, tag, html_opts = {}, &block)
       (@sb_entity.section(id).map.with_index do |elt, i|
         @sb_section = [id, elt["id"]]
         opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => @sb_section.join('|'), "data-sb-repeat" => true, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
         content_tag(tag, capture(self, i, &block), opts)
       end).join('').html_safe
+    end
+
+    def elt(id)
+      select_element(id)
     end
 
     # Note : could work well - set the ids hierarchy in elements retrieved from the db
@@ -167,13 +88,6 @@ module Sibu
       end
       items
     end
-
-    # def bg_img(elt, html_opts = {})
-    #   defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => "/default.jpg"}
-    #   content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-    #   html_opts.merge!({class: "sb-img #{html_opts[:class]}", data: {id: elt.is_a?(Hash) ? elt["id"] : elt}}) if action_name != 'show'
-    #   content_tag(:div, content_tag(:img, nil, content.except("id")), html_opts)
-    # end
 
     def link(elt, html_opts = {}, &block)
       repeat = html_opts.delete(:repeat)
