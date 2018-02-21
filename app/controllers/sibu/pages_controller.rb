@@ -74,6 +74,7 @@ module Sibu
       @links = @site.pages_path_by_id if @site
       @element = @entity.element(*@section_id.split('|'), *@element_id.split('|'))
       @repeat = params[:repeat]
+      @size = params[:size].blank? ? :medium : params[:size].to_sym
     end
 
     def update_element

@@ -58,9 +58,10 @@ module Sibu
     def img(elt, opts = {})
       wrapper = opts.delete(:wrapper)
       repeat = opts.delete(:repeat)
+      size = opts.delete(:size)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => "/default.jpg"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat}}) if action_name != 'show'
+      opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat, size: size}}) if action_name != 'show'
       wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts) : content_tag(:img, nil, content.except("id").merge(opts))
     end
 

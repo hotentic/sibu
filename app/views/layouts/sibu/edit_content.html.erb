@@ -51,11 +51,7 @@
     });
 
     function setEditMode(section, overlay, left, top, width, height) {
-        // var offset = elt.offset();
-        // var width = elt.width(), height = elt.height();
         var editMode = $("#edit_mode_overlay");
-        // var yPosition = offset.top - $(".sibu_content_panel").offset().top;
-        // var section = elt.parents("sb-edit").first();
         editMode.find(".overlay_top").css("height", top);
         editMode.find(".overlay_bottom").css("top", top + height);
         editMode.find(".overlay_left").css({"height": height, "width": left, "top": top});
@@ -146,7 +142,7 @@
         $("#edit_panel").slideUp("fast");
     }
 
-    function editContent(eltId, sectionId, entity, repeat, contentType) {
+    function editContent(eltId, sectionId, entity, repeat, contentType, size) {
         $.ajax({
             url: "<%= edit_element_site_page_path(@site.id, @page.id) %>",
             method: "GET",
@@ -155,7 +151,8 @@
                 section_id: sectionId,
                 entity: entity,
                 repeat: repeat,
-                content_type: contentType
+                content_type: contentType,
+                size: size
             }
         })
     }
@@ -170,32 +167,13 @@
         });
         editables.click(function(evt) {
             evt.preventDefault();
-            var elt = $(this), eltId = elt.data("id"), repeat = elt.data("repeat"), type = elt.data("type");
+            var elt = $(this), eltId = elt.data("id"), repeat = elt.data("repeat"), type = elt.data("type"), size = elt.data("size");
             var sectionId = section.data("sb-id"), entity = section.data("sb-entity");
-            editContent(eltId, sectionId, entity, repeat, type);
+            editContent(eltId, sectionId, entity, repeat, type, size);
         })
     }
 
     function initOverlays() {
-        // $("div.sb-overlay").remove();
-        // $("sb-edit").each(function() {
-        //     var elt = $(this);
-        //     elt.prepend("<div class='sb-overlay'><a>Modifier</a></div>");
-        //     var overlay = elt.find(".sb-overlay");
-        //     var dimensions = overlayDimensions(overlay, elt);
-        //     overlay.width(dimensions.width);
-        //     overlay.height(dimensions.height);
-        //
-        //     elt.hover(function() {
-        //         overlay.css("opacity", 1);
-        //     }, function() {
-        //         overlay.css("opacity", 0);
-        //     });
-        //
-        //     overlay.click(function() {
-        //         setEditMode($(this));
-        //     })
-        // });
         var container = $("#edit_overlays");
         container.html("");
         $("[data-sb-id]").each(function() {
@@ -226,17 +204,6 @@
             }
         });
         return height;
-    }
-
-    function overlayDimensions(overlay, element) {
-        var children = element.find("> *:not(.sb-overlay)");
-        var width = - +children.first().css("margin-left").replace("px", ""), height = - +children.first().css("margin-top").replace("px", "");
-        var maxWidth = element.parent().outerWidth(true), maxHeight = element.parent().outerHeight(true);
-        element.find("> *:not(.sb-overlay)").each(function() {
-            width = width + $(this).outerWidth(true);
-            height = height + $(this).outerHeight(true);
-        });
-        return {width: Math.min(width, maxWidth), height: Math.min(height, maxHeight)};
     }
 </script>
 <%= yield :scripts %>
