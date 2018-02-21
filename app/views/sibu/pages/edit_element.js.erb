@@ -1,11 +1,23 @@
 var editPanel = $("#edit_panel");
 editPanel.html("");
-<% if @content_type == 'text' %>
-  <% text_value = @element["text"] || 'Texte à modifier' %>
+<% case @content_type %>
+<% when 'text' %>
   editPanel.html("<%= j(render 'text_edit_panel') %>");
-  var editorElt = editPanel.find("trix-editor")[0];
-  editorElt.editor.loadHTML("<%= j(raw(text_value.gsub("\n", "<br/>"))) %>");
-<% elsif @content_type == 'media' %>
+<% when 'paragraph' %>
+  editPanel.html("<%= j(render 'paragraph_edit_panel') %>");
+  var quill = initQuillEditor('#editor-container');
+  quill.root.innerHTML = "<%= j(raw(@element["text"] || 'Texte à modifier')) %>";
+  quill.on('text-change', function() {
+    $("#element_text").val(quill.root.innerHTML);
+  });
+  var wrapper = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']");
+  editPanel.find(".ql-editor").css({
+      "font-family": wrapper.css("font-family"),
+      "font-size": wrapper.css("font-size"),
+      "color": wrapper.css("color"),
+      "text-align": wrapper.css("text-align")
+  });
+<% when 'media' %>
   editPanel.html("<%= j(render 'media_edit_panel') %>");
   var images = editPanel.find(".sibu_image img");
   images.click(function() {
@@ -15,9 +27,18 @@ editPanel.html("");
       $("#element_src").val($(this).attr("src"));
     }
   });
-<% elsif @content_type == 'link' %>
+<% when 'link' %>
   editPanel.html("<%= j(render 'link_edit_panel') %>");
+  $("input[name='mode']").change(function() {
+    var selected = $(this).val();
+    var other = selected === 'internal' ? 'external' : 'internal';
+    $("#link_" + selected).find("#element_value, #element_target").removeAttr("disabled");
+    $("#link_" + other).find("#element_value, #element_target").attr("disabled", "disabled");
+  });
+<% else %>
+  editPanel.html("<%= j(render 'error_panel') %>");
 <% end %>
+
 <% if @repeat %>
 $("#element_actions").show();
 <% else %>

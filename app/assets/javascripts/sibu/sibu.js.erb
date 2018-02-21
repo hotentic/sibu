@@ -1,6 +1,22 @@
 //= require jquery
 //= require jquery_ujs
-//= require trix
+//= require ../quill/quill
 //= require_self
 
-Trix.config.blockAttributes.default.tagName = "div"
+
+Quill.register(Quill.import('attributors/style/align'), true);
+
+function initQuillEditor(container) {
+    return new Quill(container, {
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline'], ['link'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'align': [] }],
+                ['clean']
+            ]
+        },
+        theme: 'snow'
+    });
+}

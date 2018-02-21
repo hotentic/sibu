@@ -5,8 +5,8 @@
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
     <div class="sibu_select_images sibu_field">
       <p>Sélectionnez ou <%= link_to 'téléchargez', new_site_image_path(@site.id, page_id: @page.id) %> une image</p>
-      <% @site.images.each do |image| %>
-      <div class="sibu_image">
+      <% site_images.each do |image| %>
+      <div class="sibu_image" data-img-id="<%= image.id %>">
         <%= image_tag image.file_url(:medium), class: (@element["src"] == image.file_url(:medium) ? 'selected' : '') %>
       </div>
       <% end %>

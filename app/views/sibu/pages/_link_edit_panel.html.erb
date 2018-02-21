@@ -3,14 +3,23 @@
 <%= render 'element_actions' %>
 <div class="sibu_edit_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
+    <% internal = is_internal(@element["value"]) %>
     <div class="sibu_field">
       <%= label_tag 'element[text]', 'Libellé' %>
       <%= text_field_tag 'element[text]', @element["text"] %>
     </div>
-    <div class="sibu_field">
-      <%= label_tag 'element[value]', 'Lien' %>
-      <%= select_tag 'element[value]', options_from_collection_for_select(@site.pages, :id, :name, @element["value"]),
-                     {prompt: 'Sélectionnez une page'} %>
+    <div id="link_internal" class="sibu_field">
+      <%= radio_button_tag :mode, 'internal', internal, class: 'radio' %>
+      <%= label_tag 'mode_internal', 'Lien vers une page du site' %>
+      <%= select_tag 'element[value]', options_from_collection_for_select(@site.pages.order(:name), :id, :name, @element["value"]),
+                     prompt: 'Sélectionnez une page', disabled: !internal %>
+      <%= hidden_field_tag 'element[target]', '_self', disabled: !internal %>
+    </div>
+    <div id="link_external" class="sibu_field">
+      <%= radio_button_tag :mode, 'external', !internal, class: 'radio' %>
+      <%= label_tag 'mode_external', 'Lien vers un autre site' %>
+      <%= text_field_tag 'element[value]', (@element["value"] unless internal), placeholder: 'Ex : http://www.un-site.com', disabled: internal %>
+      <%= hidden_field_tag 'element[target]', '_blank', disabled: internal %>
     </div>
     <%= hidden_field_tag 'element[id]', @element["id"] %>
     <%= hidden_field_tag :element_id, @element_id %>

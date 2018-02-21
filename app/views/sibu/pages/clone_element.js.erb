@@ -2,9 +2,5 @@
 $("#edit_panel #edit_msg").html("<p class='sibu_alert'>Une erreur s'est produite lors de l'enregistrement.</p>");
 <% else %>
 $("#edit_panel").slideUp();
-var clonedElt = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']").first();
-var newElt = clonedElt.clone();
-newElt.data("id", "<%= @cloned["id"] %>");
-clonedElt.after(newElt);
-cancelEditMode();
+location.reload(true);
 <% end %>

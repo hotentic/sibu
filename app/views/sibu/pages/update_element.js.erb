@@ -6,9 +6,9 @@
   <% if @updated["text"] %>
     updatedElt.html("<%= j(raw @updated["text"]) %>");
   <% end %>
-  <% unless @updated.except("id", "text").blank? %>
+  <% unless @updated.except("id", "text", "value").blank? %>
     var tag = updatedElt.prop("tagName").toLowerCase();
-    <% @updated.except("id", "text").each_pair do |attr, val| %>
+    <% @updated.except("id", "text", "value").each_pair do |attr, val| %>
       if(("<%= attr %>" === 'src' || "<%= attr %>" === 'alt') && tag !== 'img') {
         updatedElt.find("img").attr("<%= attr %>", "<%= val %>");
       } else {

@@ -3,7 +3,6 @@ module Sibu
     include ActiveSupport::Concern
 
     def section(*ids)
-      # elts = nil
       if ids.length == 1
         s = nil
         if sections.blank?
@@ -33,7 +32,6 @@ module Sibu
       if sub_idx
         sub = s[sub_idx]
       else
-        logger.debug("init section #{subid}")
         sub = {"id" => subid, "elements" => []}
         self.sections[id] << sub
         save
@@ -75,9 +73,13 @@ module Sibu
 
     def delete_element(*ids, element_id)
       siblings = section(*ids)
-      ref_index = siblings.index {|s| s["id"] == element_id}
-      siblings.delete_at(ref_index)
-      save
+      if siblings.length > 1
+        ref_index = siblings.index {|s| s["id"] == element_id}
+        siblings.delete_at(ref_index)
+        save
+      else
+        nil
+      end
     end
 
     def clone_section(*ids)
@@ -101,9 +103,9 @@ module Sibu
     end
 
     def sanitize_value(value)
-      unless value["text"].blank?
-        value["text"].gsub!(/<\/?(div|p|ul|li)>/, '')
-      end
+      # unless value["text"].blank?
+      #   value["text"].gsub!(/<\/?(div|p|ul|li)>/, '')
+      # end
     end
   end
 end

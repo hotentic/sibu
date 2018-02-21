@@ -1,9 +1,5 @@
 <% if @cloned %>
-var section = $(".sibu_content_panel").find("[data-sb-id='<%= @section_id %>']").first();
-var newSection = section.clone();
-newSection.data("sb-id", "<%= [@section_id.split('|')[0], @cloned["id"]].join('|') %>");
-section.after(newSection);
-cancelEditMode();
+location.reload(true);
 <% else %>
 $("#edit_section_msg").html("<p class='sibu_alert'>Une erreur s'est produite lors de l'enregistrement.</p>");
 <% end %>

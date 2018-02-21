@@ -44,10 +44,6 @@
   <% end %>
 <% end %>
 <script>
-    const TEXT_TAGS = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'span'];
-    const IMG_TAGS = ['img'];
-    const LINK_TAGS = ['a'];
-
     var rootElt = $('html, body');
 
     $(function () {
@@ -165,7 +161,7 @@
     }
 
     function initInnerOverlays(section) {
-        var editables = section.find("[class*='sb-']");
+        var editables = section.find("[data-type]");
         editables.off();
         editables.hover(function() {
             $(this).addClass("sb-editable");
@@ -174,17 +170,9 @@
         });
         editables.click(function(evt) {
             evt.preventDefault();
-            var elt = $(this), tag = elt.prop("tagName").toLowerCase(), eltId = elt.data("id"), repeat = elt.data("repeat");
+            var elt = $(this), eltId = elt.data("id"), repeat = elt.data("repeat"), type = elt.data("type");
             var sectionId = section.data("sb-id"), entity = section.data("sb-entity");
-            if (TEXT_TAGS.indexOf(tag) !== -1) {
-                editContent(eltId, sectionId, entity, repeat, 'text');
-            } else if (IMG_TAGS.indexOf(tag) !== -1 || elt.hasClass('sb-img')) {
-                editContent(eltId, sectionId, entity, repeat, 'media');
-            } else if (LINK_TAGS.indexOf(tag) !== -1) {
-                editContent(eltId, sectionId, entity, repeat, 'link');
-            } else {
-                console.log('Sibu - Unsupported tag type : ' + tag);
-            }
+            editContent(eltId, sectionId, entity, repeat, type);
         })
     }
 

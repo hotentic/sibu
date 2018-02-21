@@ -1,8 +1,6 @@
 module Sibu
   module PagesHelper
     include Sibu::Engine.routes.url_helpers
-    include TrixEditorHelper
-
 
     def link_path(page_id)
       p = @site.page_by_id(page_id)
@@ -10,20 +8,39 @@ module Sibu
     end
 
     def page_templates
-      [['Accueil', 'home'], ['Offre', 'offer'], ['Galerie', 'gallery'], ['Destination', 'destination']]
+      [['Accueil', 'home'], ['Offre', 'offer'], ['Galerie', 'gallery'], ['Destination', 'destination'], ['Mentions légales', 'text']]
     end
 
     def page_languages
       [['Français', 'fr'], ['Anglais', 'en']]
     end
 
-    [:h1, :h2, :h3, :h4, :h5, :h6, :p, :span, :div].each do |t|
+    def site_images
+      @site.images + Sibu::Image.shared
+    end
+
+    def available_links
+      options_from_collection_for_select(@site.pages, :id, :name, @element["value"])
+    end
+
+    def is_internal(val)
+      val.blank? || val == '#' || /^\d{1,3}$/.match(val.to_s)
+    end
+
+    [:h1, :h2, :h3, :h4, :h5, :h6, :span].each do |t|
       define_method(t) do |elt, html_opts = {}|
         defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => "Texte à modifier"}
         content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-        html_opts.merge!({class: "sb-#{t} #{html_opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
+        html_opts.merge!({data: {id: elt_id(elt), type: "text"}}) if action_name != 'show'
         content_tag(t, raw(content["text"]).html_safe, html_opts)
       end
+    end
+
+    def p(elt, html_opts = {})
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => "Texte à modifier"}
+      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
+      html_opts.merge!({data: {id: elt_id(elt), type: "paragraph"}}) if action_name != 'show'
+      content_tag(:div, content_tag(:p, raw(content["text"]).html_safe), html_opts)
     end
 
     def sb
@@ -43,7 +60,7 @@ module Sibu
       repeat = opts.delete(:repeat)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => "/default.jpg"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      opts.merge!({class: "sb-img #{opts[:class]}", data: {id: elt_id(elt), repeat: repeat}}) if action_name != 'show'
+      opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat}}) if action_name != 'show'
       wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts) : content_tag(:img, nil, content.except("id").merge(opts))
     end
 
@@ -93,31 +110,25 @@ module Sibu
       repeat = html_opts.delete(:repeat)
       defaults = {"id" => elt_id(elt), "value" => "", "text" => "Nouveau lien"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({class: "sb-link #{html_opts[:class]}", data: {id: elt_id(elt), repeat: repeat}}) if action_name != 'show'
-      val = content["value"] || ""
+      val = content.delete("value") || ""
+      text = content.delete("text");
+      html_opts.merge!({data: {id: elt_id(elt), type: "link", repeat: repeat}}) if action_name != 'show'
       if val.to_s.include?('http')
-        href = val
+        content["href"] = val
       else
-        href = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
+        content["href"] = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
       end
       if block_given?
-        content_tag(:a, {href: href}.merge(html_opts), &block)
+        content_tag(:a, content.merge(html_opts), &block)
       else
-        content_tag(:a, content["text"], {href: href}.merge(html_opts))
+        content_tag(:a, text, content.merge(html_opts))
       end
-    end
-
-    def form_label(elt, html_opts = {}, &block)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => "Texte à modifier"}
-      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({class: "sb-label #{html_opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
-      content_tag(:label, raw(content["text"]).html_safe, html_opts)
     end
 
     def interactive_map(elt, html_opts = {}, &block)
       defaults = {"data-lat" => "45.68854", "data-lng" => "5.91587", "data-title" => "Titre marqueur"}
       content = elt.is_a?(Hash) ? defaults.merge(elt) : (select_element(elt) || {"id" => elt}).merge(defaults)
-      html_opts.merge!({class: "sb-map #{html_opts[:class]}", data: {id: elt_id(elt)}}) if action_name != 'show'
+      html_opts.merge!({data: {id: elt_id(elt), type: "map"}}) if action_name != 'show'
       content_tag(:div, nil, content.merge(html_opts))
     end
 

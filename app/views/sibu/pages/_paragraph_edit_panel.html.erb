@@ -3,10 +3,9 @@
 <%= render 'element_actions' %>
 <div class="sibu_edit_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
-    <div class="sibu_field">
-      <%= label_tag 'element[text]', 'Texte' %>
-      <%= text_field_tag 'element[text]', @element["text"] %>
-    </div>
+    <div id="editor-container"></div>
+
+    <%= hidden_field_tag 'element[text]' %>
     <%= hidden_field_tag 'element[id]', @element["id"] %>
     <%= hidden_field_tag :element_id, @element_id %>
     <%= hidden_field_tag :section_id, @section_id %>

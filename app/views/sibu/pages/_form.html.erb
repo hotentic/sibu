@@ -1,27 +1,52 @@
 <%= form_for([@site, @page]) do |f| %>
   <div class="sibu_field">
     <%= f.label :name, 'Nom de la page' %>
-    <%= f.text_field :name, placeholder: "Ex : Accueil, contact..." %>
+    <div>
+      <%= f.text_field :name, placeholder: "Ex: Accueil, contact..." %>
+      <small>Libellé utilisé dans l'outil d'administration (non utilisé dans le site)</small>
+    </div>
   </div>
   <div class="sibu_field">
     <%= f.label :template, 'Modèle' %>
-    <%= f.select(:template, page_templates, {prompt: 'Sélectionnez un modèle de page'}) %>
+    <div>
+      <%= f.select(:template, page_templates, {prompt: 'Sélectionnez un modèle de page'}) %>
+      <small>Le gabarit utilisé pour créer la page</small>
+    </div>
   </div>
   <div class="sibu_field">
     <%= f.label :path, "Chemin d'accès" %>
-    <%= f.text_field :path, placeholder: "Adresse de la page" %>
+    <div>
+      <%= f.text_field :path, placeholder: "Laisser vide pour le générer automatiquement" %>
+      <small>L'adresse (ou URL) de la page, utilisée par les navigateurs web pour y accéder</small>
+    </div>
   </div>
   <div class="sibu_field">
     <%= f.label :language, "Langue" %>
-    <%= f.select(:language, page_languages, {prompt: 'Sélectionnez une langue'})  %>
+    <div>
+      <%= f.select(:language, page_languages, {prompt: 'Sélectionnez une langue'}) %>
+      <small>La langue d'affichage de la page</small>
+    </div>
   </div>
   <div class="sibu_field">
     <%= f.label :title, 'Titre' %>
-    <%= f.text_field :title, placeholder: "Titre de la page" %>
+    <div>
+      <%= f.text_field :title, placeholder: "Maximum 80 caractères", maxlength: 80 %>
+      <small>Le titre sera affiché dans les résultats des moteurs de recherche et dans les onglets des navigateurs</small>
+    </div>
   </div>
   <div class="sibu_field">
     <%= f.label :description, 'Description' %>
-    <%= f.text_area :description, placeholder: "Description de la page" %>
+    <div>
+      <%= f.text_area :description, placeholder: "Maximum 300 caractères", maxlength: 300 %>
+      <small>La description est affichée dans les résultats des moteurs de recherche</small>
+    </div>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :keywords, 'Mots-clé' %>
+    <div>
+      <%= f.text_area :keywords, placeholder: "Mots-clé utilisés dans votre site" %>
+      <small>Une liste de mots-clé décrivant le contenu de votre site (optionnelle)</small>
+    </div>
   </div>
   <%= f.hidden_field :site_id %>
   <div class="sibu_actions">
