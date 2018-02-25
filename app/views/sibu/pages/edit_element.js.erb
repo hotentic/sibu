@@ -40,8 +40,15 @@ editPanel.html("");
 <% end %>
 
 <% if @repeat %>
-$("#element_actions").show();
+$("#clone_elt, #duplicate_elt").show();
 <% else %>
-$("#element_actions").hide();
+$("#clone_elt, #duplicate_elt").remove();
+<% end %>
+
+<% if @children %>
+$("#child_elt").show();
+<% else %>
+$("#child_elt").remove();
 <% end %>
 editPanel.slideDown("fast");
+document.body.style.overflow = "hidden";

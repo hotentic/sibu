@@ -1,21 +1,21 @@
 <% content_for :styles do %>
   <style>
     <% unless @site.primary_color.blank? %>
-    :not(.sibu_panel) [class*='bg--primary'] {
+    .sibu_site_content [class*='bg--primary'] {
       background-color: <%= @site.primary_color %> !important;
     }
 
-    :not(.sibu_panel) [class *='txt--primary'] {
+    .sibu_site_content [class *='txt--primary'] {
       color: <%= @site.primary_color %> !important;
     }
     <% end %>
 
     <% unless @site.secondary_color.blank? %>
-    :not(.sibu_panel) [class*='bg--success'] {
+    .sibu_site_content [class*='bg--success'] {
       background-color: <%= @site.secondary_color %> !important;
     }
 
-    :not(.sibu_panel) [class *='txt--success'] {
+    .sibu_site_content [class *='txt--success'] {
       color: <%= @site.secondary_color %> !important;
     }
     <% end %>

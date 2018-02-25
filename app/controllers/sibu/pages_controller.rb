@@ -3,10 +3,10 @@ require_dependency "sibu/application_controller"
 module Sibu
   class PagesController < ApplicationController
     before_action :set_page, only: [:edit, :update, :destroy, :edit_element, :update_element, :clone_element,
-                                    :delete_element, :edit_section, :clone_section, :delete_section]
+                                    :delete_element, :child_element, :new_section, :create_section, :delete_section]
     before_action :set_site, only: [:index, :new]
     before_action :set_edit_context, only: [:edit_element, :update_element, :clone_element, :delete_element,
-                                            :clone_section, :delete_section]
+                                            :child_element, :new_section, :create_section, :delete_section]
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
@@ -75,6 +75,7 @@ module Sibu
       @element = @entity.element(*@section_id.split('|'), *@element_id.split('|'))
       @repeat = params[:repeat]
       @size = params[:size].blank? ? :medium : params[:size].to_sym
+      @children = params[:children]
     end
 
     def update_element
@@ -90,14 +91,17 @@ module Sibu
       @deleted = @entity.delete_element(*@section_id.split('|'), *@element_id.split('|'))
     end
 
-    def edit_section
+    def child_element
+      @added = @entity.child_element(*@section_id.split('|'), *@element_id.split('|'))
     end
 
-    def update_section
+    def new_section
+      @after = params[:after]
+      @links = @site.pages_path_by_id
     end
 
-    def clone_section
-      @cloned = @entity.clone_section(*@section_id.split('|'))
+    def create_section
+      @created = @entity.create_section(*@section_id.split('|'), params[:after], section_params)
     end
 
     def delete_section
@@ -128,6 +132,10 @@ module Sibu
 
     def element_params
       params.require(:element).permit!
+    end
+
+    def section_params
+      params.require(:section).permit!
     end
   end
 end

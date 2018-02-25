@@ -1,0 +1,6 @@
+<% if @added.nil? %>
+$("#edit_panel #edit_msg").html("<p class='sibu_alert'>Une erreur s'est produite lors de l'ajout du sous-menu.</p>");
+<% else %>
+$("#edit_panel").slideUp();
+location.reload(true);
+<% end %>

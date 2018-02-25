@@ -1,4 +1,5 @@
 <div id="element_actions">
-  <button onclick="cloneElement('<%= @entity_type %>', '<%= @section_id %>', '<%= @element_id %>')">Dupliquer</button>
-  <button onclick="deleteElement('<%= @entity_type %>', '<%= @section_id %>', '<%= @element_id %>')">Supprimer</button>
+  <button id="clone_elt" onclick="cloneElement('<%= @entity_type %>', '<%= @section_id %>', '<%= @element_id %>')">Dupliquer</button>
+  <button id="duplicate_elt" onclick="deleteElement('<%= @entity_type %>', '<%= @section_id %>', '<%= @element_id %>')">Supprimer</button>
+  <button id="child_elt" onclick="addChildElement('<%= @entity_type %>', '<%= @section_id %>', '<%= @element_id %>')">Ajouter un sous-menu</button>
 </div>

@@ -10,8 +10,8 @@ module Sibu
 
     validates_presence_of :name, :site_template
 
-    def page_template(page)
-      "#{site_template.path}/#{page.template}"
+    def section_template(section)
+      "#{site_template.path}/#{section["template"]}"
     end
 
     def not_found

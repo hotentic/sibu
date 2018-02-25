@@ -22,7 +22,7 @@
     <%= hidden_field_tag :entity, @entity_type %>
     <div class="sibu_actions">
       <%= submit_tag 'Valider' %>
-      <%= link_to 'Annuler', '#', onclick: '$("#edit_panel").slideUp("fast"); return false;' %>
+      <%= link_to 'Annuler', '#', onclick: 'cancelEdit(); return false;' %>
     </div>
   <% end %>
 </div>

@@ -26,6 +26,7 @@
       <%= render conf[panel] %>
       <% if panel == :content_panel %>
         <div id="edit_panel" class="sibu_panel sibu_view"></div>
+        <div id="sections_panel"></div>
         <div id="edit_mode_overlay" class="sibu_panel sibu_view">
           <div class="overlay_top"></div>
           <div class="overlay_right"></div>
@@ -33,7 +34,8 @@
           <div class="overlay_bottom"></div>
           <div class="edit_mode_actions">
             <p id="edit_section_msg">Modifier la section</p>
-            <button id="clone_section" onclick="cloneSection()">Dupliquer</button>
+            <button id="new_section_before" onclick="newSection(false)">Insérer avant</button>
+            <button id="new_section_after" onclick="newSection(true)">Insérer après</button>
             <button id="delete_section" onclick="deleteSection()">Supprimer</button>
             <button onclick="cancelEditMode()">Fermer</button>
           </div>
@@ -60,10 +62,12 @@
         editMode.find("#edit_section_msg").text("Modifier la section");
         editMode.show();
         if(!section.data('sb-repeat')) {
-            editMode.find("#clone_section").hide();
+            editMode.find("#new_section_before").hide();
+            editMode.find("#new_section_after").hide();
             editMode.find("#delete_section").hide();
         } else {
-            editMode.find("#clone_section").show();
+            editMode.find("#new_section_before").show();
+            editMode.find("#new_section_after").show();
             editMode.find("#delete_section").show();
         }
         rootElt.animate({scrollTop: top}, 500);
@@ -82,18 +86,17 @@
         }
     }
 
-    function cloneSection() {
-        if (window.confirm("Dupliquer la section ?")) {
-            var section = $(".sb-editing").first();
-            $.ajax({
-                url: "<%= clone_section_site_page_path(@site.id, @page.id) %>",
-                method: "POST",
-                data: {
-                    section_id: section.data("sb-id"),
-                    entity: section.data("sb-entity")
-                }
-            })
-        }
+    function newSection(isAfter) {
+        var section = $(".sb-editing").first();
+        $.ajax({
+            url: "<%= new_section_site_page_path(@site.id, @page.id) %>",
+            method: "GET",
+            data: {
+                section_id: section.data("sb-id"),
+                entity: section.data("sb-entity"),
+                after: isAfter
+            }
+        })
     }
 
     function deleteSection() {
@@ -138,11 +141,26 @@
         }
     }
 
-    function cancelEdit() {
-        $("#edit_panel").slideUp("fast");
+    function addChildElement(entity, sectionId, elementId) {
+        if (window.confirm("Ajouter un sous-menu ?")) {
+            $.ajax({
+                url: "<%= child_element_site_page_path(@site.id, @page.id) %>",
+                method: "POST",
+                data: {
+                    section_id: sectionId,
+                    element_id: elementId,
+                    entity: entity
+                }
+            })
+        }
     }
 
-    function editContent(eltId, sectionId, entity, repeat, contentType, size) {
+    function cancelEdit() {
+        $("#edit_panel").slideUp("fast");
+        document.body.style.overflow = "initial";
+    }
+
+    function editContent(eltId, sectionId, entity, repeat, contentType, size, children) {
         $.ajax({
             url: "<%= edit_element_site_page_path(@site.id, @page.id) %>",
             method: "GET",
@@ -152,7 +170,8 @@
                 entity: entity,
                 repeat: repeat,
                 content_type: contentType,
-                size: size
+                size: size,
+                children: children
             }
         })
     }
@@ -167,9 +186,10 @@
         });
         editables.click(function(evt) {
             evt.preventDefault();
-            var elt = $(this), eltId = elt.data("id"), repeat = elt.data("repeat"), type = elt.data("type"), size = elt.data("size");
+            var elt = $(this), eltId = elt.data("id"), repeat = elt.data("repeat"), type = elt.data("type"),
+                size = elt.data("size"), children = elt.data("children");
             var sectionId = section.data("sb-id"), entity = section.data("sb-entity");
-            editContent(eltId, sectionId, entity, repeat, type, size);
+            editContent(eltId, sectionId, entity, repeat, type, size, children);
         })
     }
 

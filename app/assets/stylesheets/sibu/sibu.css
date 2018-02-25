@@ -49,7 +49,7 @@
     right: 0;
 }
 
-#edit_panel {
+#edit_panel, #sections_panel {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -59,7 +59,12 @@
     background-color: white;
 }
 
-#element_actions {
+#sections_panel .sibu_sections {
+    max-height: 60vh;
+    overflow-y: scroll;
+}
+
+#element_actions button {
     display: none;
 }
 
