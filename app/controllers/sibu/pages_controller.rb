@@ -102,6 +102,10 @@ module Sibu
       @page.sections << {"id" => "sibu_template_free_text", "elements" => [{"id" => "paragraph0"}]}
       @page.sections << {"id" => "sibu_template_gallery",
                          "elements" => [{"id" => "slide0", "elements" => [{"id" => "slide0"}, {"id" => "slide1"}, {"id" => "slide2"}]}]}
+      @page.sections << {"id" => "sibu_template_table", "elements" => [
+          {"id" => "col0", "elements" => [{"id" => "row1"}, {"id" => "row2"}]},
+          {"id" => "col1", "elements" => [{"id" => "row1"}, {"id" => "row2"}]},
+      ]}
     end
 
     def create_section
