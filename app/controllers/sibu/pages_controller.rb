@@ -95,9 +95,13 @@ module Sibu
       @added = @entity.child_element(*@section_id.split('|'), *@element_id.split('|'))
     end
 
+    # Todo - init available sections properly and fix dynamic sections creation (init needed)
     def new_section
       @after = params[:after]
       @links = @site.pages_path_by_id
+      @page.sections << {"id" => "sibu_template_free_text", "elements" => [{"id" => "paragraph0"}]}
+      @page.sections << {"id" => "sibu_template_gallery",
+                         "elements" => [{"id" => "slide0", "elements" => [{"id" => "slide0"}, {"id" => "slide1"}, {"id" => "slide2"}]}]}
     end
 
     def create_section

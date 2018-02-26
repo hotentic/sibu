@@ -57,7 +57,8 @@ module Sibu
     end
 
     def elements(id = nil)
-      id ? select_element(id)["elements"] : @sb_entity.elements(*@sb_section)
+      items = id ? select_element(id)["elements"] : @sb_entity.find_or_init(*@sb_section)["elements"]
+      items.blank? ? [{"id" => ""}] : items
     end
 
     def img(elt, opts = {})
@@ -89,8 +90,9 @@ module Sibu
       content_tag(tag, capture(self, &block), opts)
     end
 
+    # Todo : voir comment générer une section par défaut en mode liste des sections et insertion d'un bloc avec sections
     def sections(id, tag, html_opts = {}, &block)
-      (@sb_entity.section(id).map.with_index do |elt, i|
+      (@sb_entity.find_or_init(id)["elements"].map.with_index do |elt, i|
         @sb_section = [id, elt["id"]]
         opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => @sb_section.join('|'), "data-sb-repeat" => true, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
         content_tag(tag, capture(self, i, &block), opts)

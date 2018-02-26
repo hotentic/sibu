@@ -80,19 +80,31 @@ module Sibu
       save
     end
 
-    def create_section(ref_id, after, new_section)
+    def create_section(*ids, after, new_section)
       new_section["id"] = "#{new_section["template"]}-#{Time.current.to_i}"
-      ref_pos = sections.index {|s| s["id"] == ref_id}
-      sections.insert(after.to_s == 'true' ? ref_pos + 1 : ref_pos, new_section)
+      if ids.length == 1
+        parent = sections
+      else
+        parent = find_or_init(*ids[0..-2])["elements"]
+      end
+      ref_pos = parent.index {|s| s["id"] == ids.last}
+      parent.insert(after.to_s == 'true' ? ref_pos + 1 : ref_pos, new_section)
       save ? new_section : nil
     end
 
-    def delete_section(id)
-      if sections.length == 1
-        nil
+    def delete_section(*ids)
+      if ids.length == 1
+        if sections.length == 1
+          nil
+        else
+          ref_index = sections.index {|s| s["id"] == ids.first}
+          sections.delete_at(ref_index)
+          save
+        end
       else
-        ref_index = sections.index {|s| s["id"] == id}
-        sections.delete_at(ref_index)
+        parent = find_or_init(*ids[0..-2])
+        ref_index = parent["elements"].index {|s| s["id"] == ids.last}
+        parent["elements"].delete_at(ref_index)
         save
       end
     end

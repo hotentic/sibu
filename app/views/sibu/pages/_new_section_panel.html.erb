@@ -3,14 +3,14 @@
   <div id="edit_msg"></div>
 </div>
 <div>
+  <div id="<%= "#{@site.site_template.reference}_sections" %>" class="sibu_sections sibu_site_content">
+    <% sections_templates.each do |st| %>
+      <div data-sb-template="<%= st["template"] %>">
+        <%= render "shared/#{@site.section_template(st)}", sec: st %>
+      </div>
+    <% end %>
+  </div>
   <%= form_tag(create_section_site_page_path(@site.id, @page.id), method: :post, remote: true) do |f| %>
-    <div id="<%= "#{@site.site_template.reference}_sections" %>" class="sibu_sections sibu_site_content">
-      <% sections_templates.each do |st| %>
-        <div data-sb-template="<%= st["template"] %>">
-          <%= render "shared/#{@site.section_template(st)}", sec: st %>
-        </div>
-      <% end %>
-    </div>
     <%= hidden_field_tag 'section[template]', '' %>
     <%= hidden_field_tag :section_id, @section_id %>
     <%= hidden_field_tag :after, @after%>

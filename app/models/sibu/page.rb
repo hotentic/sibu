@@ -6,19 +6,20 @@ module Sibu
 
     store :metadata, accessors: [:title, :description, :keywords], coder: JSON
 
-    before_save :init_path
-    validates_presence_of :name, :site, :language, :template
+    before_save :update_path
+    validates_presence_of :name, :site, :language
 
     def save_and_init
       if valid?
-        template_defaults = site.site_template.pages.select {|p| p[:template] == template}.first
+        template_defaults = site.site_template.pages.first
         self.sections = template_defaults[:sections]  if template_defaults
       end
       save
     end
 
-    def init_path
-      self.path = template if self.path.blank? && template != 'home'
+    # Todo : fix me (is_home flag ?)
+    def update_path
+      self.path = name.parameterize if self.path.blank? && name != 'Accueil'
     end
   end
 end

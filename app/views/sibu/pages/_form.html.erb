@@ -7,13 +7,6 @@
     </div>
   </div>
   <div class="sibu_field">
-    <%= f.label :template, 'Modèle' %>
-    <div>
-      <%= f.select(:template, page_templates, {prompt: 'Sélectionnez un modèle de page'}) %>
-      <small>Le gabarit utilisé pour créer la page</small>
-    </div>
-  </div>
-  <div class="sibu_field">
     <%= f.label :path, "Chemin d'accès" %>
     <div>
       <%= f.text_field :path, placeholder: "Laisser vide pour le générer automatiquement" %>
