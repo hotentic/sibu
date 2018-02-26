@@ -58,7 +58,7 @@
         editMode.find(".overlay_bottom").css("top", top + height);
         editMode.find(".overlay_left").css({"height": height, "width": left, "top": top});
         editMode.find(".overlay_right").css({"height": height, "left": left + width, "top": top});
-        editMode.find(".edit_mode_actions").css({"top": (top <= 40 ? (top + height) : (top - 40)), left: left, width: width});
+        editMode.find(".edit_mode_actions").css({"top": (top <= 40 ? (top + height) : (top - 40 - 20)), left: left, width: width});
         editMode.find("#edit_section_msg").text("Modifier la section");
         editMode.show();
         if(!section.data('sb-repeat')) {
@@ -226,6 +226,7 @@
         return height;
     }
 </script>
-<%= yield :scripts %>
+<%= yield :site_scripts %>
+<%= yield :page_scripts %>
 </body>
 </html>

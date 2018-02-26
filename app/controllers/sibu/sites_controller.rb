@@ -29,11 +29,12 @@ module Sibu
     end
 
     def edit
+      @next_page = params[:next_page]
     end
 
     def update
       if @site.update(site_params)
-        redirect_to sites_url, notice: "Le site a bien été mis à jour."
+        redirect_to (params[:next_page].blank? ? sites_url : params[:next_page]), notice: "Le site a bien été mis à jour."
       else
         flash.now[:alert] = "Une erreur s'est produite lors de l'enregistrement du site."
         render :edit
