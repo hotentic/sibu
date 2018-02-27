@@ -35,6 +35,8 @@ editPanel.html("");
     $("#link_" + selected).find("#element_value, #element_target").removeAttr("disabled");
     $("#link_" + other).find("#element_value, #element_target").attr("disabled", "disabled");
   });
+<% when 'group' %>
+  editPanel.html("<%= j(render 'group_edit_panel') %>");
 <% else %>
   editPanel.html("<%= j(render 'error_panel') %>");
 <% end %>

@@ -179,12 +179,14 @@
     function initInnerOverlays(section) {
         var editables = section.find("[data-type]");
         editables.off();
-        editables.hover(function() {
+        editables.hover(function(evt) {
+            evt.stopPropagation();
             $(this).addClass("sb-editable");
         }, function() {
             $(this).removeClass("sb-editable");
         });
         editables.click(function(evt) {
+            evt.stopPropagation();
             evt.preventDefault();
             var elt = $(this), eltId = elt.data("id"), repeat = elt.data("repeat"), type = elt.data("type"),
                 size = elt.data("size"), children = elt.data("children");

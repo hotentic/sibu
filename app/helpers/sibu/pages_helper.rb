@@ -41,11 +41,12 @@ module Sibu
       end
     end
 
-    def p(elt, html_opts = {})
+    def p(elt, opts = {})
+      repeat = opts.delete(:repeat)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => DEFAULT_PARAGRAPH}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({data: {id: elt_id(elt), type: "paragraph"}}) if action_name != 'show'
-      content_tag(:div, content_tag(:p, raw(content["text"]).html_safe), html_opts)
+      opts.merge!({data: {id: elt_id(elt), repeat: repeat, type: "paragraph"}}) if action_name != 'show'
+      content_tag(:div, content_tag(:p, raw(content["text"]).html_safe), opts)
     end
 
     def sb
@@ -58,7 +59,7 @@ module Sibu
 
     def elements(id = nil)
       items = id ? select_element(id)["elements"] : @sb_entity.find_or_init(*@sb_section)["elements"]
-      items.blank? ? [{"id" => ""}] : items
+      items.blank? ? [{"id" => "#{@sb_section.last}*"}] : items
     end
 
     def img(elt, opts = {})
@@ -69,6 +70,16 @@ module Sibu
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
       opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat, size: size}}) if action_name != 'show'
       wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts) : content_tag(:img, nil, content.except("id").merge(opts))
+    end
+
+    def grp(elt, opts = {}, &block)
+      wrapper = opts.delete(:wrapper) || :div
+      repeat = opts.delete(:repeat)
+      children = opts.delete(:children)
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt}
+      opts = defaults.merge(opts)
+      opts.merge!({data: {id: elt_id(elt), type: "group", repeat: repeat, children: children}}) if action_name != 'show'
+      content_tag(wrapper, capture(self, &block), opts)
     end
 
     # Note : see ActionView::OutputBuffer
@@ -109,7 +120,7 @@ module Sibu
           items << e
         end
       end
-      items.blank? ? [{"id" => element_id.split("|").last, "data-id" => [element_id, "#{id}0"].join("|")}] : items
+      items.blank? ? [{"id" => element_id.split("|").last, "data-id" => [element_id, "#{element_id}0"].join("|")}] : items
     end
 
     def link(elt, html_opts = {}, &block)
