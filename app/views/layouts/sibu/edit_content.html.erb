@@ -157,6 +157,13 @@
 
     function cancelEdit() {
         $("#edit_panel").slideUp("fast");
+        $("#edit_panel").html("");
+        document.body.style.overflow = "initial";
+    }
+
+    function cancelSectionsEdit() {
+        $("#sections_panel").slideUp("fast");
+        $("#sections_panel").html("");
         document.body.style.overflow = "initial";
     }
 

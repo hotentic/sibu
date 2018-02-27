@@ -9,8 +9,12 @@
 
 .sb-editable {
     cursor: pointer;
-    outline: dashed rgba(94, 219, 255, 0.8) 2px;
+    outline: dashed rgba(94, 219, 255, 0.8) 3px;
     outline-offset: -3px;
+}
+
+.sb-editable[data-type='map'] {
+    border: dashed rgba(94, 219, 255, 0.8) 3px;
 }
 
 #edit_mode_overlay {

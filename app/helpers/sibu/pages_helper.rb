@@ -143,9 +143,9 @@ module Sibu
       end
     end
 
-    def interactive_map(elt, html_opts = {}, &block)
+    def interactive_map(elt, html_opts = {})
       defaults = {"data-lat" => "45.68854", "data-lng" => "5.91587", "data-title" => DEFAULT_TEXT}
-      content = elt.is_a?(Hash) ? defaults.merge(elt) : (select_element(elt) || {"id" => elt}).merge(defaults)
+      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {"id" => elt}))
       html_opts.merge!({data: {id: elt_id(elt), type: "map"}}) if action_name != 'show'
       content_tag(:div, nil, content.merge(html_opts))
     end

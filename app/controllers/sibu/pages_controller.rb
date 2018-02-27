@@ -81,6 +81,7 @@ module Sibu
     def update_element
       ids = (@section_id.split('|') + @element_id.split('|')).uniq[0...-1]
       @updated = @entity.update_element(*ids, element_params)
+      @refresh = params[:refresh]
     end
 
     def clone_element
@@ -95,13 +96,12 @@ module Sibu
       @added = @entity.child_element(*@section_id.split('|'), *@element_id.split('|'))
     end
 
-    # Todo - init available sections properly and fix dynamic sections creation (init needed)
     def new_section
       @after = params[:after]
       @links = @site.pages_path_by_id
       @page.sections << {"id" => "sibu_template_free_text", "elements" => [{"id" => "paragraph0"}]}
       @page.sections << {"id" => "sibu_template_gallery",
-                         "elements" => [{"id" => "slide0", "elements" => [{"id" => "slide0"}, {"id" => "slide1"}, {"id" => "slide2"}]}]}
+                         "elements" => [{"id" => "slide0"}, {"id" => "slide1"}, {"id" => "slide2"}]}
       @page.sections << {"id" => "sibu_template_table", "elements" => [
           {"id" => "col0", "elements" => [{"id" => "row1"}, {"id" => "row2"}]},
           {"id" => "col1", "elements" => [{"id" => "row1"}, {"id" => "row2"}]},
