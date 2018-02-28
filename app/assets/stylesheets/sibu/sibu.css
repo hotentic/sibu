@@ -23,7 +23,7 @@
 
 #edit_mode_overlay > div {
     position: absolute;
-    z-index: 999;
+    z-index: 99;
 }
 
 #edit_mode_overlay .overlay_top,
