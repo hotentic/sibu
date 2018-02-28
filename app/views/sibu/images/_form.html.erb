@@ -1,10 +1,25 @@
 <%= form_for([@site, @image]) do |f| %>
   <div class="sibu_field">
-    <%= f.hidden_field :file, value: @image.cached_file_data %>
-    <%= f.file_field :file %>
+    <%= f.label :file, "Sélection de l'image" %>
+    <div>
+      <%= f.hidden_field :file, value: @image.cached_file_data %>
+      <%= f.file_field :file %>
+      <small>Sélectionnez une image à télécharger depuis votre ordinateur</small>
+    </div>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :alt, "Légende / texte alternatif" %>
+    <div>
+      <%= f.text_field :alt %>
+      <small>Renseignez un texte décrivant l'image</small>
+    </div>
   </div>
   <%= f.hidden_field :site_id %>
   <%= hidden_field_tag :page_id, @page_id %>
+  <%= hidden_field_tag :element_id, @element_id %>
+  <%= hidden_field_tag :section_id, @section_id %>
+  <%= hidden_field_tag :img_id, @img_id %>
+  <%= hidden_field_tag :size, @size %>
   <div class="sibu_actions">
     <%= f.submit 'Valider' %>
     <%= link_to 'Annuler', :back %>

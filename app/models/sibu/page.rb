@@ -21,5 +21,9 @@ module Sibu
     def update_path
       self.path = name.parameterize if self.path.blank? && name != 'Accueil'
     end
+
+    def site_template
+      site.site_template
+    end
   end
 end

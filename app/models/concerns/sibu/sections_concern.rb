@@ -52,7 +52,7 @@ module Sibu
       siblings = find_or_init(*ids)["elements"]
       ref_index = siblings.index {|s| s["id"] == element_id}
       new_elt = siblings[ref_index].deep_dup
-      new_elt["id"] = element_id + '§'
+      new_elt["id"] = "cl#{Time.current.to_i}"
       siblings.insert(ref_index + 1, new_elt)
       save ? new_elt : nil
     end
@@ -73,23 +73,29 @@ module Sibu
       siblings = elements(*ids)
       parent_elt = siblings[siblings.index {|s| s["id"] == element_id}]
       if parent_elt["elements"].blank?
-        parent_elt["elements"] = [{"id" => "#{element_id}*"}]
+        parent_elt["elements"] = [{"id" => "cl#{Time.current.to_i}"}]
       else
-        parent_elt["elements"] << [{"id" => "#{parent_elt["elements"].last["id"]}§"}]
+        parent_elt["elements"] << [{"id" => "cl#{Time.current.to_i}"}]
       end
       save
     end
 
     def create_section(*ids, after, new_section)
-      new_section["id"] = "#{new_section["template"]}-#{Time.current.to_i}"
+      new_section["id"] = "cs#{Time.current.to_i}"
       if ids.length == 1
         parent = sections
       else
         parent = find_or_init(*ids[0..-2])["elements"]
       end
-      ref_pos = parent.index {|s| s["id"] == ids.last}
-      parent.insert(after.to_s == 'true' ? ref_pos + 1 : ref_pos, new_section)
-      save ? new_section : nil
+      if new_section["template"].blank?
+        nil
+      else
+        template_defaults = site_template.templates ? site_template.templates[new_section["template"]] : {}
+        sec = template_defaults.merge(new_section)
+        ref_pos = parent.index {|s| s["id"] == ids.last}
+        parent.insert(after.to_s == 'true' ? ref_pos + 1 : ref_pos, sec)
+        sec if save
+      end
     end
 
     def delete_section(*ids)

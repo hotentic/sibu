@@ -97,15 +97,16 @@ module Sibu
     end
 
     def new_section
+      page = Sibu::Page.find(params[:id])
+      @page = Page.new(id: page.id, sections: [])
+      @site = Sibu::Site.includes(:pages).find(page.site_id)
       @after = params[:after]
       @links = @site.pages_path_by_id
-      @page.sections << {"id" => "sibu_template_free_text", "elements" => [{"id" => "paragraph0"}]}
-      @page.sections << {"id" => "sibu_template_gallery",
-                         "elements" => [{"id" => "slide0"}, {"id" => "slide1"}, {"id" => "slide2"}]}
-      @page.sections << {"id" => "sibu_template_table", "elements" => [
-          {"id" => "col0", "elements" => [{"id" => "row1"}, {"id" => "row2"}]},
-          {"id" => "col1", "elements" => [{"id" => "row1"}, {"id" => "row2"}]},
-      ]}
+
+      @site.site_template.available_templates.each do |t|
+        template_defaults = @site.site_template.templates ? (@site.site_template.templates[t["template"]] || {}) : {}
+        @page.sections << template_defaults.merge(t).to_h
+      end
     end
 
     def create_section

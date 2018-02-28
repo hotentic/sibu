@@ -12,8 +12,7 @@ module Sibu
     end
 
     def sections_templates
-      Dir.glob(File.join(Rails.root, "app/views/shared/#{@site.site_template.path}/*.erb")).map {|f| f.split('/').last}
-          .map {|f| f[1..-1].gsub('.html.erb', '')}.select {|f| f != 'site'}.map {|f| {"id" => "sibu_template_#{f}", "template" => f}}
+      @site.site_template.available_templates
     end
 
     def page_languages
@@ -21,7 +20,7 @@ module Sibu
     end
 
     def site_images
-      @site.images + Sibu::Image.shared
+      Sibu::Image.shared + @site.images
     end
 
     def available_links
@@ -59,7 +58,7 @@ module Sibu
 
     def elements(id = nil)
       items = id ? select_element(id)["elements"] : @sb_entity.find_or_init(*@sb_section)["elements"]
-      items.blank? ? [{"id" => "#{@sb_section.last}*"}] : items
+      items.blank? ? [{"id" => "el#{Time.current.to_i}"}] : items
     end
 
     def img(elt, opts = {})

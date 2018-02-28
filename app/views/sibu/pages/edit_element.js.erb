@@ -25,6 +25,7 @@ editPanel.html("");
       images.removeClass('selected');
       $(this).addClass('selected');
       $("#element_src").val($(this).data("src"));
+      $("#element_alt").val($(this).data("alt"));
     }
   });
 <% when 'link' %>

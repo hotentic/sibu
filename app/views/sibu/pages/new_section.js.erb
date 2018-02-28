@@ -1,7 +1,7 @@
 var sectionsPanel = $("#sections_panel");
 sectionsPanel.html("");
 sectionsPanel.html("<%= j(render 'new_section_panel') %>");
-var sections = sectionsPanel.find(".sibu_sections > *");
+var sections = sectionsPanel.find(".sibu_sections [data-sb-template]");
 sections.click(function() {
     if(!$(this).hasClass('selected')) {
         sections.removeClass('selected');
