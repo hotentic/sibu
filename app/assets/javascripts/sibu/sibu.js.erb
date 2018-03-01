@@ -17,6 +17,11 @@ class IconBlot extends Inline {
     static formats(node) {
         return node.getAttribute('href');
     }
+
+    format(name, value) {
+        if (name !== this.statics.blotName || !value) return super.format(name, value);
+        this.domNode.setAttribute('href', value);
+    }
 }
 IconBlot.blotName = 'icon';
 IconBlot.tagName = 'a';
@@ -39,24 +44,33 @@ function initQuillEditor(container) {
         theme: 'snow'
     });
 
+    function promptWithInit(promptText) {
+        var range = quill.getSelection(true);
+        if(range && range.length === 0) {
+            quill.insertText(range.index, ' ', Quill.sources.USER);
+            quill.setSelection(range.index, 1, Quill.sources.USER);
+        }
+        return prompt(promptText);
+    }
+
     var fbButton = document.querySelector('.ql-facebook');
     fbButton.addEventListener('click', function() {
-        var value = prompt('Adresse de la page Facebook :');
+        var value = promptWithInit('Adresse de la page Facebook :');
         quill.format('icon', [value, 'sb-facebook']);
     });
     var twButton = document.querySelector('.ql-twitter');
     twButton.addEventListener('click', function() {
-        var value = prompt('Adresse du compte Twitter :');
+        var value = promptWithInit('Adresse du compte Twitter :');
         quill.format('icon', [value, 'sb-twitter']);
     });
     var igButton = document.querySelector('.ql-instagram');
     igButton.addEventListener('click', function() {
-        var value = prompt('Adresse du compte Instagram :');
+        var value = promptWithInit('Adresse du compte Instagram :');
         quill.format('icon', [value, 'sb-instagram']);
     });
     var piButton = document.querySelector('.ql-pinterest');
     piButton.addEventListener('click', function() {
-        var value = prompt('Adresse du compte Pinterest :');
+        var value = promptWithInit('Adresse du compte Pinterest :');
         quill.format('icon', [value, 'sb-pinterest']);
     });
 
