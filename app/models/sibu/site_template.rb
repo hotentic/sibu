@@ -3,6 +3,7 @@ module Sibu
     store :default_sections, accessors: [:sections], coder: JSON
     store :default_pages, accessors: [:pages], coder: JSON
     store :default_templates, accessors: [:templates], coder: JSON
+    store :default_styles, accessors: [:primary_font, :secondary_font, :primary_color, :secondary_color], coder: JSON
 
     def reference
       name.parameterize.gsub('-', '_')

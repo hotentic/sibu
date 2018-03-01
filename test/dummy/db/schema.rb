@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180214134653) do
+ActiveRecord::Schema.define(version: 20180301152101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,8 @@ ActiveRecord::Schema.define(version: 20180214134653) do
     t.datetime "updated_at", null: false
     t.text "default_sections"
     t.text "default_pages"
+    t.text "default_templates"
+    t.text "default_styles"
   end
 
   create_table "sibu_sites", force: :cascade do |t|
@@ -54,6 +56,7 @@ ActiveRecord::Schema.define(version: 20180214134653) do
     t.integer "user_id"
     t.string "domain"
     t.text "custom_data"
+    t.text "style_data"
   end
 
 end

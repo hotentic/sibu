@@ -7,14 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <% if @site %>
-    <%= stylesheet_link_tag @site.site_template.path, media: "all" %>
+    <%= stylesheet_link_tag @site.style_url, media: "all" %>
     <%= javascript_include_tag @site.site_template.path %>
-  <% end %>
-  <% unless @site.primary_font.blank? %>
-    <%= stylesheet_link_tag "fonts/#{@site.primary_font.downcase}", media: "all" %>
-  <% end %>
-  <% unless @site.secondary_font.blank? %>
-    <%= stylesheet_link_tag "fonts/#{@site.secondary_font.downcase}", media: "all" %>
   <% end %>
   <%= csrf_meta_tags %>
   <%= yield :styles %>

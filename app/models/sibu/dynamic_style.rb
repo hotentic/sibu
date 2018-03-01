@@ -5,37 +5,37 @@ module Sibu
 
     def initialize(site_id)
       @site = Sibu::Site.find(site_id)
-      @filename = "_variables"
+      @filename = "#{site_id}_#{Time.current.to_i}"
       @scss_file = File.new(scss_file_path, 'w')
-      vars_binding = OpenStruct.new(site: @site).instance_eval { binding }
-      @body = ERB.new(File.read(template_file_path)).result(vars_binding)
+      @body = ERB.new(File.read(template_file_path)).result(binding)
       @env = Rails.application.assets
     end
 
-    # Todo : la compilation semble marcher
-    # Modifier le fichier cible scss pour que les variables soient directement renseignées (detente.scss.erb)
-    # Tester la compilation SASS puis mettre en place upload du fichier compilé dans Sibu::Site si ça marche
     def compile
       find_or_create_scss
 
       begin
         scss_file.write generate_css
         scss_file.flush
-        # site.update(style_url: File.join(site.site_template.path, "#{filename}.css"))
-      ensure
         scss_file.close
-        # File.delete(scss_file)
+        css_file_path = scss_file_path.gsub('scss', 'css')
+        File.rename(scss_file_path, css_file_path)
+        site.update(style: File.new(css_file_path))
+      rescue Exception => ex
+          logger.error(ex)
+      ensure
+        File.delete(css_file_path)
       end
     end
 
     private
 
     def template_file_path
-      @template_file_path ||= File.join(Rails.root, 'app', 'assets', 'stylesheets', site.site_template.path, '_template.scss.erb')
+      @template_file_path ||= File.join(Rails.root, 'lib', 'assets', '_default_template.scss.erb')
     end
 
     def scss_tmpfile_path
-      @scss_file_path ||= File.join(Rails.root, 'app', 'assets', 'stylesheets', site.site_template.path)
+      @scss_file_path ||= File.join(Rails.root, 'app', 'assets', 'stylesheets', 'templates')
       FileUtils.mkdir_p(@scss_file_path) unless File.exists?(@scss_file_path)
       @scss_file_path
     end

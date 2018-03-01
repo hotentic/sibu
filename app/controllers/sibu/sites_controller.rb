@@ -21,6 +21,7 @@ module Sibu
     def create
       @site = Sibu::Site.new(site_params)
       if @site.save_and_init
+        generate_styles
         redirect_to sites_url, notice: "Le site a bien été créé."
       else
         flash.now[:alert] = "Une erreur s'est produite lors de la création du site."
@@ -34,6 +35,9 @@ module Sibu
 
     def update
       if @site.update(site_params)
+        if @site.previous_changes.has_key?(:custom_data)
+          generate_styles
+        end
         redirect_to (params[:next_page].blank? ? sites_url : params[:next_page]), notice: "Le site a bien été mis à jour."
       else
         flash.now[:alert] = "Une erreur s'est produite lors de l'enregistrement du site."
@@ -54,6 +58,11 @@ module Sibu
 
     def site_params
       params.require(:site).permit!
+    end
+
+    def generate_styles
+      ds = Sibu::DynamicStyle.new(@site.id)
+      ds.compile
     end
   end
 end
