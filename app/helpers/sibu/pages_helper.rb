@@ -100,7 +100,6 @@ module Sibu
       content_tag(tag, capture(self, &block), opts)
     end
 
-    # Todo : voir comment générer une section par défaut en mode liste des sections et insertion d'un bloc avec sections
     def sections(id, tag, html_opts = {}, &block)
       (@sb_entity.find_or_init(id)["elements"].map.with_index do |elt, i|
         @sb_section = [id, elt["id"]]

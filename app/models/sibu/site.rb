@@ -3,7 +3,7 @@ module Sibu
     include Sibu::SectionsConcern
 
     store :custom_data, accessors: [:primary_font, :secondary_font, :primary_color, :secondary_color], coder: JSON
-    store :metadata, accessors: [:analytics_id]
+    store :metadata, accessors: [:analytics_id, :style_url], coder: JSON
 
     belongs_to :site_template, :class_name => 'Sibu::SiteTemplate'
     has_many :pages, :class_name => 'Sibu::Page', dependent: :destroy

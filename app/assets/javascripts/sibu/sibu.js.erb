@@ -3,20 +3,62 @@
 //= require ../quill/quill
 //= require_self
 
+var Inline = Quill.import('blots/inline');
 
+class IconBlot extends Inline {
+    static create(args) {
+        let node = super.create();
+        node.setAttribute('href', args[0]);
+        node.setAttribute('target', '_blank');
+        node.setAttribute('class', args[1]);
+        return node;
+    }
+
+    static formats(node) {
+        return node.getAttribute('href');
+    }
+}
+IconBlot.blotName = 'icon';
+IconBlot.tagName = 'a';
+
+Quill.register(IconBlot);
 Quill.register(Quill.import('attributors/style/align'), true);
 
 function initQuillEditor(container) {
-    return new Quill(container, {
+    var quill = new Quill(container, {
         modules: {
             toolbar: [
                 ['bold', 'italic', 'underline'], ['link'],
                 [{ 'color': [] }, { 'background': [] }],
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                 [{ 'align': [] }],
+                ['facebook', 'twitter', 'instagram', 'pinterest'],
                 ['clean']
             ]
         },
         theme: 'snow'
     });
+
+    var fbButton = document.querySelector('.ql-facebook');
+    fbButton.addEventListener('click', function() {
+        var value = prompt('Adresse de la page Facebook :');
+        quill.format('icon', [value, 'sb-facebook']);
+    });
+    var twButton = document.querySelector('.ql-twitter');
+    twButton.addEventListener('click', function() {
+        var value = prompt('Adresse du compte Twitter :');
+        quill.format('icon', [value, 'sb-twitter']);
+    });
+    var igButton = document.querySelector('.ql-instagram');
+    igButton.addEventListener('click', function() {
+        var value = prompt('Adresse du compte Instagram :');
+        quill.format('icon', [value, 'sb-instagram']);
+    });
+    var piButton = document.querySelector('.ql-pinterest');
+    piButton.addEventListener('click', function() {
+        var value = prompt('Adresse du compte Pinterest :');
+        quill.format('icon', [value, 'sb-pinterest']);
+    });
+
+    return quill;
 }

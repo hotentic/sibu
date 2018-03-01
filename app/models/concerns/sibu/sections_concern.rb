@@ -60,13 +60,9 @@ module Sibu
     def delete_element(*ids, element_id)
       src_elt = find_or_init(*ids, element_id)
       siblings = find_or_init(*ids)["elements"]
-      if siblings.length > 1
-        ref_index = siblings.index {|s| s["id"] == element_id}
-        siblings.delete_at(ref_index)
-        save
-      else
-        nil
-      end
+      ref_index = siblings.index {|s| s["id"] == element_id}
+      siblings.delete_at(ref_index)
+      save
     end
 
     def child_element(*ids, element_id)

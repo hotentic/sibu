@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'Sibu';
+  src: font-url('sibu/Sibu.eot');
+  src: font-url('sibu/Sibu.eot') format('embedded-opentype'), font-url('sibu/Sibu.ttf') format('truetype'),
+  font-url('sibu/Sibu.woff') format('woff'), font-url('sibu/Sibu.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+a[class^="sb-"]:before, a[class*=" sb-"]:before {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Sibu' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  margin-right: 3px;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.sb-facebook:before {
+  content: "\e900";
+}
+
+.sb-pinterest:before {
+  content: "\e901";
+}
+
+.sb-twitter:before {
+  content: "\e902";
+}
+
+.sb-instagram:before {
+  content: "\e903";
+}
