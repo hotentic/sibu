@@ -22,7 +22,7 @@
   <%= hidden_field_tag :img_id, @img_id %>
   <%= hidden_field_tag :size, @size %>
   <div class="sibu_actions">
-    <%= f.submit 'Valider' %>
+    <%= f.submit 'Valider', data: {disable_with: "Téléchargement de l'image en cours..."} %>
     <%= link_to 'Annuler', :back %>
   </div>
 <% end %>
