@@ -4,6 +4,7 @@
   <title><%= conf[:title] %></title>
   <%= stylesheet_link_tag conf[:stylesheet], media: 'all' %>
   <%= javascript_include_tag conf[:javascript] %>
+  <%= javascript_include_tag 'sibu/common' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -14,6 +15,9 @@
     </div>
   <% end %>
 <% end %>
+<script>
+    sibuCallback("<%= "#{action_name}_#{controller_name}".camelize(:lower) %>");
+</script>
 <%= yield :scripts %>
 </body>
 </html>

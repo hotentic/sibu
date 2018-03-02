@@ -86,7 +86,7 @@ module Sibu
       if new_section["template"].blank?
         nil
       else
-        template_defaults = site_template.templates ? site_template.templates[new_section["template"]] : {}
+        template_defaults = (site_template.templates && site_template.templates[new_section["template"]]) ? site_template.templates[new_section["template"]] : {}
         sec = template_defaults.merge(new_section)
         ref_pos = parent.index {|s| s["id"] == ids.last}
         parent.insert(after.to_s == 'true' ? ref_pos + 1 : ref_pos, sec)

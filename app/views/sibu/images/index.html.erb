@@ -1,6 +1,6 @@
 <div id="pages" class="sibu_view">
   <div class="actions">
-    <%= link_to 'Télécharger une image', new_site_image_path(@site.id) %> | <%= link_to 'Retour', :back %>
+    <%= link_to 'Télécharger une image', new_site_image_path(@site.id) %> <%= link_to 'Retour', :back %>
   </div>
   <h2>Images du site "<%= @site.name %>"</h2>
   <% @images.each do |image| %>
