@@ -81,6 +81,12 @@ module Sibu
       content_tag(wrapper, capture(self, &block), opts)
     end
 
+    def widget(elt, widget_type, opts = {}, &block)
+      content = elt.is_a?(Hash) ? elt : (select_element(elt) || {})
+      opts.merge!({data: {id: elt_id(elt), type: "widget_#{widget_type.to_s.underscore}"}}) if action_name != 'show'
+      content_tag(:div, capture(widget_type.new(content), &block), opts)
+    end
+
     # Note : see ActionView::OutputBuffer
     def sb_page
       @sb_entity = @page

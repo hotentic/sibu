@@ -26,6 +26,11 @@ $ gem install sibu
   - Use a specific controller & helper for site display
   - Move page templates to SiteTemplate model
 
+## Dependencies & inspiration
+jQuery (for now)
+Shrine
+https://github.com/BLauris/custom-css-for-user (dynamic custom styles)
+
 ## Contributing
 Contribution directions go here.
 

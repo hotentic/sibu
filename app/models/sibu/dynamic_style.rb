@@ -29,6 +29,12 @@ module Sibu
       end
     end
 
+    def self.refresh_styles
+      Sibu::Site.all.each do |s|
+        Sibu::DynamicStyle.new(s.id).compile
+      end
+    end
+
     private
 
     def template_file_path

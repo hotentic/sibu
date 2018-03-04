@@ -40,6 +40,8 @@ editPanel.html("");
   editPanel.html("<%= j(render 'group_edit_panel') %>");
 <% when 'map' %>
   editPanel.html("<%= j(render 'map_edit_panel') %>");
+<% when /^widget/ %>
+  editPanel.html("<%= j(render "shared/sibu/#{@content_type}_panel") %>");
 <% else %>
   editPanel.html("<%= j(render 'error_panel') %>");
 <% end %>
