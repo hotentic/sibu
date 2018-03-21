@@ -7,7 +7,12 @@ module Sibu
     store :metadata, accessors: [:title, :description, :keywords], coder: JSON
 
     before_save :update_path
-    validates_presence_of :name, :site, :language
+    validates_presence_of :name, :site
+
+    def self.lookup(domain_name, page_path)
+      joins(:site).where("sibu_sites.domain = ? AND ((sibu_sites.version = ? AND sibu_pages.path = ?) OR sibu_pages.path = LTRIM(REPLACE(?, sibu_sites.version, ''), '/'))",
+                         domain_name, Sibu::Site::DEFAULT_VERSION, page_path, page_path).first
+    end
 
     def save_and_init
       if valid?
@@ -24,6 +29,12 @@ module Sibu
 
     def site_template
       site.site_template
+    end
+
+    def deep_copy
+      new_page = deep_dup
+      new_page.name = name + ' - copie'
+      new_page
     end
   end
 end

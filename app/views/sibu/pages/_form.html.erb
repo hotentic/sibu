@@ -14,13 +14,6 @@
     </div>
   </div>
   <div class="sibu_field">
-    <%= f.label :language, "Langue" %>
-    <div>
-      <%= f.select(:language, page_languages) %>
-      <small>La langue d'affichage de la page</small>
-    </div>
-  </div>
-  <div class="sibu_field">
     <%= f.label :title, 'Titre' %>
     <div>
       <%= f.text_field :title, placeholder: "Maximum 80 caractères", maxlength: 80 %>

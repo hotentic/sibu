@@ -2,15 +2,17 @@ module Sibu
   class Site < ApplicationRecord
     include StyleUploader::Attachment.new(:style, cache: :styles_cache, store: :styles_store)
     include Sibu::SectionsConcern
+    extend Sibu::UserConcern
 
     store :custom_data, accessors: [:primary_font, :secondary_font, :primary_color, :secondary_color], coder: JSON
     store :metadata, accessors: [:analytics_id], coder: JSON
 
     belongs_to :site_template, :class_name => 'Sibu::SiteTemplate'
     has_many :pages, :class_name => 'Sibu::Page', dependent: :destroy
-    has_many :images, :class_name => 'Sibu::Image', dependent: :destroy
 
-    validates_presence_of :name, :site_template
+    validates_presence_of :name, :site_template, :version
+
+    DEFAULT_VERSION = 'fr'
 
     def style_url
       style ? style.url : site_template.path
@@ -54,6 +56,10 @@ module Sibu
         site_template.pages.each do |p|
           self.pages << Sibu::Page.new(p)
         end
+        self.primary_color = site_template.primary_color
+        self.secondary_color = site_template.secondary_color
+        self.primary_font = site_template.primary_font
+        self.secondary_font = site_template.secondary_font
       end
       save
     end
@@ -74,6 +80,17 @@ module Sibu
       site_data = Rails.application.config.sibu[:site_data][source]
       self.sections = site_data.sections(self)
       save!
+    end
+
+    def deep_copy
+      site_copy = deep_dup
+      pages.each do |p|
+        site_copy.name = name + ' - copie'
+        site_copy.domain = nil
+        site_copy.pages << p.deep_dup
+      end
+
+      site_copy
     end
   end
 end

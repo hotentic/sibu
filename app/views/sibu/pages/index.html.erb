@@ -21,6 +21,7 @@
         <td colspan="2">
           <%= link_to 'Voir', site_page_path(@site.id, p), target: '_blank' %> |
           <%= link_to 'Modifier', site_page_edit_content_path(site_id: @site.id, page_id: p.id) %> |
+          <%= link_to 'Copier', duplicate_site_page_path(@site.id, p), method: :post, data: {confirm: "Copier la page \"#{p.name}\" ?"} %> |
           <%= link_to 'Paramétrer', edit_site_page_path(@site.id, p) %> |
           <%= link_to 'Supprimer', site_page_path(@site.id, p), method: :delete, data: {confirm: "Supprimer la page \"#{p.name}\" ?"} %>
         </td>

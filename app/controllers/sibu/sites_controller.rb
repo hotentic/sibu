@@ -2,11 +2,11 @@ require_dependency "sibu/application_controller"
 
 module Sibu
   class SitesController < ApplicationController
-    before_action :set_site, only: [:show, :edit, :update, :destroy]
+    before_action :set_site, only: [:show, :edit, :update, :destroy, :duplicate]
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
-      @sites = Sibu::Site.where(user_id: send(Rails.application.config.sibu[:current_user]).id)
+      @sites = Sibu::Site.for_user(sibu_user).order(:name, :version)
     end
 
     def show
@@ -15,7 +15,7 @@ module Sibu
     end
 
     def new
-      @site = Sibu::Site.new(user_id: send(Rails.application.config.sibu[:current_user]).id)
+      @site = Sibu::Site.new(user_id: sibu_user.id, version: Sibu::Site::DEFAULT_VERSION)
     end
 
     def create
@@ -48,6 +48,16 @@ module Sibu
     def destroy
       @site.destroy
       redirect_to sites_url, notice: "Le site a bien été supprimé."
+    end
+
+    def duplicate
+      new_site = @site.deep_copy
+      if new_site.save
+        redirect_to sites_url, notice: "Le site a bien été copié."
+      else
+        flash.now[:alert] = "Une erreur s'est produite lors de la copie du site."
+        render :index
+      end
     end
 
     private

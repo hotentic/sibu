@@ -71,7 +71,7 @@ module Sibu
       if parent_elt["elements"].blank?
         parent_elt["elements"] = [{"id" => "cl#{Time.current.to_i}"}]
       else
-        parent_elt["elements"] << [{"id" => "cl#{Time.current.to_i}"}]
+        parent_elt["elements"] << {"id" => "cl#{Time.current.to_i}"}
       end
       save
     end

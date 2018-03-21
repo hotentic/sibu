@@ -1,4 +1,4 @@
-<%= form_for([@site, @image]) do |f| %>
+<%= form_for(@image) do |f| %>
   <div class="sibu_field">
     <%= f.label :file, "Sélection de l'image" %>
     <div>
@@ -14,7 +14,7 @@
       <small>Renseignez un texte décrivant l'image</small>
     </div>
   </div>
-  <%= f.hidden_field :site_id %>
+  <%= f.hidden_field :user_id %>
   <%= hidden_field_tag :page_id, @page_id %>
   <%= hidden_field_tag :entity_type, @entity_type %>
   <%= hidden_field_tag :element_id, @element_id %>

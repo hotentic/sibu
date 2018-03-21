@@ -5,7 +5,9 @@ Sibu::Engine.routes.draw do
 
   scope path_names: {new: 'creer', edit: 'modifier'} do
     resources :sites do
+      post 'duplicate', on: :member
       resources :pages do
+        post 'duplicate', on: :member
         get :edit_content, to: 'pages#edit_content', path: 'editer'
         get :edit_element, on: :member
         get :edit_section, on: :member
@@ -17,8 +19,8 @@ Sibu::Engine.routes.draw do
         post 'create_section', on: :member
         delete 'delete_section', on: :member
       end
-
-      resources :images
     end
+
+    resources :images
   end
 end

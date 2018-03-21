@@ -4,7 +4,7 @@
 <div class="sibu_edit_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
     <div class="sibu_select_images sibu_field">
-      <p>Sélectionnez ou <%= link_to 'téléchargez', new_site_image_path(@site.id, page_id: @page.id, section_id: @section_id, entity_type: @entity_type,
+      <p>Sélectionnez ou <%= link_to 'téléchargez', new_image_path(page_id: @page.id, section_id: @section_id, entity_type: @entity_type,
                                                                         element_id: @element_id, img_id: @element["id"], size: @size) %> une image</p>
       <% site_images.each do |image| %>
       <div class="sibu_image" data-img-id="<%= image.id %>">

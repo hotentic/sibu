@@ -24,8 +24,8 @@ module Sibu
       rescue Exception => ex
           logger.error(ex)
       ensure
-        File.delete(scss_file_path) if File.exist?(scss_file_path)
-        File.delete(css_file_path) if File.exist?(css_file_path)
+        File.delete(scss_file_path) if scss_file_path && File.exist?(scss_file_path)
+        File.delete(css_file_path) if css_file_path && File.exist?(css_file_path)
       end
     end
 

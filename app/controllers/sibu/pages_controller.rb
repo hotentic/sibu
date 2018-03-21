@@ -2,7 +2,7 @@ require_dependency "sibu/application_controller"
 
 module Sibu
   class PagesController < ApplicationController
-    before_action :set_page, only: [:edit, :update, :destroy, :edit_element, :update_element, :clone_element,
+    before_action :set_page, only: [:edit, :update, :destroy, :duplicate, :edit_element, :update_element, :clone_element,
                                     :delete_element, :child_element, :new_section, :create_section, :delete_section]
     before_action :set_site, only: [:index, :new]
     before_action :set_edit_context, only: [:edit_element, :update_element, :clone_element, :delete_element,
@@ -15,8 +15,11 @@ module Sibu
 
     def show
       if params[:site_id].blank?
-        @site = Sibu::Site.find_by_domain(request.domain)
-        if @site
+        sites = Sibu::Site.where(domain: request.domain)
+        if sites.count > 0
+          versions = sites.map {|s| s.version}
+          version = params[:path].blank? ? Sibu::Site::DEFAULT_VERSION : params[:path].split('/').first
+          @site = sites.where(version: version).first
           @page = @site.page(params[:path])
           @links = @site.pages_path_by_id
           view_template = @page ? 'show' : @site.not_found
@@ -60,6 +63,16 @@ module Sibu
     end
 
     def destroy
+    end
+
+    def duplicate
+      new_page = @page.deep_copy
+      if new_page.save
+        redirect_to site_pages_url(@page.site_id), notice: "La page a bien été copiée."
+      else
+        flash.now[:alert] = "Une erreur s'est produite lors de la copie de la page."
+        render :index
+      end
     end
 
     def edit_content

@@ -7,20 +7,12 @@ module Sibu
       p ? (@site.domain.blank? ? site_page_path(@site.id, p.id) : "/#{p.path}") : "#"
     end
 
-    def page_templates
-      [['Accueil', 'home'], ['Offre', 'offer'], ['Galerie', 'gallery'], ['Destination', 'destination'], ['Mentions légales', 'text']]
-    end
-
     def sections_templates
       @site.site_template.available_templates
     end
 
-    def page_languages
-      [['Français', 'fr'], ['Anglais', 'en']]
-    end
-
     def site_images
-      Sibu::Image.shared + @site.images
+      Sibu::Image.shared + Sibu::Image.for_user(sibu_user)
     end
 
     def available_links

@@ -1,6 +1,7 @@
 module Sibu
   class Image < ApplicationRecord
     include ImageUploader::Attachment.new(:file)
+    extend Sibu::UserConcern
 
     belongs_to :site, :class_name => 'Sibu::Site', optional: true
 

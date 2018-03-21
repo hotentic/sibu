@@ -18,10 +18,10 @@ class Sibu::ImageUploader < Shrine
   end
 
   def generate_location(io, context)
-    site_id  = context[:record].site_id
+    user_id  = context[:record].user_id
     style = context[:version] != :original ? "resized" : "originals"
     name  = super
 
-    [site_id, style, name].compact.join("/")
+    [user_id, style, name].compact.join("/")
   end
 end

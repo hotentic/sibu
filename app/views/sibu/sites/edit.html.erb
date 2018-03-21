@@ -1,5 +1,6 @@
 <div class="sibu_view">
   <div class="actions">
+    <% if @site.persisted? && @next_page %><%= link_to 'Rétablir les paramètres par défaut', '#', onclick: 'resetValues()' %><% end %>
     <%= link_to 'Retour', :back %>
   </div>
   <h2>Modifier un site</h2>

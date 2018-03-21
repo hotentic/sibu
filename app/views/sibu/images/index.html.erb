@@ -1,11 +1,11 @@
 <div id="pages" class="sibu_view">
   <div class="actions">
-    <%= link_to 'Télécharger une image', new_site_image_path(@site.id) %> <%= link_to 'Retour', :back %>
+    <%= link_to 'Télécharger une image', new_image_path %> <%= link_to 'Retour', :back %>
   </div>
-  <h2>Images du site "<%= @site.name %>"</h2>
+  <h2>Images téléchargées</h2>
   <div class="sibu_images">
     <% @images.each do |image| %>
-      <%= link_to image_tag(image.file_url(:small)), edit_site_image_path(@site.id, image.id), class: 'sibu_image', id: "sibu_image_#{image.id}", remote: true %>
+      <%= link_to image_tag(image.file_url(:small)), edit_image_path(image.id), class: 'sibu_image', id: "sibu_image_#{image.id}", remote: true %>
     <% end %>
   </div>
   <div class="sibu_edit_image">Sélectionnez une image pour voir ses informations.</div>
