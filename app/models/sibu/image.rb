@@ -3,14 +3,21 @@ module Sibu
     include ImageUploader::Attachment.new(:file)
     extend Sibu::UserConcern
 
-    belongs_to :site, :class_name => 'Sibu::Site', optional: true
-
-    store :metadata, accessors: [:alt], coder: JSON
+    store :metadata, accessors: [:alt, :reference], coder: JSON
 
     validates_presence_of :file_data
 
     def self.shared
-      where(site_id: nil)
+      where(user_id: nil)
+    end
+
+    def self.empty
+      empty_img = where("metadata ILIKE '%default_empty_image%'").first
+      if empty_img.nil?
+        empty_img = new(reference: 'default_empty_image', file: File.new('app/assets/images/empty.png'))
+        empty_img.save
+      end
+      empty_img
     end
   end
 end

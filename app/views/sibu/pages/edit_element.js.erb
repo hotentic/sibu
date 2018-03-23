@@ -5,37 +5,10 @@ editPanel.html("");
   editPanel.html("<%= j(render 'text_edit_panel') %>");
 <% when 'paragraph' %>
   editPanel.html("<%= j(render 'paragraph_edit_panel') %>");
-  var quill = initQuillEditor('#editor-container');
-  quill.root.innerHTML = "<%= j(raw(@element["text"] || 'Texte à modifier')) %>";
-  quill.on('text-change', function() {
-    $("#element_text").val(quill.root.innerHTML);
-  });
-  var wrapper = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']");
-  editPanel.find(".ql-editor").css({
-      "font-family": wrapper.css("font-family"),
-      "font-size": wrapper.css("font-size"),
-      "color": wrapper.css("color"),
-      "text-align": wrapper.css("text-align")
-  });
 <% when 'media' %>
   editPanel.html("<%= j(render 'media_edit_panel') %>");
-  var images = editPanel.find(".sibu_image img");
-  images.click(function() {
-    if(!$(this).hasClass('selected')) {
-      images.removeClass('selected');
-      $(this).addClass('selected');
-      $("#element_src").val($(this).data("src"));
-      $("#element_alt").val($(this).data("alt"));
-    }
-  });
 <% when 'link' %>
   editPanel.html("<%= j(render 'link_edit_panel') %>");
-  $("input[name='mode']").change(function() {
-    var selected = $(this).val();
-    var other = selected === 'internal' ? 'external' : 'internal';
-    $("#link_" + selected).find("#element_value, #element_target").removeAttr("disabled");
-    $("#link_" + other).find("#element_value, #element_target").attr("disabled", "disabled");
-  });
 <% when 'group' %>
   editPanel.html("<%= j(render 'group_edit_panel') %>");
 <% when 'map' %>
@@ -46,17 +19,59 @@ editPanel.html("");
   editPanel.html("<%= j(render 'error_panel') %>");
 <% end %>
 
-<% if @repeat %>
-$("#clone_elt, #duplicate_elt").show();
-<% else %>
-$("#clone_elt, #duplicate_elt").remove();
-<% end %>
 
-<% if @children %>
-$("#child_elt").show();
-<% else %>
-$("#child_elt").remove();
-<% end %>
-editPanel.slideDown("fast");
+editPanel.slideDown("fast", function() {
+    <% case @content_type %>
+    <% when 'paragraph' %>
+        var quill = initQuillEditor('#editor-container');
+        quill.root.innerHTML = "<%= j(raw(@element["text"] || 'Texte à modifier')) %>";
+        quill.on('text-change', function() {
+            $("#element_text").val(quill.root.innerHTML);
+        });
+        var wrapper = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']");
+        editPanel.find(".ql-editor").css({
+            "font-family": wrapper.css("font-family"),
+            "font-size": wrapper.css("font-size"),
+            "color": wrapper.css("color"),
+            "text-align": wrapper.css("text-align")
+        });
+    <% when 'media' %>
+        var images = editPanel.find(".sibu_image img");
+        images.click(function() {
+            if(!$(this).hasClass('selected')) {
+                images.removeClass('selected');
+                $(this).addClass('selected');
+                $("#element_src").val($(this).data("src"));
+                $("#element_alt").val($(this).data("alt"));
+                editPanel.find(".sibu_crop").html('<img src="' + $("#element_src").val() + '"/>');
+                editPanel.find(".sibu_selected_image > p:first-child").hide();
+                initCropper("<%= @element_id %>");
+            }
+        });
+        if(editPanel.find(".sibu_crop img").size() > 0) {
+          initCropper("<%= @element_id %>");
+        }
+    <% when 'link' %>
+        $("input[name='mode']").change(function() {
+            var selected = $(this).val();
+            var other = selected === 'internal' ? 'external' : 'internal';
+            $("#link_" + selected).find("#element_value, #element_target").removeAttr("disabled");
+            $("#link_" + other).find("#element_value, #element_target").attr("disabled", "disabled");
+        });
+    <% else %>
+    <% end %>
+
+    <% if @repeat %>
+        $("#clone_elt, #duplicate_elt").show();
+    <% else %>
+        $("#clone_elt, #duplicate_elt").remove();
+    <% end %>
+
+    <% if @children %>
+        $("#child_elt").show();
+    <% else %>
+        $("#child_elt").remove();
+    <% end %>
+    sibuCallback("editElement", "<%= @content_type %>");
+});
 document.body.style.overflow = "hidden";
-sibuCallback("editElement", "<%= @content_type %>");

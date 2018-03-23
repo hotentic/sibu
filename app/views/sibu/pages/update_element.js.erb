@@ -12,7 +12,7 @@
   <% unless @updated.except("id", "text", "value").blank? %>
     var tag = updatedElt.prop("tagName").toLowerCase();
     <% @updated.except("id", "text", "value").each_pair do |attr, val| %>
-      if(("<%= attr %>" === 'src' || "<%= attr %>" === 'alt') && tag !== 'img') {
+      if(("<%= attr %>" === 'src' || "<%= attr %>" === 'alt' || "<%= attr %>" === 'style') && tag !== 'img') {
         updatedElt.find("img").attr("<%= attr %>", "<%= val %>");
       } else {
         updatedElt.attr("<%= attr %>", "<%= val %>");

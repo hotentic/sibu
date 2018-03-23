@@ -12,7 +12,7 @@ module Sibu
     end
 
     def site_images
-      Sibu::Image.shared + Sibu::Image.for_user(sibu_user)
+      ([Sibu::Image.empty] + Sibu::Image.shared + Sibu::Image.for_user(sibu_user)).uniq
     end
 
     def available_links

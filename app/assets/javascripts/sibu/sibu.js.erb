@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require sibu/common
 //= require ../quill/quill
+//= require ../cropper/cropper
 //= require_self
 
 var Inline = Quill.import('blots/inline');
@@ -76,4 +77,28 @@ function initQuillEditor(container) {
     });
 
     return quill;
+}
+
+
+function initCropper(imgId) {
+    var wrapper = $(".sibu_crop").first();
+    var srcImg = $("#content_panel").find(".sb-editing img[data-id='" + imgId + "']").first();
+    var srcContainer = srcImg.parent();
+    var ratio = parseFloat(srcContainer.css("width")) / parseFloat(wrapper.css("width"));
+    wrapper.css("height", (parseFloat(srcContainer.css("height")) / ratio) + "px");
+    var cropper = new Cropper(wrapper.find("img")[0], {
+        crop: function(event) {
+            var data = event.detail;
+            var cropper = this.cropper;
+            var imageData = cropper.getImageData();
+            var previewWidth = parseFloat(srcContainer.css("width"));
+            var imageScaledRatio = data.width / previewWidth;
+            var width = imageData.naturalWidth / imageScaledRatio + 'px';
+            var height = imageData.naturalHeight / imageScaledRatio + 'px';
+            var marginLeft = -data.x / imageScaledRatio + 'px';
+            var marginTop = -data.y / imageScaledRatio + 'px';
+
+            $("#element_style").val("width: " + width + "; height: " + height + "; margin-left: " + marginLeft + "; margin-top: " + marginTop +"; max-width: none; max-height: none;");
+        }
+    });
 }

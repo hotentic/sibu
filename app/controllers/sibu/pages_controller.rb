@@ -15,12 +15,9 @@ module Sibu
 
     def show
       if params[:site_id].blank?
-        sites = Sibu::Site.where(domain: request.domain)
-        if sites.count > 0
-          versions = sites.map {|s| s.version}
-          version = params[:path].blank? ? Sibu::Site::DEFAULT_VERSION : params[:path].split('/').first
-          @site = sites.where(version: version).first
-          @page = @site.page(params[:path])
+        page = Page.lookup(request.domain, params[:path])
+        if page
+          @site = page.site
           @links = @site.pages_path_by_id
           view_template = @page ? 'show' : @site.not_found
         else
