@@ -8,5 +8,9 @@ module Sibu
     def metadata
       JSON.parse(file_data, symbolize_names: true)[:metadata]
     end
+
+    def file_name
+      metadata[:filename]
+    end
   end
 end
