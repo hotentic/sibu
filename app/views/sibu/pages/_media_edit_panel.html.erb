@@ -19,10 +19,14 @@
         <% if @element["src"] == DEFAULT_IMG || @element["src"].blank? %>
           <p>Veuillez sélectionner une image.</p>
         <% end %>
+        <div class="sibu_is_cropped" style="display: <%= (@element["src"] == DEFAULT_IMG || @element["src"].blank?) ? 'none' : 'block' %>">
+          <%= check_box_tag('is_cropped', true, !@element["style"].blank?, id: 'is_cropped', class: 'checkbox') %>
+          <%= label_tag 'is_cropped', "Recadrer l'image" %>
+        </div>
         <div class="sibu_crop">
           <%= image_tag(@element["src"]) unless @element["src"] == DEFAULT_IMG || @element["src"].blank? %>
         </div>
-        <div class="sibu_field">
+        <div class="sibu_field" style="display: <%= (@element["src"] == DEFAULT_IMG || @element["src"].blank?) ? 'none' : 'block' %>">
           <%= label_tag 'element[alt]', 'Légende / texte alternatif' %>
           <%= text_field_tag 'element[alt]', @element["alt"] %>
         </div>

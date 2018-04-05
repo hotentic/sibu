@@ -79,14 +79,14 @@ function initQuillEditor(container) {
     return quill;
 }
 
-
 function initCropper(imgId) {
     var wrapper = $(".sibu_crop").first();
     var srcImg = $("#content_panel").find(".sb-editing img[data-id='" + imgId + "']").first();
     var srcContainer = srcImg.parent();
     var ratio = parseFloat(srcContainer.css("width")) / parseFloat(wrapper.css("width"));
-    wrapper.css("height", (parseFloat(srcContainer.css("height")) / ratio) + "px");
-    var cropper = new Cropper(wrapper.find("img")[0], {
+    var wrapperHeight = Math.min(320, parseFloat(srcContainer.css("height")) / ratio) + "px";
+    wrapper.css("height", wrapperHeight);
+    return new Cropper(wrapper.find("img")[0], {
         crop: function(event) {
             var data = event.detail;
             var cropper = this.cropper;
@@ -97,7 +97,8 @@ function initCropper(imgId) {
             var height = imageData.naturalHeight / imageScaledRatio + 'px';
             var marginLeft = -data.x / imageScaledRatio + 'px';
             var marginTop = -data.y / imageScaledRatio + 'px';
-
+            // console.log("crop detail : " + JSON.stringify(data));
+            // console.log('img data : ' + JSON.stringify(imageData));
             $("#element_style").val("width: " + width + "; height: " + height + "; margin-left: " + marginLeft + "; margin-top: " + marginTop +"; max-width: none; max-height: none;");
         }
     });

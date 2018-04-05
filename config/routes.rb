@@ -20,7 +20,6 @@ Sibu::Engine.routes.draw do
         delete 'delete_section', on: :member
       end
     end
-
-    resources :images
+    resources :images, :documents
   end
 end

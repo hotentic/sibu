@@ -16,11 +16,21 @@ module Sibu
     end
 
     def available_links
-      options_from_collection_for_select(@site.pages, :id, :name, @element["value"])
+      options_from_collection_for_select(@site.pages.order(:name), :id, :name, @element["value"])
     end
 
-    def is_internal(val)
-      val.blank? || val == '#' || /^\d{1,3}$/.match(val.to_s)
+    def available_docs
+      options_from_collection_for_select(Sibu::Document.for_user(sibu_user), :file_url, :file_name, @element["value"])
+    end
+
+    def link_type(val)
+      if val.blank? || val == '#' || /^\d{1,3}$/.match(val.to_s)
+        'internal'
+      elsif Sibu::Document.for_user(sibu_user).map {|d| d.file_url}.include?(val)
+        'document'
+      else
+        'external'
+      end
     end
 
     [:h1, :h2, :h3, :h4, :h5, :h6, :span].each do |t|
@@ -127,7 +137,7 @@ module Sibu
       val = content.delete("value") || ""
       text = content.delete("text");
       html_opts.merge!({data: {id: elt_id(elt), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
-      if val.to_s.include?('http')
+      if val.to_s.include?('/')
         content["href"] = val
       else
         content["href"] = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'

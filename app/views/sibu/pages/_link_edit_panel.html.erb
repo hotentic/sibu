@@ -3,23 +3,28 @@
 <%= render 'element_actions' %>
 <div class="sibu_edit_form">
   <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
-    <% internal = is_internal(@element["value"]) %>
+    <% current_type = link_type(@element["value"]) %>
     <div class="sibu_field">
       <%= label_tag 'element[text]', 'Libellé' %>
       <%= text_field_tag 'element[text]', @element["text"] %>
     </div>
     <div id="link_internal" class="sibu_field">
-      <%= radio_button_tag :mode, 'internal', internal, class: 'radio' %>
+      <%= radio_button_tag :mode, 'internal', current_type == 'internal', class: 'radio' %>
       <%= label_tag 'mode_internal', 'Lien vers une page du site' %>
-      <%= select_tag 'element[value]', options_from_collection_for_select(@site.pages.order(:name), :id, :name, @element["value"]),
-                     prompt: 'Sélectionnez une page', disabled: !internal %>
-      <%= hidden_field_tag 'element[target]', '_self', disabled: !internal %>
+      <%= select_tag 'element[value]', available_links, prompt: 'Sélectionnez une page', disabled: current_type != 'internal' %>
+      <%= hidden_field_tag 'element[target]', '_self', disabled: current_type != 'internal' %>
     </div>
     <div id="link_external" class="sibu_field">
-      <%= radio_button_tag :mode, 'external', !internal, class: 'radio' %>
+      <%= radio_button_tag :mode, 'external', current_type == 'external', class: 'radio' %>
       <%= label_tag 'mode_external', 'Lien vers un autre site' %>
-      <%= text_field_tag 'element[value]', (@element["value"] unless internal), placeholder: 'Ex : http://www.un-site.com', disabled: internal %>
-      <%= hidden_field_tag 'element[target]', '_blank', disabled: internal %>
+      <%= text_field_tag 'element[value]', (@element["value"] if current_type == 'external'), placeholder: 'Ex : http://www.un-site.com', disabled: current_type != 'external' %>
+      <%= hidden_field_tag 'element[target]', '_blank', disabled: current_type != 'external' %>
+    </div>
+    <div id="link_document" class="sibu_field">
+      <%= radio_button_tag :mode, 'document', current_type == 'document', class: 'radio' %>
+      <%= label_tag 'mode_document', 'Lien vers un document' %>
+      <%= select_tag 'element[value]', available_docs, prompt: 'Sélectionnez un document', disabled: current_type != 'document' %>
+      <%= hidden_field_tag 'element[target]', '_blank', disabled: current_type != 'document' %>
     </div>
     <%= hidden_field_tag 'element[id]', @element["id"] %>
     <%= hidden_field_tag :element_id, @element_id %>

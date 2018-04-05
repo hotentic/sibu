@@ -1,0 +1,37 @@
+<div class="sibu_view">
+  <div class="actions">
+    <%= link_to 'Télécharger un document', new_document_path %> <%= link_to 'Retour', :back %>
+  </div>
+  <h2>Documents téléchargés</h2>
+  <table class="sibu_documents">
+    <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Taille</th>
+      <th>Mise à jour</th>
+      <th>Chemin d'accès (URL)</th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @documents.each do |doc| %>
+      <tr>
+        <td><%= doc.metadata[:filename] %></td>
+        <td><%= doc.metadata[:size] > (1024 * 1024) ? "#{doc.metadata[:size] / (1024 * 1024)} Mo" : "#{doc.metadata[:size] / 1024} Ko" %></td>
+        <td><%= l doc.updated_at %></td>
+        <td><%= doc.file_url %></td>
+        <td>
+          <%= link_to 'Voir', doc.file_url, target: '_blank' %> |
+          <%= link_to 'Supprimer', document_path(doc), method: :delete, data: {confirm: "Supprimer le document \"#{doc.metadata[:filename]}\" ?"} %>
+        </td>
+      </tr>
+    <% end %>
+    <% if @documents.empty? %>
+      <tr>
+        <td colspan="4">Aucun document téléchargé pour le moment.</td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+

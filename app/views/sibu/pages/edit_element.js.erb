@@ -37,6 +37,7 @@ editPanel.slideDown("fast", function() {
         });
     <% when 'media' %>
         var images = editPanel.find(".sibu_image img");
+        var isCropped = $("#is_cropped"), cropper;
         images.click(function() {
             if(!$(this).hasClass('selected')) {
                 images.removeClass('selected');
@@ -45,12 +46,29 @@ editPanel.slideDown("fast", function() {
                 $("#element_alt").val($(this).data("alt"));
                 editPanel.find(".sibu_crop").html('<img src="' + $("#element_src").val() + '"/>');
                 editPanel.find(".sibu_selected_image > p:first-child").hide();
-                initCropper("<%= @element_id %>");
+                editPanel.find(".sibu_selected_image").find(".sibu_is_cropped").show();
+                editPanel.find(".sibu_selected_image").find(".sibu_field").show();
+                if(isCropped.is(":checked")) {
+                    cropper = initCropper("<%= @element_id %>");
+                }
             }
         });
         if(editPanel.find(".sibu_crop img").size() > 0) {
-          initCropper("<%= @element_id %>");
+            if(isCropped.is(":checked")) {
+                cropper = initCropper("<%= @element_id %>");
+            }
         }
+        isCropped.change(function() {
+          if($(this).is(":checked")) {
+              cropper = initCropper("<%= @element_id %>");
+          } else {
+              $("#element_style").val("");
+              $(".sibu_crop").attr("style", "");
+              if(cropper) {
+                  cropper.destroy();
+              }
+          }
+        });
     <% when 'link' %>
         $("input[name='mode']").change(function() {
             var selected = $(this).val();

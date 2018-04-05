@@ -1,0 +1,15 @@
+<%= form_for(@document) do |f| %>
+  <div class="sibu_field">
+    <%= f.label :file, "Sélection du document" %>
+    <div>
+      <%= f.hidden_field :file, value: @document.cached_file_data %>
+      <%= f.file_field :file %>
+      <small>Sélectionnez un document à télécharger depuis votre ordinateur</small>
+    </div>
+  </div>
+  <%= f.hidden_field :user_id %>
+  <div class="sibu_actions">
+    <%= f.submit 'Valider', data: {disable_with: "Téléchargement du document en cours..."} %>
+    <%= link_to 'Annuler', :back %>
+  </div>
+<% end %>
