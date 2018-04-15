@@ -15,9 +15,9 @@ module Sibu
 
     def show
       if params[:site_id].blank?
-        page = Page.lookup(request.domain, params[:path])
-        if page
-          @site = page.site
+        @page = Page.lookup(request.domain, params[:path])
+        if @page
+          @site = @page.site
           @links = @site.pages_path_by_id
           view_template = @page ? 'show' : @site.not_found
         else
