@@ -36,5 +36,19 @@ module Sibu
       new_page.name = name + ' - copie'
       new_page
     end
+
+    def update_templates(sections_templates)
+      sections.each do |s|
+        s["template"] = sections_templates[s["id"]]
+      end
+      save
+    end
+
+    def reorder_sections(*ordered_ids)
+      if ordered_ids.length == sections.length
+        self.sections = ordered_ids.map {|section_id| sections.find {|sec| sec["id"] == section_id}}
+        save
+      end
+    end
   end
 end

@@ -83,6 +83,13 @@ module Sibu
       content_tag(wrapper, capture(self, &block), opts)
     end
 
+    def form_label(elt, html_opts = {}, &block)
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => DEFAULT_TEXT}
+      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
+      html_opts.merge!({data: {id: elt_id(elt), type: "text"}}) if action_name != 'show'
+      content_tag(:label, raw(content["text"]).html_safe, html_opts)
+    end
+
     def widget(elt, widget_type, opts = {}, &block)
       content = elt.is_a?(Hash) ? elt : (select_element(elt) || {})
       opts.merge!({data: {id: elt_id(elt), type: "widget_#{widget_type.to_s.underscore}"}}) if action_name != 'show'

@@ -60,6 +60,13 @@ module Sibu
     end
 
     def destroy
+      site_id = @page.site_id
+      if @page.destroy
+        redirect_to site_pages_url(site_id), notice: "La page a bien été supprimée."
+      else
+        flash.now[:alert] = "Une erreur s'est produite lors de la suppression de la page."
+        render :index
+      end
     end
 
     def duplicate
