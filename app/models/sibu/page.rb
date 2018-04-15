@@ -10,8 +10,8 @@ module Sibu
     validates_presence_of :name, :site
 
     def self.lookup(domain_name, page_path)
-      joins(:site).where("sibu_sites.domain = ? AND ((sibu_sites.version = ? AND sibu_pages.path = ?) OR sibu_pages.path = LTRIM(REPLACE(?, sibu_sites.version, ''), '/'))",
-                         domain_name, Sibu::Site::DEFAULT_VERSION, page_path, page_path).first
+      joins(:site).where("sibu_sites.domain = ? AND ((sibu_sites.version = ? AND COALESCE(sibu_pages.path, '') = ?) OR sibu_pages.path = LTRIM(REPLACE(?, sibu_sites.version, ''), '/'))",
+                         domain_name, Sibu::Site::DEFAULT_VERSION, page_path.nil? ? '' : page_path.strip, page_path.nil? ? '' : page_path.strip).first
     end
 
     def save_and_init
