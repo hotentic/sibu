@@ -45,6 +45,9 @@
     $(function () {
         initOverlays();
         sibuCallback("editContent");
+        <% unless @edit_section.blank? %>
+          $("[data-sb-overlay='<%= @edit_section %>']").click();
+        <% end %>
     });
 
     function setEditMode(section, overlay, left, top, width, height) {
@@ -205,7 +208,7 @@
           var offset = section.offset();
           var yOffset = offset.top - $(".sibu_content_panel").offset().top;
           var width = section.outerWidth(), height = (section.outerHeight() === 0 ? childrenHeight(section) : section.outerHeight());
-          var overlay = $("<div>Modifier</div>");
+          var overlay = $("<div data-sb-overlay='" + section.attr("data-sb-id") + "'>Modifier</div>");
           container.append(overlay);
           overlay.css({top: yOffset, left: offset.left, width: width, height: height});
           overlay.hover(function() {

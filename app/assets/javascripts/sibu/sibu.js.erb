@@ -103,3 +103,12 @@ function initCropper(imgId) {
         }
     });
 }
+
+function refreshAfterEdit(sectionId) {
+    var baseUrl = window.location.href.split('?')[0];
+    if (sectionId) {
+        window.location.href = baseUrl + '?edit_section=' + sectionId;
+    } else {
+        window.location.href = baseUrl;
+    }
+}

@@ -1,5 +1,5 @@
 <% if @deleted %>
-location.reload(true);
+refreshAfterEdit('<%= @section_id %>');
 <% else %>
 $("#edit_section_msg").text("La suppression n'a pas pu être effectuée.");
 <% end %>

@@ -83,6 +83,7 @@ module Sibu
       @page = Sibu::Page.find(params[:page_id])
       @site = Sibu::Site.includes(:pages).find(@page.site_id) if @page
       @links = @site.pages_path_by_id if @site
+      @edit_section = params[:edit_section]
       render :edit_content, layout: 'sibu/edit_content'
     end
 
