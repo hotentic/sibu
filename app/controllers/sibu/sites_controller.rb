@@ -21,7 +21,7 @@ module Sibu
     def create
       @site = Sibu::Site.new(site_params)
       if @site.save_and_init
-        generate_styles
+        generate_styles(@site)
         redirect_to sites_url, notice: "Le site a bien été créé."
       else
         flash.now[:alert] = "Une erreur s'est produite lors de la création du site."
@@ -36,7 +36,7 @@ module Sibu
     def update
       if @site.update(site_params)
         if @site.previous_changes.has_key?(:custom_data)
-          generate_styles
+          generate_styles(@site)
         end
         redirect_to (params[:next_page].blank? ? sites_url : params[:next_page]), notice: "Le site a bien été mis à jour."
       else
@@ -53,6 +53,8 @@ module Sibu
     def duplicate
       new_site = @site.deep_copy
       if new_site.save
+        generate_styles(@site)
+        generate_styles(new_site)
         redirect_to sites_url, notice: "Le site a bien été copié."
       else
         flash.now[:alert] = "Une erreur s'est produite lors de la copie du site."
@@ -70,8 +72,8 @@ module Sibu
       params.require(:site).permit!
     end
 
-    def generate_styles
-      ds = Sibu::DynamicStyle.new(@site.id)
+    def generate_styles(site)
+      ds = Sibu::DynamicStyle.new(site.id)
       ds.compile
     end
   end

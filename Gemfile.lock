@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sibu (0.3.3)
+    sibu (0.3.5)
       image_processing (~> 0.4)
       jquery-rails (~> 4.3)
       mini_magick (~> 4.3)
@@ -54,7 +54,7 @@ GEM
     builder (3.2.3)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
-    down (4.4.0)
+    down (4.5.0)
     erubi (1.7.0)
     ffi (1.9.18)
     globalid (0.4.1)
@@ -121,7 +121,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    shrine (2.10.1)
+    shrine (2.11.0)
       down (~> 4.1)
     sprockets (3.7.1)
       concurrent-ruby (~> 1.0)

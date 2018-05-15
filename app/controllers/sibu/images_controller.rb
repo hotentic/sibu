@@ -26,7 +26,7 @@ module Sibu
           else
             msg = {notice: "L'image a bien été mise à jour."}
           end
-          redirect_to site_page_edit_content_path(@site.id, @page_id), msg
+          redirect_to site_page_edit_content_path(p.site_id, @page_id), msg
         else
           redirect_to images_url, notice: "L'image a bien été téléchargée."
         end
