@@ -84,6 +84,9 @@
     cursor: pointer;
 }
 
+.sb-editing [data-type] {
+    min-width: 1em;
+}
 
 .ql-snow .ql-tooltip[data-mode="link"]::before {
     content: "Adresse du lien :";

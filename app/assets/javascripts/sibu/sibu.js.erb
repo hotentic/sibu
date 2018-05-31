@@ -104,11 +104,15 @@ function initCropper(imgId) {
     });
 }
 
-function refreshAfterEdit(sectionId) {
+function refreshAfterEdit(reload, sectionId) {
     var baseUrl = window.location.href.split('?')[0];
-    if (sectionId) {
-        window.location.href = baseUrl + '?edit_section=' + sectionId;
+    if (reload) {
+        if (sectionId) {
+            window.location.href = baseUrl + '?edit_section=' + sectionId;
+        } else {
+            window.location.href = baseUrl;
+        }
     } else {
-        window.location.href = baseUrl;
+        window.history.replaceState(null, null, window.location.pathname);
     }
 }
