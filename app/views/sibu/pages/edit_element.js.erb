@@ -3,6 +3,8 @@ editPanel.html("");
 <% case @content_type %>
 <% when 'text' %>
   editPanel.html("<%= j(render 'text_edit_panel') %>");
+<% when 'embed' %>
+  editPanel.html("<%= j(render 'code_edit_panel') %>");
 <% when 'paragraph' %>
   editPanel.html("<%= j(render 'paragraph_edit_panel') %>");
 <% when 'media' %>

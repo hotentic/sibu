@@ -8,6 +8,8 @@
   var updatedElt = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']");
   <% if @updated["text"] %>
     updatedElt.html("<%= j(raw @updated["text"]) %>");
+  <% elsif @updated["code"] %>
+    updatedElt.html("<%= j(raw @updated["code"]) %>");
   <% end %>
   <% unless @updated.except("id", "text", "value").blank? %>
     var tag = updatedElt.prop("tagName").toLowerCase();

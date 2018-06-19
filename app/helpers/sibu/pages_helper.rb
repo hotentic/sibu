@@ -96,6 +96,13 @@ module Sibu
       content_tag(:div, capture(widget_type.new(content), &block), opts)
     end
 
+    def embed(elt, opts = {})
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "code" => '<p>Contenu HTML personnalisé (iframe, etc...)</p>'}
+      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
+      opts.merge!({data: {id: elt_id(elt), type: "embed"}}) if action_name != 'show'
+      content_tag(:div, content_tag(:p, raw(content["code"]).html_safe), opts)
+    end
+
     # Note : see ActionView::OutputBuffer
     def sb_page
       @sb_entity = @page
