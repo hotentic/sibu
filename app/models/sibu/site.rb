@@ -47,7 +47,7 @@ module Sibu
     end
 
     def page_by_id(page_id)
-      pages.where(id: page_id).first
+      pages.where(id: page_id).select(:id, :path).first
     end
 
     def save_and_init

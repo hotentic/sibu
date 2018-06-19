@@ -4,7 +4,7 @@ module Sibu
 
     def link_path(page_id)
       p = @site.page_by_id(page_id)
-      p ? (@site.domain.blank? ? site_page_path(@site.id, p.id) : "/#{p.path}") : "#"
+      p ? (request.host == conf[:domain] ? site_page_path(@site.id, p.id) : "/#{p.path}") : "#"
     end
 
     def sections_templates
@@ -149,7 +149,7 @@ module Sibu
       defaults = {"id" => elt_id(elt), "value" => "", "text" => DEFAULT_TEXT}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
       val = content.delete("value") || ""
-      text = content.delete("text");
+      text = content.delete("text")
       html_opts.merge!({data: {id: elt_id(elt), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
       if val.to_s.include?('/')
         content["href"] = val
