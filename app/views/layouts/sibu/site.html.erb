@@ -9,6 +9,15 @@
   <% if @site %>
     <%= stylesheet_link_tag @site.style_url, media: "all" %>
     <%= javascript_include_tag @site.site_template.path %>
+    <% unless @site.analytics_id.blank? %>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= @site.analytics_id %>"></script>
+      <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '<%= @site.analytics_id %>');
+      </script>
+    <% end %>
   <% end %>
   <%= csrf_meta_tags %>
   <%= yield :styles %>

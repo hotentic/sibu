@@ -1,5 +1,6 @@
 Sibu::Engine.routes.draw do
 
+  # Note : fix the issue with domain & subdomain & internal links
   get '/', to: 'pages#show', constraints: lambda {|req| req.domain != Rails.application.config.sibu[:domain]}
   get '*path', to: 'pages#show', constraints: lambda {|req| req.domain != Rails.application.config.sibu[:domain]}
 
