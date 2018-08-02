@@ -27,6 +27,12 @@
       <%= hidden_field_tag 'element[target]', '_blank', disabled: current_type != 'document' %>
     </div>
     <%= hidden_field_tag 'element[id]', @element["id"] %>
+    <!-- Note : to be tested on multiple nested elements -->
+    <% (@element["elements"] || []).each do |e| %>
+      <% e.each_pair do |k, v| %>
+        <%= hidden_field_tag "element[elements][][#{k}]", v %>
+      <% end %>
+    <% end %>
     <%= hidden_field_tag :element_id, @element_id %>
     <%= hidden_field_tag :section_id, @section_id %>
     <%= hidden_field_tag :entity, @entity_type %>

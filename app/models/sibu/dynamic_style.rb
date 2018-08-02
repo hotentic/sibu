@@ -22,7 +22,7 @@ module Sibu
         File.rename(scss_file_path, css_file_path)
         site.update(style: File.new(css_file_path))
       rescue Exception => ex
-          logger.error(ex)
+          Rails.logger.error(ex)
       ensure
         File.delete(scss_file_path) if scss_file_path && File.exist?(scss_file_path)
         File.delete(css_file_path) if css_file_path && File.exist?(css_file_path)

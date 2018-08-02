@@ -156,10 +156,11 @@ module Sibu
       else
         content["href"] = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
       end
+      # Note : sends elts in given order
       if block_given?
-        content_tag(:a, content.merge(html_opts).except("elements"), &block)
+        content_tag(:a, capture(*([raw(text)] + elts(elt)), &block), content.merge(html_opts).except("elements"))
       else
-        content_tag(:a, text, content.merge(html_opts).except("elements"))
+        content_tag(:a, raw(text), content.merge(html_opts).except("elements"))
       end
     end
 

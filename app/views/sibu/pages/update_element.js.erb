@@ -1,24 +1,6 @@
 <% if @updated.nil? %>
   $("#edit_panel #edit_msg").html("<p class='sibu_alert'>Une erreur s'est produite lors de l'enregistrement.</p>");
-<% elsif @refresh %>
-  $("#edit_panel").slideUp();
-  location.reload(true);
 <% else %>
   $("#edit_panel").slideUp();
-  var updatedElt = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']");
-  <% if @updated["text"] %>
-    updatedElt.html("<%= j(raw @updated["text"]) %>");
-  <% elsif @updated["code"] %>
-    updatedElt.html("<%= j(raw @updated["code"]) %>");
-  <% end %>
-  <% unless @updated.except("id", "text", "value").blank? %>
-    var tag = updatedElt.prop("tagName").toLowerCase();
-    <% @updated.except("id", "text", "value").each_pair do |attr, val| %>
-      if(("<%= attr %>" === 'src' || "<%= attr %>" === 'alt' || "<%= attr %>" === 'style') && tag !== 'img') {
-        updatedElt.find("img").attr("<%= attr %>", "<%= val %>");
-      } else {
-        updatedElt.attr("<%= attr %>", "<%= val %>");
-      }
-    <% end %>
-  <% end %>
+  refreshAfterEdit(true, '<%= @section_id %>');
 <% end %>
