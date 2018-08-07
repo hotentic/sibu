@@ -80,7 +80,7 @@ module Sibu
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt}
       opts = defaults.merge(opts)
       opts.merge!({data: {id: elt_id(elt), type: "group", repeat: repeat, children: children}}) if action_name != 'show'
-      content_tag(wrapper, capture(self, &block), opts)
+      content_tag(wrapper, capture(*elts(elt), &block), opts)
     end
 
     def form_label(elt, html_opts = {}, &block)
