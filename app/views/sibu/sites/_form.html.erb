@@ -34,7 +34,7 @@
       <small>Renseignez l'identifiant Google Analytics pour suivre les statistiques d'audience du site</small>
     </div>
   </div>
-  <% if @site.persisted? && @next_page %>
+  <% if conf[:custom_styles] && @site.persisted? %>
   <div class="sibu_field sibu_colors">
     <%= f.label :primary_color, 'Couleur principale' %>
     <div>
@@ -70,7 +70,6 @@
     </div>
   </div>
   <% end %>
-  <%= hidden_field_tag :next_page, @next_page %>
   <%= f.hidden_field :user_id %>
   <div class="sibu_actions">
     <%= f.submit 'Valider', data: {disable_with: 'Enregistrement en cours...'} %>

@@ -1,0 +1,272 @@
+$sibu-color1 : #acb3c2 !default;
+$sibu-color2 : #727e96 !default;
+$sibu-color3 : #333 !default;
+
+.sibu_view {
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+  h2 {
+    padding-bottom: 1rem;
+    border-bottom: 2px solid $sibu-color1;
+  }
+
+  > .actions {
+    float: right;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  .sibu_images {
+    width: 70%;
+    float: left;
+    max-height: calc(100vh - 160px);
+    overflow: auto;
+  }
+
+  .sibu_edit_image {
+    margin-top: 1rem;
+    padding: 1rem;
+    text-align: center;
+    height: calc(100vh - 160px);
+    float: right;
+    width: 30%;
+    background-color: $sibu-color2;
+
+    .sibu_field {
+      margin-top: 1rem;
+      label {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .sibu_image {
+    display: inline-block;
+    margin-right: 1rem;
+    margin-top: 1rem;
+
+    img {
+      padding: 5px;
+      border: 1px solid $sibu-color3;
+      height: 100px;
+      width: auto;
+    }
+
+    &.selected {
+      background-color: $sibu-color3;
+    }
+  }
+
+  .sibu_form {
+    padding: 2rem;
+    text-align: center;
+
+    .sibu_field {
+      width: 90%;
+      margin: 0 auto 2rem auto;
+
+      label {
+        display: inline-block;
+        width: 20%;
+        text-align: right;
+        padding-right: 1rem;
+        vertical-align: top;
+        font-weight: bold;
+        margin-top: 0.5rem;
+        line-height: 1;
+
+        & + * {
+          display: inline-block;
+          width: 75%;
+          > * {
+            display: inline-block;
+            width: 100%;
+          }
+          small {
+            text-align: left;
+            font-style: italic;
+          }
+        }
+      }
+    }
+
+    .sibu_colors {
+      label {
+        vertical-align: top;
+      }
+
+      label + div {
+        text-align: left;
+      }
+
+      .sibu_color {
+        display: inline-block;
+        width: 4rem;
+        height: 4rem;
+        margin-right: 0.5rem;
+
+        &.selected {
+          border: 2px solid $sibu-color3;
+          outline: solid white 2px;
+          outline-offset: -3px;
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .sibu_edit_form {
+    padding: 2rem 0;
+    text-align: left;
+
+    .sibu_actions {
+      text-align: center;
+    }
+
+    .sibu_field {
+      width: 100%;
+      margin: 0 auto 2rem auto;
+
+      p {
+        font-weight: bold;
+      }
+
+      label {
+        text-align: left;
+        font-weight: bold;
+
+        & + * {
+          display: block;
+          width: 100%;
+        }
+
+        & + input[type='checkbox'] {
+          display: inline-block;
+          width: 2rem;
+          margin-right: 2rem;
+        }
+      }
+    }
+
+    .sibu_image_selection {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .sibu_select_images {
+      width: 70%;
+      max-height: calc(100vh - 300px);
+      overflow: auto;
+
+      .sibu_image {
+        position: relative;
+        span {
+          position: absolute;
+          z-index: -1;
+          line-height: 1;
+          width: 100%;
+          text-align: center;
+          top: 30px;
+
+          & + .selected {
+            background-color: transparentize($sibu-color3, 0.5);
+          }
+        }
+      }
+
+      img {
+        padding: 5px;
+        border: 1px solid $sibu-color3;
+
+        &.selected {
+          background-color: $sibu-color3;
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .sibu_selected_image {
+      background-color: $sibu-color2;
+      width: 30%;
+      margin-bottom: 2rem;
+      text-align: center;
+      padding: 1rem;
+
+      .sibu_field {
+        margin-top: 1rem;
+        label {
+          font-weight: bold;
+        }
+      }
+    }
+
+    #editor-container .ql-editor {
+      color: $sibu-color2;
+    }
+  }
+
+  .sibu_actions {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    input, a {
+      font-size: 18px;
+      padding: 0.5em 1em;
+    }
+  }
+
+  .sibu_template {
+    display: inline-block;
+    width: 33%;
+    vertical-align: top;
+    padding: 2rem;
+
+    img {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      border-top: 2px solid $sibu-color1;
+      box-shadow: 0 0 5px #ccc;
+    }
+  }
+}
+
+#sections_panel {
+  .sibu_sections {
+    padding: 2rem;
+
+    > div {
+      > * {
+        padding: 2rem;
+        border-bottom: 2px solid $sibu-color1;
+        &:hover {
+          cursor: pointer;
+          outline: dashed $sibu-color2 4px;
+          outline-offset: -5px;
+        }
+
+        &.selected {
+          outline: solid $sibu-color2 5px;
+          outline-offset: -5px;
+        }
+
+        > * {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+      }
+    }
+  }
+
+  .sibu_actions {
+    text-align: center;
+  }
+}
