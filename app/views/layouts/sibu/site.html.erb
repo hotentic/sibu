@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <% if @site %>
-    <%= stylesheet_link_tag @site.style_url, media: "all" %>
+    <%= stylesheet_link_tag (conf[:custom_styles] ? @site.style_url : @site.site_template.path), media: "all" %>
     <%= javascript_include_tag @site.site_template.path %>
     <% unless @site.analytics_id.blank? %>
       <script async src="https://www.googletagmanager.com/gtag/js?id=<%= @site.analytics_id %>"></script>

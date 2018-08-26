@@ -7,7 +7,7 @@
   <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
   <%= javascript_include_tag 'sibu/sibu' %>
   <% if @site %>
-    <%= stylesheet_link_tag @site.style_url, media: "all" %>
+    <%= stylesheet_link_tag (conf[:custom_styles] ? @site.style_url : @site.site_template.path), media: "all" %>
     <%= javascript_include_tag "#{@site.site_template.path}-core" %>
   <% end %>
   <%= csrf_meta_tags %>
