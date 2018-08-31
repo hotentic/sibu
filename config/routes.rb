@@ -1,8 +1,8 @@
 Sibu::Engine.routes.draw do
 
   # Note : fix the issue with domain & subdomain & internal links
-  get '/', to: 'pages#show', constraints: lambda {|req| req.domain != Rails.application.config.sibu[:domain]}
-  get '*path', to: 'pages#show', constraints: lambda {|req| req.domain != Rails.application.config.sibu[:domain]}
+  get '/', to: 'pages#show', constraints: lambda {|req| req.host != Rails.application.config.sibu[:host]}
+  get '*path', to: 'pages#show', constraints: lambda {|req| req.host != Rails.application.config.sibu[:host]}
 
   scope path_names: {new: 'creer', edit: 'modifier'} do
     resources :sites do

@@ -9,9 +9,16 @@ module Sibu
     before_save :update_path
     validates_presence_of :name, :site
 
-    def self.lookup(domain_name, page_path)
-      joins(:site).where("sibu_sites.domain = ? AND ((sibu_sites.version = ? AND COALESCE(sibu_pages.path, '') = ?) OR sibu_pages.path = LTRIM(REPLACE(?, sibu_sites.version, ''), '/'))",
-                         domain_name, Sibu::Site::DEFAULT_VERSION, page_path.nil? ? '' : page_path.strip, page_path.nil? ? '' : page_path.strip).first
+    def self.lookup(domain_name, page_query)
+      page_path = (page_query || '').strip.split('?')[0]
+      if page_path.blank?
+        joins(:site).where("sibu_sites.domain = ? AND COALESCE(sibu_pages.path, '') = ''", domain_name).first
+      else
+        paths = page_path.split('/').inject([]) {|p, s| p << (p.length == 0 ? s : "#{p[-1]}/#{s}")}
+        joins(:site).where("sibu_sites.domain = ? AND COALESCE(sibu_pages.path, '') IN (?)", domain_name, paths)
+            .order(path: :desc)
+            .first
+      end
     end
 
     def save_and_init

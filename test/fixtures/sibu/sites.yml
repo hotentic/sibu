@@ -1,11 +1,8 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  metadata: MyText
-  sections: 
-
-two:
-  name: MyString
-  metadata: MyText
-  sections: 
+site_one:
+  name: Site
+  site_template: template_one
+  version: fr
+  domain: www.published.site
+  sections: []

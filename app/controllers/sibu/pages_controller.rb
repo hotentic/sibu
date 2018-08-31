@@ -14,14 +14,18 @@ module Sibu
     end
 
     def show
+      return_code = :ok
       if params[:site_id].blank?
-        @page = Page.lookup(request.domain, params[:path])
+        @page = Sibu::Page.lookup(request.host, params[:path])
         if @page
+          @query_path =  params[:path][@page.path.length + 1..-1] unless @page.path.blank?
+          @query_params = show_params.except(:controller, :action, :path).to_h
           @site = @page.site
           @links = @site.pages_path_by_id
-          view_template = @page ? 'show' : @site.not_found
+          view_template = 'show'
         else
           view_template = Rails.application.config.sibu[:not_found]
+          return_code = :not_found
         end
       else
         @site = Sibu::Site.find(params[:site_id])
@@ -30,7 +34,7 @@ module Sibu
         view_template = 'show'
       end
 
-      render view_template, layout: 'sibu/site'
+      render view_template, layout: 'sibu/site', status: return_code
     end
 
     def new
@@ -163,6 +167,10 @@ module Sibu
 
     def section_params
       params.require(:section).permit!
+    end
+
+    def show_params
+      params.permit!
     end
   end
 end

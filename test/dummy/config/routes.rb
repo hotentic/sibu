@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount Sibu::Engine => "/sibu"
+  mount Sibu::Engine => "/"
 end

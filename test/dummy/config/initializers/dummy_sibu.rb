@@ -29,7 +29,7 @@ Rails.application.config.sibu = {
     bottom_panel: 'shared/bottom_panel',
     auth_filter: :dummy_auth,
     current_user: :dummy_user,
-    domain: 'localhost',
+    host: 'localhost',
     not_found: 'shared/not_found',
     images: {large: 1024, medium: 640, small: 320}
 }

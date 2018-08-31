@@ -16,7 +16,7 @@ module Sibu
     end
 
     test "basic sections serialization" do
-      site = Site.new(name: 'test site', site_template: @site_template, sections: @site_sections)
+      site = Site.new(name: 'test site', site_template: @site_template, sections: @site_sections, version: 'fr')
       page = Page.new(name: 'test page', site: site, template: 'test template', path: 'test',
                       sections: @page_sections)
 

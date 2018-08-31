@@ -1,14 +1,22 @@
-<header>
-  <%= site_section('header') do %>
-    <%= sb.h1('title') %>
-    <%= sb.img('top_logo_img', id: 'logo') %>
-  <% end %>
-  <nav>
-    <% site_sections('main_menu').each do |menu_item| %>
-      <%= site_section(menu_item) do |s| %>
-        <%= sb.link(menu_item) %>
-      <% end %>
+<%= site.section('nav', :nav) do |s| %>
+  <ul>
+    <% s.elts('menu').each do |menu_item| %>
+      <li>
+        <%= s.link(menu_item, repeat: true, children: true) %>
+        <% unless menu_item["elements"].blank? %>
+          <ul>
+            <% s.elts(menu_item).each do |sub_item| %>
+              <li><%= s.link(sub_item, repeat: true) %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </li>
     <% end %>
-  </nav>
-</header>
-<%= render "shared/#{@site.page_template(@page)}" %>
+  </ul>
+<% end %>
+
+<div>
+  <% @page.sections.each do |s| %>
+    <%= render "shared/#{@site.section_template(s)}", sec: s %>
+  <% end %>
+</div>

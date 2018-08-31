@@ -1,17 +1,31 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  site_id: 1
-  metadata: MyText
-  language: MyString
-  url: MyString
-  sections: 
+page_one:
+  name: Page one
+  site: site_one
+  path: segment1/segment2
+  metadata: >
+    {
+      "title": "Page one"
+    }
+  sections: {}
 
-two:
-  name: MyString
-  site_id: 1
-  metadata: MyText
-  language: MyString
-  url: MyString
-  sections: 
+page_two:
+  name: Page two
+  site: site_one
+  path: segment1
+  metadata: >
+    {
+      "title": "Page two"
+    }
+  sections: {}
+
+home_page:
+  name: Home
+  site: site_one
+  path:
+  metadata: >
+    {
+      "title": "Home page"
+    }
+  sections: {}
