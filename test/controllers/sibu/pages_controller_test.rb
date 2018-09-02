@@ -34,6 +34,14 @@ module Sibu
       assert_select "title", "Page one"
     end
 
+    test "should get site page with trailing /" do
+      site = sibu_sites(:site_one)
+      page = sibu_pages(:page_one)
+      get "http://localhost:3000/sites/#{site.id}/pages/#{page.id}/"
+      assert_response :success
+      assert_select "title", "Page one"
+    end
+
     test "should match existing page on published site" do
       get 'http://www.published.site/segment1/segment2'
       assert_response :success

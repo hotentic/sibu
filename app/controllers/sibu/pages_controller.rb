@@ -7,6 +7,7 @@ module Sibu
     before_action :set_site, only: [:index, :new]
     before_action :set_edit_context, only: [:edit_element, :update_element, :clone_element, :delete_element,
                                             :child_element, :new_section, :create_section, :delete_section]
+    before_action :set_online, only: [:show, :edit]
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
@@ -155,6 +156,10 @@ module Sibu
       @section_id = params[:section_id]
       @element_id = params[:element_id]
       @entity = @entity_type == 'site' ? @site : @page
+    end
+
+    def set_online
+      @online = request.host != conf[:host]
     end
 
     def page_params

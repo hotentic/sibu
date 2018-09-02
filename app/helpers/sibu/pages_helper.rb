@@ -92,7 +92,7 @@ module Sibu
 
     def widget(elt, widget_type, opts = {}, &block)
       content = elt.is_a?(Hash) ? elt : (select_element(elt) || {})
-      opts.merge!({data: {id: elt_id(elt), type: "widget_#{widget_type.to_s.underscore}"}}) if action_name != 'show'
+      opts.merge!({data: {id: elt_id(elt), type: "widget_#{widget_type.to_s.split('::').last.underscore}"}}) if action_name != 'show'
       content_tag(:div, capture(widget_type.new(content), &block), opts)
     end
 
