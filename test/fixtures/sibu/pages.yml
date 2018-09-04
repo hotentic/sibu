@@ -29,3 +29,13 @@ home_page:
       "title": "Home page"
     }
   sections: {}
+
+page_filter:
+  name: Filter
+  site: site_one
+  path: segment1/segment2/segment3
+  metadata: >
+    {
+      "title": "Page filtré"
+    }
+  sections: {}

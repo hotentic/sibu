@@ -32,6 +32,7 @@ module Sibu
         @site = Sibu::Site.find(params[:site_id])
         @page = Sibu::Page.find(params[:id])
         @links = @site.pages_path_by_id
+        @query_path = params[:path]
         view_template = 'show'
       end
 

@@ -7,14 +7,14 @@ pg: &pg
 development:
   <<: *pg
   database: sibu_dev
-  username: pg_local
-  password: pg_local
+  username: pglocal
+  password: pglocal
 
 test:
   <<: *pg
   database: sibu_test
-  username: pg_local
-  password: pg_local
+  username: pglocal
+  password: pglocal
 
 production:
   <<: *pg

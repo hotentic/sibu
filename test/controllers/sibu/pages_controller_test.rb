@@ -59,10 +59,10 @@ module Sibu
     end
 
     test "should match existing page with query params on published site" do
-      get 'http://www.published.site/segment1/segment2/segment3?param1=param2&param3=param4'
+      get 'http://www.published.site/segment1/segment2/filter?param1=param2&param3=param4'
       assert_response :success
       assert_select "title", "Page one"
-      assert_equal 'segment3', controller.instance_variable_get(:@query_path)
+      assert_equal 'filter', controller.instance_variable_get(:@query_path)
       assert_equal({'param1' => 'param2', 'param3' => 'param4'}, controller.instance_variable_get(:@query_params))
     end
 
@@ -94,5 +94,15 @@ module Sibu
       get 'http://www.published.site/unknown/page'
       assert_response :not_found
     end
+
+    test "should get filters" do
+      site = sibu_sites(:site_one)
+      page = sibu_pages(:page_filter)
+      get "http://localhost:3000/sites/#{site.id}/pages/#{page.id}/filter"
+      assert_response :success
+      assert_equal 'filter', controller.instance_variable_get(:@query_path)
+
+    end
+
   end
 end

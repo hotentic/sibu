@@ -18,6 +18,7 @@ Sibu::Engine.routes.draw do
         get 'new_section', on: :member
         post 'create_section', on: :member
         delete 'delete_section', on: :member
+        get '*path', to: 'pages#show', on: :member
       end
     end
     resources :images, :documents
