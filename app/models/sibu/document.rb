@@ -5,6 +5,10 @@ module Sibu
 
     validates_presence_of :file_data
 
+    def self.shared
+      where(user_id: nil)
+    end
+
     def metadata
       JSON.parse(file_data, symbolize_names: true)[:metadata]
     end

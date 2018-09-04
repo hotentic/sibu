@@ -22,7 +22,7 @@
         <td><%= doc.file_url %></td>
         <td>
           <%= link_to 'Voir', doc.file_url, target: '_blank' %> |
-          <%= link_to 'Supprimer', document_path(doc), method: :delete, data: {confirm: "Supprimer le document \"#{doc.file_name}\" ?"} %>
+          <%= link_to('Supprimer', document_path(doc), method: :delete, data: {confirm: "Supprimer le document \"#{doc.file_name}\" ?"}) if doc.user_id %>
         </td>
       </tr>
     <% end %>
