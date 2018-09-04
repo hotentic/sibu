@@ -4,7 +4,7 @@ module Sibu
 
     def link_path(page_id)
       p = @site.page_by_id(page_id)
-      p ? (request.host == conf[:domain] ? site_page_path(@site.id, p.id) : "/#{p.path}") : "#"
+      p ? (request.host == conf[:host] ? site_page_path(@site.id, p.id) : "/#{p.path}") : "#"
     end
 
     def sections_templates
@@ -24,7 +24,7 @@ module Sibu
     end
 
     def link_type(val)
-      if val.blank? || val == '#' || /^\d{1,3}$/.match(val.to_s)
+      if val.blank? || val == '#' || /^\d+$/.match(val.to_s)
         'internal'
       elsif Sibu::Document.for_user(sibu_user).map {|d| d.file_url}.include?(val)
         'document'
