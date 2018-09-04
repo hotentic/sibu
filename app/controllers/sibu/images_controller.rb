@@ -6,7 +6,7 @@ module Sibu
     before_action :set_edition_context, only: [:new, :create]
 
     def index
-      @images = Sibu::Image.for_user(sibu_user)
+      @images = Sibu::Image.shared + Sibu::Image.for_user(sibu_user)
     end
 
     def new
