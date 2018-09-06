@@ -32,8 +32,12 @@ Quill.register(IconBlot);
 Quill.register(Quill.import('attributors/style/align'), true);
 
 function initQuillEditor(container) {
-    var quill = new Quill(container, {
-        modules: {
+    var quillModules;
+    var modulesCallback = "sibuEditorModules";
+    if(typeof modulesCallback === "function") {
+        quillModules = modulesCallback();
+    } else {
+        quillModules = {
             toolbar: [
                 ['bold', 'italic', 'underline'], ['link'],
                 [{ 'color': [] }, { 'background': [] }],
@@ -42,7 +46,10 @@ function initQuillEditor(container) {
                 ['facebook', 'twitter', 'instagram', 'pinterest'],
                 ['clean']
             ]
-        },
+        };
+    }
+    var quill = new Quill(container, {
+        modules: quillModules,
         theme: 'snow'
     });
 
