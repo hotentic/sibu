@@ -34,8 +34,8 @@ Quill.register(Quill.import('attributors/style/align'), true);
 function initQuillEditor(container) {
     var quillModules;
     var modulesCallback = "sibuEditorModules";
-    if(typeof modulesCallback === "function") {
-        quillModules = modulesCallback();
+    if(typeof window[modulesCallback] === "function") {
+        quillModules = window[modulesCallback]();
     } else {
         quillModules = {
             toolbar: [
@@ -63,25 +63,33 @@ function initQuillEditor(container) {
     }
 
     var fbButton = document.querySelector('.ql-facebook');
-    fbButton.addEventListener('click', function() {
-        var value = promptWithInit('Adresse de la page Facebook :');
-        quill.format('icon', [value, 'sb-facebook']);
-    });
+    if(fbButton) {
+      fbButton.addEventListener('click', function() {
+          var value = promptWithInit('Adresse de la page Facebook :');
+          quill.format('icon', [value, 'sb-facebook']);
+      });
+    }
     var twButton = document.querySelector('.ql-twitter');
-    twButton.addEventListener('click', function() {
-        var value = promptWithInit('Adresse du compte Twitter :');
-        quill.format('icon', [value, 'sb-twitter']);
-    });
+    if(twButton) {
+      twButton.addEventListener('click', function() {
+          var value = promptWithInit('Adresse du compte Twitter :');
+          quill.format('icon', [value, 'sb-twitter']);
+      });
+    }
     var igButton = document.querySelector('.ql-instagram');
-    igButton.addEventListener('click', function() {
-        var value = promptWithInit('Adresse du compte Instagram :');
-        quill.format('icon', [value, 'sb-instagram']);
-    });
+    if(igButton) {
+      igButton.addEventListener('click', function() {
+          var value = promptWithInit('Adresse du compte Instagram :');
+          quill.format('icon', [value, 'sb-instagram']);
+      });
+    }
     var piButton = document.querySelector('.ql-pinterest');
-    piButton.addEventListener('click', function() {
-        var value = promptWithInit('Adresse du compte Pinterest :');
-        quill.format('icon', [value, 'sb-pinterest']);
-    });
+    if(piButton) {
+      piButton.addEventListener('click', function() {
+          var value = promptWithInit('Adresse du compte Pinterest :');
+          quill.format('icon', [value, 'sb-pinterest']);
+      });
+    }
 
     return quill;
 }
