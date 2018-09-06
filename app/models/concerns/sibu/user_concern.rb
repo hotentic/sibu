@@ -3,7 +3,11 @@ module Sibu
     include ActiveSupport::Concern
 
     def for_user(usr)
-      where(user_id: usr.id)
+      Rails.application.config.sibu[:multi_user] ? (shared + where(user_id: usr.id)) : all
+    end
+
+    def shared
+      where(user_id: nil)
     end
   end
 end

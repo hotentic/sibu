@@ -3,7 +3,7 @@ require_dependency "sibu/application_controller"
 module Sibu
   class DocumentsController < ApplicationController
     def index
-      @documents = Sibu::Document.shared + Sibu::Document.for_user(sibu_user)
+      @documents = Sibu::Document.for_user(sibu_user)
     end
 
     def new

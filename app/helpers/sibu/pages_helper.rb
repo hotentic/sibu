@@ -12,7 +12,7 @@ module Sibu
     end
 
     def site_images
-      ([Sibu::Image.empty] + Sibu::Image.shared + Sibu::Image.for_user(sibu_user)).uniq
+      ([Sibu::Image.empty] + Sibu::Image.for_user(sibu_user)).uniq
     end
 
     def available_links
@@ -20,13 +20,13 @@ module Sibu
     end
 
     def available_docs
-      options_from_collection_for_select((Sibu::Document.shared + Sibu::Document.for_user(sibu_user)), :file_url, :file_name, @element["value"])
+      options_from_collection_for_select(Sibu::Document.for_user(sibu_user), :file_url, :file_name, @element["value"])
     end
 
     def link_type(val)
       if val.blank? || val == '#' || /^\d+$/.match(val.to_s)
         'internal'
-      elsif (Sibu::Document.shared + Sibu::Document.for_user(sibu_user)).map {|d| d.file_url}.include?(val)
+      elsif Sibu::Document.for_user(sibu_user).map {|d| d.file_url}.include?(val)
         'document'
       else
         'external'
