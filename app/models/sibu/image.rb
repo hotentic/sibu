@@ -7,10 +7,6 @@ module Sibu
 
     validates_presence_of :file_data
 
-    def self.shared
-      where(user_id: nil)
-    end
-
     def self.empty
       empty_img = where("metadata ILIKE '%default_empty_image%'").first
       if empty_img.nil?
