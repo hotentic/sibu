@@ -69,7 +69,11 @@ module Sibu
       size = opts.delete(:size)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => DEFAULT_IMG}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat, size: size}}) if action_name != 'show'
+      if action_name == 'show'
+        content["src"] = ("/#{conf[:deployment_path]}" + content["src"]) if @online && conf[:deployment_path]
+      else
+        opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat, size: size}}) if action_name != 'show'
+      end
       wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts) : content_tag(:img, nil, content.except("id").merge(opts))
     end
 
