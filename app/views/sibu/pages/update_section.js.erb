@@ -1,0 +1,6 @@
+<% if @updated %>
+$("#edit_panel").slideUp();
+refreshAfterEdit(true, '<%= @section_id %>');
+<% else %>
+$("#edit_panel #edit_msg").html("<p class='sibu_alert'>Une erreur s'est produite lors de l'enregistrement.</p>");
+<% end %>

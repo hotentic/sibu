@@ -28,6 +28,9 @@
           <div class="overlay_bottom"></div>
           <div class="edit_mode_actions">
             <p id="edit_section_msg">Modifier la section</p>
+            <% if conf[:section_form] %>
+              <button id="edit_section" onclick="editSection()">Configurer</button>
+            <% end %>
             <button id="new_section_before" onclick="newSection(false)">Insérer un bloc avant</button>
             <button id="new_section_after" onclick="newSection(true)">Insérer un bloc après</button>
             <button id="delete_section" onclick="deleteSection()">Supprimer</button>
@@ -94,6 +97,18 @@
                 section_id: section.data("sb-id"),
                 entity: section.data("sb-entity"),
                 after: isAfter
+            }
+        })
+    }
+
+    function editSection() {
+        var section = $(".sb-editing").first();
+        $.ajax({
+            url: "<%= edit_section_site_page_path(@site.id, @page.id) %>",
+            method: "GET",
+            data: {
+                section_id: section.data("sb-id"),
+                entity: section.data("sb-entity")
             }
         })
     }
