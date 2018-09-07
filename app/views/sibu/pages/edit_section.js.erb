@@ -1,0 +1,7 @@
+var editPanel = $("#edit_panel");
+editPanel.html("");
+editPanel.html("<%= j(render conf[:section_form]) %>");
+editPanel.slideDown("fast", function() {
+    sibuCallback("editSection");
+});
+document.body.style.overflow = "hidden";

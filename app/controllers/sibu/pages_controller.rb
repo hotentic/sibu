@@ -3,10 +3,12 @@ require_dependency "sibu/application_controller"
 module Sibu
   class PagesController < ApplicationController
     before_action :set_page, only: [:edit, :update, :destroy, :duplicate, :edit_element, :update_element, :clone_element,
-                                    :delete_element, :child_element, :new_section, :create_section, :delete_section]
+                                    :delete_element, :child_element, :new_section, :create_section, :edit_section,
+                                    :update_section, :delete_section]
     before_action :set_site, only: [:index, :new]
     before_action :set_edit_context, only: [:edit_element, :update_element, :clone_element, :delete_element,
-                                            :child_element, :new_section, :create_section, :delete_section]
+                                            :child_element, :new_section, :create_section, :edit_section,
+                                            :update_section, :delete_section]
     before_action :set_online, only: [:show, :edit]
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
@@ -135,6 +137,17 @@ module Sibu
 
     def create_section
       @created = @entity.create_section(*@section_id.split('|'), params[:after], section_params)
+    end
+
+    def edit_section
+      @section = @entity.section(params[:section_id])
+    end
+
+    def update_section
+      # {"utf8"=>"✓", "section"=>{"color"=>"#AFCA0B", "filters"=>"school_camps"}, "section_id"=>"cs1536301729", "refresh"=>"true", "commit"=>"Valider", "site_id"=>"3", "id"=>"1392"}
+      @entity.section(params[:section_id]).merge!(section_params)
+      logger.debug @entity.section(params[:section_id])
+      @updated = @entity.save
     end
 
     def delete_section
