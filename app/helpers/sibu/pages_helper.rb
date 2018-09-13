@@ -4,7 +4,7 @@ module Sibu
 
     def link_path(page_id)
       p = @site.page_by_id(page_id)
-      p ? (request.host == conf[:host] ? site_page_path(@site.id, p.id) : "/#{p.path}") : "#"
+      p ? (request.host == conf[:host] ? site_page_path(@site.id, p.id) : (conf[:deployment_path] ? "/#{conf[:deployment_path]}/#{p.path}" : "/#{p.path}")) : "#"
     end
 
     def sections_templates
