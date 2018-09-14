@@ -3,7 +3,7 @@ Sibu::Engine.routes.draw do
   get '/', to: 'pages#show', constraints: lambda {|req| req.host != Rails.application.config.sibu[:host]}
   get '*path', to: 'pages#show', constraints: lambda {|req| req.host != Rails.application.config.sibu[:host]}
 
-  scope path_names: {new: 'creer', edit: 'modifier'} do
+  scope path_names: {new: 'creer', edit: 'parametrer'} do
     resources :sites do
       post 'duplicate', on: :member
       resources :pages do
@@ -19,8 +19,11 @@ Sibu::Engine.routes.draw do
         get 'new_section', on: :member
         post 'create_section', on: :member
         delete 'delete_section', on: :member
+      end
+      resources :pages, only:[] do
         get '*path', to: 'pages#show', on: :member
       end
+
     end
     resources :images, :documents
   end

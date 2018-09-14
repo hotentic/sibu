@@ -24,7 +24,7 @@
         <td><%= l s.updated_at %></td>
         <td colspan="2">
           <%= link_to 'Pages', site_pages_path(s) %> |
-          <%= link_to 'Modifier', edit_site_path(s) %> |
+          <%= link_to 'Paramétrer', edit_site_path(s) %> |
           <%= link_to 'Copier', duplicate_site_path(s), method: :post, data: {confirm: "Copier le site \"#{s.name}\" ?"} %> |
           <%= link_to 'Supprimer', site_path(s), method: :delete, data: {confirm: "Supprimer le site \"#{s.name}\" ?"} %>
         </td>
