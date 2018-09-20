@@ -1,19 +1,24 @@
 <div class="sibu_image_preview">
   <%= image_tag @image.file_url(:medium) %>
 </div>
-<% if @image.user_id %>
-  <%= form_for(@image) do |f| %>
-    <div class="sibu_field">
-      <%= f.label :alt, "Légende / texte alternatif" %>
-      <div>
-        <%= f.text_field :alt %><br/>
-        <small>Renseignez un texte décrivant l'image</small>
-      </div>
+<%= form_for(@image) do |f| %>
+  <div class="sibu_field">
+    <%= f.label :alt, "Légende / texte alternatif" %>
+    <div>
+      <%= f.text_field :alt %><br/>
+      <small>Renseignez un texte décrivant l'image</small>
     </div>
-    <%= f.hidden_field :user_id %>
-    <div class="sibu_actions">
-      <%= f.submit 'Mettre à jour' %>
-      <%= link_to 'Supprimer', image_path(@image.id), method: :delete, data: {confirm: "Supprimer l'image ?", disable_with: "Suppression en cours..."} %>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :credits, "Crédits" %>
+    <div>
+      <%= f.text_field :credits %><br/>
+      <small>Crédits, copyright...</small>
     </div>
-  <% end %>
+  </div>
+  <%= f.hidden_field :user_id %>
+  <div class="sibu_actions">
+    <%= f.submit 'Mettre à jour' %>
+    <%= link_to 'Supprimer', image_path(@image.id), method: :delete, data: {confirm: "Supprimer l'image ?", disable_with: "Suppression en cours..."} %>
+  </div>
 <% end %>

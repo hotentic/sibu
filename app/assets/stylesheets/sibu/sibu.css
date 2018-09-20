@@ -86,6 +86,7 @@
 
 .sb-editing [data-type] {
     min-width: 1em;
+    min-height: 0.5em;
 }
 
 .ql-snow .ql-tooltip[data-mode="link"]::before {

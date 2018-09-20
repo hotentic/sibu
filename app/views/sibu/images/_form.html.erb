@@ -14,6 +14,13 @@
       <small>Renseignez un texte décrivant l'image</small>
     </div>
   </div>
+  <div class="sibu_field">
+    <%= f.label :credits, "Crédits" %>
+    <div>
+      <%= f.text_field :credits %><br/>
+      <small>Crédits, copyright...</small>
+    </div>
+  </div>
   <%= f.hidden_field :user_id %>
   <%= hidden_field_tag :page_id, @page_id %>
   <%= hidden_field_tag :entity_type, @entity_type %>
