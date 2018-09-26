@@ -28,8 +28,10 @@ module Sibu
         'internal'
       elsif Sibu::Document.for_user(sibu_user).map {|d| d.file_url}.include?(val)
         'document'
-      else
+      elsif val.to_s.includes?('/')
         'external'
+      else
+        'email'
       end
     end
 
@@ -157,6 +159,8 @@ module Sibu
       html_opts.merge!({data: {id: elt_id(elt), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
       if val.to_s.include?('/')
         content["href"] = val
+      elsif val.to_s.include?('@')
+        content["href"] = 'mailto:'+val
       else
         content["href"] = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
       end

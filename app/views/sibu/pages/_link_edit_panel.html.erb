@@ -20,6 +20,12 @@
       <%= text_field_tag 'element[value]', (@element["value"] if current_type == 'external'), placeholder: 'Ex : http://www.un-site.com', disabled: current_type != 'external' %>
       <%= hidden_field_tag 'element[target]', '_blank', disabled: current_type != 'external' %>
     </div>
+    <div id="link_email" class="sibu_field">
+      <%= radio_button_tag :mode, 'email', current_type == 'email', class: 'radio' %>
+      <%= label_tag 'mode_external', 'Lien vers un Email' %>
+      <%= text_field_tag 'element[value]', (@element["value"] if current_type == 'email'), placeholder: 'Ex : email@exemple.fr', disabled: current_type != 'email' %>
+      <%= hidden_field_tag 'element[target]', '_blank', disabled: current_type != 'email' %>
+    </div>
     <div id="link_document" class="sibu_field">
       <%= radio_button_tag :mode, 'document', current_type == 'document', class: 'radio' %>
       <%= label_tag 'mode_document', 'Lien vers un document' %>
