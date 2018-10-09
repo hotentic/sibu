@@ -8,25 +8,25 @@
       <%= label_tag 'element[text]', 'Libellé' %>
       <%= text_field_tag 'element[text]', @element["text"] %>
     </div>
-    <div id="link_internal" class="sibu_field">
+    <div id="link_internal" class="sibu_field link_mode">
       <%= radio_button_tag :mode, 'internal', current_type == 'internal', class: 'radio' %>
       <%= label_tag 'mode_internal', 'Lien vers une page du site' %>
       <%= select_tag 'element[value]', available_links, prompt: 'Sélectionnez une page', disabled: current_type != 'internal' %>
       <%= hidden_field_tag 'element[target]', '_self', disabled: current_type != 'internal' %>
     </div>
-    <div id="link_external" class="sibu_field">
+    <div id="link_external" class="sibu_field link_mode">
       <%= radio_button_tag :mode, 'external', current_type == 'external', class: 'radio' %>
       <%= label_tag 'mode_external', 'Lien vers un autre site' %>
       <%= text_field_tag 'element[value]', (@element["value"] if current_type == 'external'), placeholder: 'Ex : http://www.un-site.com', disabled: current_type != 'external' %>
       <%= hidden_field_tag 'element[target]', '_blank', disabled: current_type != 'external' %>
     </div>
-    <div id="link_email" class="sibu_field">
+    <div id="link_email" class="sibu_field link_mode">
       <%= radio_button_tag :mode, 'email', current_type == 'email', class: 'radio' %>
       <%= label_tag 'mode_external', 'Lien vers un Email' %>
       <%= text_field_tag 'element[value]', (@element["value"] if current_type == 'email'), placeholder: 'Ex : email@exemple.fr', disabled: current_type != 'email' %>
       <%= hidden_field_tag 'element[target]', '_blank', disabled: current_type != 'email' %>
     </div>
-    <div id="link_document" class="sibu_field">
+    <div id="link_document" class="sibu_field link_mode">
       <%= radio_button_tag :mode, 'document', current_type == 'document', class: 'radio' %>
       <%= label_tag 'mode_document', 'Lien vers un document' %>
       <%= select_tag 'element[value]', available_docs, prompt: 'Sélectionnez un document', disabled: current_type != 'document' %>

@@ -74,9 +74,12 @@ editPanel.slideDown("fast", function() {
     <% when 'link' %>
         $("input[name='mode']").change(function() {
             var selected = $(this).val();
-            var other = selected === 'internal' ? 'external' : 'internal';
             $("#link_" + selected).find("#element_value, #element_target").removeAttr("disabled");
-            $("#link_" + other).find("#element_value, #element_target").attr("disabled", "disabled");
+            $(".sibu_edit_form").find(".link_mode").each(function() {
+              if($(this).attr("id") !== ("link_" + selected)) {
+                $(this).find("#element_value, #element_target").attr("disabled", "disabled");
+              }
+            });
         });
     <% else %>
     <% end %>

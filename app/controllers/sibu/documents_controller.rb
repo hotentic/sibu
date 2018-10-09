@@ -21,7 +21,7 @@ module Sibu
     end
 
     def destroy
-      @document = @document.find(params[:id])
+      @document = Sibu::Document.find(params[:id])
       @document.destroy
       redirect_to documents_url, notice: "Le document a bien été supprimé."
     end

@@ -31,6 +31,22 @@ IconBlot.tagName = 'a';
 Quill.register(IconBlot);
 Quill.register(Quill.import('attributors/style/align'), true);
 
+var Link = Quill.import('formats/link');
+
+class CustomLink extends Link {
+    static create(value) {
+        let node = super.create(value);
+        value = this.sanitize(value);
+        node.setAttribute('href', value);
+        if(value.startsWith("/")) {
+            node.removeAttribute('target');
+        }
+        return node;
+    }
+}
+
+Quill.register(CustomLink);
+
 function initQuillEditor(container) {
     var quillModules;
     var modulesCallback = "sibuEditorModules";
