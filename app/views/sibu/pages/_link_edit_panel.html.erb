@@ -36,7 +36,7 @@
     <!-- Note : to be tested on multiple nested elements -->
     <% (@element["elements"] || []).each do |e| %>
       <% e.each_pair do |k, v| %>
-        <%= hidden_field_tag "element[elements][][#{k}]", v %>
+        <%= hidden_field_tag("element[elements][][#{k}]", v) unless v.blank? %>
       <% end %>
     <% end %>
     <%= hidden_field_tag :element_id, @element_id %>
