@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sibu (0.6.6)
+    sibu (0.6.7)
       image_processing (~> 0.4)
       jquery-rails (~> 4.3)
       mini_magick (~> 4.3)
@@ -50,11 +50,14 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
     builder (3.2.3)
     concurrent-ruby (1.0.5)
     crass (1.0.4)
-    down (4.5.0)
+    down (4.6.0)
+      addressable (~> 2.5)
     erubi (1.7.1)
     ffi (1.9.25)
     globalid (0.4.1)
@@ -80,6 +83,7 @@ GEM
     nokogiri (1.8.5)
       mini_portile2 (~> 2.3.0)
     pg (0.21.0)
+    public_suffix (3.0.3)
     rack (2.0.5)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)

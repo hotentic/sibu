@@ -157,8 +157,11 @@ module Sibu
       val = content.delete("value") || ""
       text = content.delete("text")
       html_opts.merge!({data: {id: elt_id(elt), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
-      if val.to_s.include?('/') || val.to_s.include?('#')
+      if val.to_s.start_with?('http')
         content["href"] = val
+      elsif val.to_s.start_with?('#')
+        content["href"] = val
+        content.delete("target")
       elsif val.to_s.include?('@')
         content["href"] = 'mailto:'+val
       else

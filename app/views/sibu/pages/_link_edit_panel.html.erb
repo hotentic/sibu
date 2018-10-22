@@ -16,7 +16,7 @@
     </div>
     <div id="link_external" class="sibu_field link_mode">
       <%= radio_button_tag :mode, 'external', current_type == 'external', class: 'radio' %>
-      <%= label_tag 'mode_external', 'Lien vers un autre site' %>
+      <%= label_tag 'mode_external', 'Lien personnalisé' %>
       <%= text_field_tag 'element[value]', (@element["value"] if current_type == 'external'), placeholder: 'Ex : http://www.un-site.com', disabled: current_type != 'external' %>
       <%= hidden_field_tag 'element[target]', '_blank', disabled: current_type != 'external' %>
     </div>
