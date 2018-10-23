@@ -24,11 +24,11 @@ module Sibu
     end
 
     def link_type(val)
-      if val.blank? || val == '#' || /^\d+$/.match(val.to_s)
+      if val.blank? || /^\d+$/.match(val.to_s)
         'internal'
       elsif Sibu::Document.for_user(sibu_user).map {|d| d.file_url}.include?(val)
         'document'
-      elsif val.to_s.include?('/')
+      elsif val.to_s.start_with?('http', '#')
         'external'
       else
         'email'
