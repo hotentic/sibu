@@ -28,7 +28,7 @@ module Sibu
         'internal'
       elsif Sibu::Document.for_user(sibu_user).map {|d| d.file_url}.include?(val)
         'document'
-      elsif val.to_s.start_with?('http', '#')
+      elsif val.to_s.start_with?('http', '#', '/')
         'external'
       else
         'email'
@@ -114,12 +114,14 @@ module Sibu
       @sb_entity = @page
       self
     end
+
     alias page sb_page
 
     def sb_site
       @sb_entity = @site
       self
     end
+
     alias site sb_site
 
     def section(id, tag, html_opts = {}, &block)
@@ -162,8 +164,10 @@ module Sibu
       elsif val.to_s.start_with?('#')
         content["href"] = val
         content.delete("target")
+      elsif val.to_s.start_with?('/')
+        content["href"] = val
       elsif val.to_s.include?('@')
-        content["href"] = 'mailto:'+val
+        content["href"] = 'mailto:' + val
       else
         content["href"] = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
       end
