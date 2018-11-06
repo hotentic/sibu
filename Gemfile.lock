@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sibu (0.6.7)
+    sibu (0.6.8)
       image_processing (~> 0.4)
       jquery-rails (~> 4.3)
       mini_magick (~> 4.3)
@@ -62,7 +62,7 @@ GEM
     ffi (1.9.25)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
-    i18n (1.1.0)
+    i18n (1.1.1)
       concurrent-ruby (~> 1.0)
     image_processing (0.11.2)
     jquery-rails (4.3.3)
