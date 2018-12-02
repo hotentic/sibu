@@ -31,7 +31,8 @@ module Sibu
 
     # Todo : fix me (is_home flag ?)
     def update_path
-      self.path = name.parameterize if self.path.blank? && name != 'Accueil'
+      prefix = site.version == Sibu::Site::DEFAULT_VERSION ? '' : "#{site.version}/"
+      self.path = "#{prefix}#{name != 'Accueil' ? name.parameterize : ''}" if self.path.blank?
     end
 
     def site_template

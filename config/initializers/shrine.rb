@@ -1,5 +1,6 @@
 require "shrine"
 require "shrine/storage/file_system"
+require "mini_magick"
 
 Shrine.storages = {
     cache: Shrine::Storage::FileSystem.new("public", prefix: "uploads/cache"),
@@ -12,3 +13,7 @@ Shrine.storages = {
 
 Shrine.plugin :activerecord
 Shrine.plugin :cached_attachment_data
+
+MiniMagick.configure do |config|
+  config.whiny = false
+end

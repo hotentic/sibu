@@ -17,7 +17,7 @@ module Sibu
     end
 
     def site_versions
-      [['Français (par défaut)', 'fr'], ['Anglais', 'en']]
+      Rails.application.config.sibu[:versions] || [['Français', 'fr']]
     end
   end
 end
