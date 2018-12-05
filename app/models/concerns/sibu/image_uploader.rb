@@ -11,10 +11,8 @@ class Sibu::ImageUploader < Shrine
     images_config = Rails.application.config.sibu[:images]
     image_type = io.mime_type
 
-    if image_type == "image/svg+xml"
-
+    if image_type == "image/svg+xml" || io.metadata['filename'].end_with?('.svg')
       {original: io, large: io.download, medium: io.download, small: io.download}
-
     else
       large = resize_to_limit!(original, images_config[:large], images_config[:large]) {|cmd| cmd.auto_orient}
       medium = resize_to_limit(large, images_config[:medium], images_config[:medium])

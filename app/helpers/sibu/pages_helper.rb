@@ -74,9 +74,10 @@ module Sibu
       if action_name == 'show'
         content["src"] = ("/#{conf[:deployment_path]}" + content["src"]) if @online && conf[:deployment_path]
       else
-        opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat, size: size}}) if action_name != 'show'
+        opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat, size: size}})
       end
-      wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts) : content_tag(:img, nil, content.except("id").merge(opts))
+      wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts)
+          : content_tag(:img, nil, content.except("id").merge(opts.stringify_keys) {|k, old, new| k == 'class' ? [old, new].join(' ') : new})
     end
 
     def grp(elt, opts = {}, &block)

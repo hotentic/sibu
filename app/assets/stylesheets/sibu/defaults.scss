@@ -207,6 +207,19 @@ $sibu-color3 : #333 !default;
           font-weight: bold;
         }
       }
+
+      .sibu_center {
+        position: relative;
+
+        #sibu_center_pos {
+          position: absolute;
+          z-index: 3;
+          font-size: 20px;
+          font-weight: bold;
+          color: white;
+          text-shadow: 0 2px grey;
+        }
+      }
     }
 
     #editor-container .ql-editor {
