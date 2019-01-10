@@ -27,6 +27,7 @@ module Sibu
           @links = @site.pages_path_by_id
           view_template = 'show'
         else
+          @site = Sibu::Site.where(domain: request.host).first
           view_template = Rails.application.config.sibu[:not_found]
           return_code = :not_found
         end

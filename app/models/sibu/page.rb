@@ -4,6 +4,7 @@ module Sibu
 
     belongs_to :site, :class_name => 'Sibu::Site'
 
+    store :custom_data, accessors: [:header_code, :footer_code], coder: JSON
     store :metadata, accessors: [:title, :description, :keywords], coder: JSON
 
     before_save :update_path

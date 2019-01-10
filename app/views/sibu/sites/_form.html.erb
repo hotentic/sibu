@@ -27,13 +27,6 @@
       <small>Langue du site</small>
     </div>
   </div>
-  <div class="sibu_field">
-    <%= f.label :analytics_id, "Statistiques d'audience" %>
-    <div>
-      <%= f.text_field :analytics_id, placeholder: "UA-XXXXXX" %>
-      <small>Renseignez l'identifiant Google Analytics pour suivre les statistiques d'audience du site</small>
-    </div>
-  </div>
   <% if conf[:custom_styles] && @site.persisted? %>
   <div class="sibu_field sibu_colors">
     <%= f.label :primary_color, 'Couleur principale' %>
@@ -67,6 +60,27 @@
     <div>
       <%= f.select :secondary_font, secondary_fonts %>
       <small>Police de caractère utilisée pour les corps de texte du modèle choisi</small>
+    </div>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :analytics_id, "Statistiques d'audience" %>
+    <div>
+      <%= f.text_field :analytics_id, placeholder: "UA-XXXXXX" %>
+      <small>Renseignez l'identifiant Google Analytics pour suivre les statistiques d'audience du site</small>
+    </div>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :header_code, "Code d'entête personnalisé" %>
+    <div>
+      <%= f.text_area :header_code, placeholder: "Code JS ou CSS (avec les balises <script> ou <style>)", rows: 6 %>
+      <small>Ce code javascript ou CSS sera inséré dans l'entête du site pour toutes les pages</small>
+    </div>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :footer_code, 'Code de pied de page personnalisé' %>
+    <div>
+      <%= f.text_area :footer_code, placeholder: "Code JS ou CSS (avec les balises <script> ou <style>)", rows: 6 %>
+      <small>Ce code javascript ou CSS sera inséré juste avant la balide fermante &lt;/body&gt; pour toutes les pages</small>
     </div>
   </div>
   <% end %>

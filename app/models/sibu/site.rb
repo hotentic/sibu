@@ -4,7 +4,8 @@ module Sibu
     include Sibu::SectionsConcern
     extend Sibu::UserConcern
 
-    store :custom_data, accessors: [:primary_font, :secondary_font, :primary_color, :secondary_color], coder: JSON
+    store :custom_data, accessors: [:primary_font, :secondary_font, :primary_color, :secondary_color, :header_code, :footer_code],
+          coder: JSON
     store :metadata, accessors: [:analytics_id], coder: JSON
 
     belongs_to :site_template, :class_name => 'Sibu::SiteTemplate'

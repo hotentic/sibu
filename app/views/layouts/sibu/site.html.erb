@@ -20,6 +20,12 @@
     <% end %>
   <% end %>
   <%= csrf_meta_tags %>
+  <% if @site && !@site.header_code.blank? %>
+    <%= raw @site.header_code %>
+  <% end %>
+  <% if @page && !@page.header_code.blank? %>
+    <%= raw @page.header_code %>
+  <% end %>
   <%= yield :included_styles %>
   <%= yield :included_scripts %>
 </head>
@@ -27,7 +33,13 @@
 
 <%= yield %>
 
-<%= yield :site_scripts %>
 <%= yield :page_scripts %>
+<%= yield :site_scripts %>
+<% if @page && !@page.footer_code.blank? %>
+  <%= raw @page.footer_code %>
+<% end %>
+<% if @site && !@site.footer_code.blank? %>
+  <%= raw @site.footer_code %>
+<% end %>
 </body>
 </html>

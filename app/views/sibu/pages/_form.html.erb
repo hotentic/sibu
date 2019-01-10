@@ -34,6 +34,20 @@
       <small>Une liste de mots-clé décrivant le contenu de votre site (optionnelle)</small>
     </div>
   </div>
+  <div class="sibu_field">
+    <%= f.label :header_code, "Code d'entête personnalisé" %>
+    <div>
+      <%= f.text_area :header_code, placeholder: "Code JS ou CSS (avec les balises <script> ou <style>)", rows: 6 %>
+      <small>Ce code javascript ou CSS sera inséré dans l'entête du site pour cette page uniquement</small>
+    </div>
+  </div>
+  <div class="sibu_field">
+    <%= f.label :footer_code, 'Code de pied de page personnalisé' %>
+    <div>
+      <%= f.text_area :footer_code, placeholder: "Code JS ou CSS (avec les balises <script> ou <style>)", rows: 6 %>
+      <small>Ce code javascript ou CSS sera inséré juste avant la balide fermante &lt;/body&gt; pour cette page uniquement</small>
+    </div>
+  </div>
   <%= f.hidden_field :site_id %>
   <div class="sibu_actions">
     <%= f.submit 'Valider' %>

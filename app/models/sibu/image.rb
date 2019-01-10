@@ -17,7 +17,3 @@ module Sibu
     end
   end
 end
-
-# ['beds-green.svg', 'camp-white.svg', 'doc-green.svg', 'doc-white.svg', 'earth-white.svg', 'family-sec_blue.svg',
-# 'family-white.svg', 'flag.svg', 'hands-green.svg', 'home-green.svg', 'house-white.svg', 'marker.svg', 'men-green.svg',
-# 'money-blue.svg', 'money-green.svg', 'quotes.svg', 'tel-green.svg', 'tel-white.svg', 'tv-green.svg']
