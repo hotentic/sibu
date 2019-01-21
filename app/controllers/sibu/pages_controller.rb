@@ -36,6 +36,7 @@ module Sibu
         @page = Sibu::Page.find(params[:id])
         @links = @site.pages_path_by_id
         @query_path = params[:path]
+        @query_params = show_params.except(:controller, :action, :path).to_h
         view_template = 'show'
       end
 

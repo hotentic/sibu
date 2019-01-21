@@ -28,40 +28,41 @@
     </div>
   </div>
   <% if conf[:custom_styles] && @site.persisted? %>
-  <div class="sibu_field sibu_colors">
-    <%= f.label :primary_color, 'Couleur principale' %>
-    <div>
-      <% primary_colors.each do |c| %>
-        <span class="sibu_color <%= 'selected' if f.object.primary_color == c %>" data-color="<%= c %>" style="background-color: <%= c %>;"></span>
-      <% end %>
-      <small>Couleur principale appliquée au modèle choisi</small>
+    <div class="sibu_field sibu_colors">
+      <%= f.label :primary_color, 'Couleur principale' %>
+      <div>
+        <% primary_colors.each do |c| %>
+          <span class="sibu_color <%= 'selected' if f.object.primary_color == c %>" data-color="<%= c %>" style="background-color: <%= c %>;"></span>
+        <% end %>
+        <small>Couleur principale appliquée au modèle choisi</small>
+      </div>
+      <%= f.hidden_field :primary_color %>
     </div>
-    <%= f.hidden_field :primary_color %>
-  </div>
-  <div class="sibu_field sibu_colors">
-    <%= f.label :secondary_color, 'Couleur secondaire' %>
-    <div>
-      <% secondary_colors.each do |c| %>
-        <span class="sibu_color <%= 'selected' if f.object.secondary_color == c %>" data-color="<%= c %>" style="background-color: <%= c %>;"></span>
-      <% end %>
-      <small>Couleur secondaire appliquée au modèle choisi</small>
+    <div class="sibu_field sibu_colors">
+      <%= f.label :secondary_color, 'Couleur secondaire' %>
+      <div>
+        <% secondary_colors.each do |c| %>
+          <span class="sibu_color <%= 'selected' if f.object.secondary_color == c %>" data-color="<%= c %>" style="background-color: <%= c %>;"></span>
+        <% end %>
+        <small>Couleur secondaire appliquée au modèle choisi</small>
+      </div>
+      <%= f.hidden_field :secondary_color %>
     </div>
-    <%= f.hidden_field :secondary_color %>
-  </div>
-  <div class="sibu_field sibu_fonts">
-    <%= f.label :name, 'Police de caractères (titres)' %>
-    <div>
-      <%= f.select :primary_font, primary_fonts %>
-      <small>Police de caractère utilisée pour les titres du modèle choisi</small>
+    <div class="sibu_field sibu_fonts">
+      <%= f.label :name, 'Police de caractères (titres)' %>
+      <div>
+        <%= f.select :primary_font, primary_fonts %>
+        <small>Police de caractère utilisée pour les titres du modèle choisi</small>
+      </div>
     </div>
-  </div>
-  <div class="sibu_field sibu_fonts">
-    <%= f.label :name, 'Police de caractères (corps)' %>
-    <div>
-      <%= f.select :secondary_font, secondary_fonts %>
-      <small>Police de caractère utilisée pour les corps de texte du modèle choisi</small>
+    <div class="sibu_field sibu_fonts">
+      <%= f.label :name, 'Police de caractères (corps)' %>
+      <div>
+        <%= f.select :secondary_font, secondary_fonts %>
+        <small>Police de caractère utilisée pour les corps de texte du modèle choisi</small>
+      </div>
     </div>
-  </div>
+  <% end %>
   <div class="sibu_field">
     <%= f.label :analytics_id, "Statistiques d'audience" %>
     <div>
@@ -83,7 +84,6 @@
       <small>Ce code javascript ou CSS sera inséré juste avant la balide fermante &lt;/body&gt; pour toutes les pages</small>
     </div>
   </div>
-  <% end %>
   <%= f.hidden_field :user_id %>
   <div class="sibu_actions">
     <%= f.submit 'Valider', data: {disable_with: 'Enregistrement en cours...'} %>

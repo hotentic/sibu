@@ -5,7 +5,7 @@ module Sibu
     belongs_to :site, :class_name => 'Sibu::Site'
 
     store :custom_data, accessors: [:header_code, :footer_code], coder: JSON
-    store :metadata, accessors: [:title, :description, :keywords], coder: JSON
+    store :metadata, accessors: [:title, :description, :keywords, :source, :external_id, :is_home], coder: JSON
 
     before_save :update_path
     validates_presence_of :name, :site
@@ -30,10 +30,13 @@ module Sibu
       save
     end
 
-    # Todo : fix me (is_home flag ?)
     def update_path
       prefix = site.version == Sibu::Site::DEFAULT_VERSION ? '' : "#{site.version}/"
-      self.path = "#{prefix}#{name != 'Accueil' ? name.parameterize : ''}" if self.path.blank?
+      if is_home == 'true'
+        self.path = ''
+      else
+        self.path = "#{prefix}#{name.parameterize}" if self.path.blank?
+      end
     end
 
     def site_template

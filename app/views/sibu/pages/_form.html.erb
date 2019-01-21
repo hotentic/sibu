@@ -14,6 +14,13 @@
     </div>
   </div>
   <div class="sibu_field">
+    <%= f.label :is_home, "Page d'accueil" %>
+    <div>
+      <%= f.check_box :is_home, {}, 'true', 'false' %><span>Cocher pour faire de cette page la page d'accueil.</span>
+      <small>Le chemin d'accès de la page d'accueil sera automatiquement mis à jour.</small>
+    </div>
+  </div>
+  <div class="sibu_field">
     <%= f.label :title, 'Titre' %>
     <div>
       <%= f.text_field :title, placeholder: "Maximum 80 caractères", maxlength: 80 %>

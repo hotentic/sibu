@@ -8,6 +8,7 @@
     <tr>
       <th>Nom</th>
       <th>Chemin d'accès</th>
+      <th>Origine</th>
       <th>Mise à jour</th>
       <th></th>
     </tr>
@@ -17,6 +18,7 @@
       <tr>
         <td><%= p.name %></td>
         <td><%= p.path %></td>
+        <td><%= (p.source || '') + (p.external_id.blank? ? '' : " (#{p.external_id})") %></td>
         <td><%= l p.updated_at %></td>
         <td>
           <%= link_to 'Voir', site_page_path(@site.id, p), target: '_blank' %> |
