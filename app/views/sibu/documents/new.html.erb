@@ -4,7 +4,7 @@
   </div>
   <h2>Télécharger un document</h2>
   <p>
-    Vous pouvez télécharger tous types de documents d'une taille inférieure à 10Mo.
+    Vous pouvez télécharger tous types de documents d'une taille inférieure à <%= Rails.application.config.sibu[:max_doc_size] || 10 %>Mo.
     Pour les documents textes, favorisez le format PDF pour une compatibilité optimale.
   </p>
   <div class="sibu_form">
