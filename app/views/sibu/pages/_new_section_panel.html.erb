@@ -4,16 +4,32 @@
 </div>
 <div>
   <div class="sibu_sections sibu_site_content">
-    <div id="<%= "#{@site.site_template.reference}_sections" %>">
-      <% sections_templates.each do |st| %>
-        <div data-sb-template="<%= st["template"] %>">
-          <%= render "shared/#{@site.section_template(st)}", sec: st %>
-        </div>
-      <% end %>
+    <div id="<%= "#{@site.site_template.reference}_sections" %>" class="sibu_sections_tabs">
+      <% sections_by_category = sections_templates.group_by {|st| st['category']} %>
+      <div class="js-tabs">
+        <ul class="js-tablist" data-existing-hx="h3">
+          <% sections_by_category.keys.each do |cat| %>
+            <li class="js-tablist__item">
+              <a href="#<%= cat %>" class="js-tablist__link" data-selected="1"><%= t "sibu.section.category.#{cat}" %></a>
+            </li>
+          <% end %>
+        </ul>
+        <% sections_by_category.each_pair do |cat, sections| %>
+          <div id="<%= cat %>" class="js-tabcontent">
+            <h3 style="display: none;"><%= t "sibu.section.category.#{cat}" %></h3>
+            <% sections.each do |st| %>
+              <div data-sb-template="<%= st["template"] %>" data-sb-category="<%= st["category"] %>">
+                <%= render "shared/#{@site.section_template(st)}", sec: st %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
   <%= form_tag(create_section_site_page_path(@site.id, @page.id), method: :post, remote: true) do |f| %>
     <%= hidden_field_tag 'section[template]', '' %>
+    <%= hidden_field_tag 'section[category]', '' %>
     <%= hidden_field_tag :section_id, @section_id %>
     <%= hidden_field_tag :after, @after%>
     <%= hidden_field_tag :entity, @entity_type %>

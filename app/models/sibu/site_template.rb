@@ -9,9 +9,14 @@ module Sibu
       name.parameterize.gsub('-', '_')
     end
 
-    def available_templates
-      Dir.glob(File.join(Rails.root, "app/views/shared/#{path}/*.erb")).map {|f| f.split('/').last}
-          .map {|f| f[1..-1].gsub('.html.erb', '')}.select {|f| f != 'site'}.map {|f| {"id" => "sibu_template_#{f}", "template" => f}}
+    def available_sections(path_prefix = 'app/views/shared')
+      sections_list = []
+      Dir.glob(File.join(Rails.root, "#{path_prefix}/#{path}/*/")).each do |dir|
+        cat = dir.split('/').last
+        sections_list += Dir.glob(dir + "*.erb").map {|f| f.split('/').last}.
+            map {|f| f[1..-1].gsub('.html.erb', '')}.map {|f| {"id" => "sibu_template_#{f}", "category" => cat, "template" => f}}
+      end
+      sections_list
     end
   end
 end

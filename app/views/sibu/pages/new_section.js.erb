@@ -1,18 +1,19 @@
 var sectionsPanel = $("#sections_panel");
-sectionsPanel.html("");
-sectionsPanel.html("<%= j(render 'new_section_panel') %>");
-var sections = sectionsPanel.find(".sibu_sections [data-sb-template]");
-sections.click(function() {
-    if(!$(this).hasClass('selected')) {
-        sections.removeClass('selected');
-        $(this).addClass('selected');
-        $("#section_template").val($(this).data("sb-template"));
-    }
-});
-sectionsPanel.slideDown("fast", function() {
+if (sectionsPanel.size()) {
+    sectionsPanel.html("<%= j(render 'new_section_panel') %>");
+    van11yAccessibleTabPanelAria($(".sibu_sections_tabs")[0]);
+    var sections = sectionsPanel.find(".sibu_sections [data-sb-template]");
+    sections.click(function() {
+        if(!$(this).hasClass('selected')) {
+            sections.removeClass('selected');
+            $(this).addClass('selected');
+            $("#section_template").val($(this).data("sb-template"));
+            $("#section_category").val($(this).data("sb-category"));
+        }
+    });
     if(typeof initSectionsForm === "function") {
         initSectionsForm();
     }
-});
-document.body.style.overflow = "hidden";
-sibuCallback("newSection");
+    document.body.style.overflow = "hidden";
+    sibuCallback("newSection");
+}

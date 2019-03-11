@@ -20,7 +20,7 @@
           <p>Veuillez sélectionner une image.</p>
         <% end %>
         <div class="sibu_custom_center" style="display: <%= (@element["src"] == DEFAULT_IMG || @element["src"].blank?) ? 'none' : 'block' %>">
-          <%= check_box_tag('custom_center', true, !@element["class"].blank?, id: 'custom_center', class: 'checkbox') %>
+          <%= check_box_tag('custom_center', true, (!@element["class"].blank? && @element["class"].include?('posx')), id: 'custom_center', class: 'checkbox') %>
           <%= label_tag 'custom_center', "Recentrer l'image" %>
         </div>
         <div class="sibu_center">

@@ -63,11 +63,6 @@
     background-color: white;
 }
 
-#sections_panel .sibu_sections {
-    max-height: 60vh;
-    overflow-y: scroll;
-}
-
 #element_actions button {
     display: none;
 }

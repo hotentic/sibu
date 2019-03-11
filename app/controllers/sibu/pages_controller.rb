@@ -131,7 +131,7 @@ module Sibu
       @after = params[:after]
       @links = @site.pages_path_by_id
 
-      @site.site_template.available_templates.each do |t|
+      @site.site_template.available_sections.each do |t|
         template_defaults = @site.site_template.templates ? (@site.site_template.templates[t["template"]] || {}) : {}
         @page.sections << template_defaults.merge(t).to_h
       end

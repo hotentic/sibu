@@ -36,7 +36,7 @@ module Sibu
     end
 
     def section_template(section)
-      "#{site_template.path}/#{section["template"]}"
+        "#{site_template.path}/#{section["category"]}/#{section["template"]}"
     end
 
     def not_found

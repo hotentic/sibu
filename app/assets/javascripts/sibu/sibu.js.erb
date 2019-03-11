@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require sibu/common
 //= require ../quill/quill
+//= require ../tabs/van11y-accessible-tab-panel-aria
 //= require_self
 
 var Inline = Quill.import('blots/inline');
@@ -116,7 +117,6 @@ function initCustomCenter() {
         var rect = e.target.getBoundingClientRect();
         var x = e.clientX - rect.left;
         var y = e.clientY - rect.top;
-        console.log('x : ' + x + ' -  y : ' + y);
         centerPos.css("top", y + "px");
         centerPos.css("left", x + "px");
         $("#element_class").val(`posx_${Math.floor((x / rect.width) * 10) * 10} posy_${Math.floor((y / rect.height) * 10) * 10}`);
@@ -138,32 +138,6 @@ function displayCurrentCenter(img, centerPos) {
     centerPos.show();
 }
 
-
-//function initCropper(imgId) {
-//    var wrapper = $(".sibu_crop").first();
-//    var srcImg = $("#content_panel").find(".sb-editing img[data-id='" + imgId + "']").first();
-//    var srcContainer = srcImg.parent();
-//    var ratio = parseFloat(srcContainer.css("width")) / parseFloat(wrapper.css("width"));
-//    var wrapperHeight = Math.min(320, parseFloat(srcContainer.css("height")) / ratio) + "px";
-//    wrapper.css("height", wrapperHeight);
-//    return new Cropper(wrapper.find("img")[0], {
-//        crop: function(event) {
-//            var data = event.detail;
-//            var cropper = this.cropper;
-//            var imageData = cropper.getImageData();
-//            var previewWidth = parseFloat(srcContainer.css("width"));
-//            var imageScaledRatio = data.width / previewWidth;
-//            var width = imageData.naturalWidth / imageScaledRatio + 'px';
-//            var height = imageData.naturalHeight / imageScaledRatio + 'px';
-//            var marginLeft = -data.x / imageScaledRatio + 'px';
-//            var marginTop = -data.y / imageScaledRatio + 'px';
-//            // console.log("crop detail : " + JSON.stringify(data));
-//            // console.log('img data : ' + JSON.stringify(imageData));
-//            $("#element_style").val("width: " + width + "; height: " + height + "; margin-left: " + marginLeft + "; margin-top: " + marginTop +"; max-width: none; max-height: none;");
-//        }
-//    });
-//}
-
 function refreshAfterEdit(reload, sectionId) {
     var baseUrl = window.location.href.split('?')[0];
     if (reload) {
@@ -175,4 +149,8 @@ function refreshAfterEdit(reload, sectionId) {
     } else {
         window.history.replaceState(null, null, window.location.pathname);
     }
+}
+
+function initSectionsPanel() {
+
 }

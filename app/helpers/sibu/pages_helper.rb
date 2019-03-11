@@ -8,7 +8,7 @@ module Sibu
     end
 
     def sections_templates
-      @site.site_template.available_templates
+      @site.site_template.available_sections
     end
 
     def site_images

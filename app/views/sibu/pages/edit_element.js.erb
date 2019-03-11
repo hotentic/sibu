@@ -46,29 +46,29 @@ editPanel.slideDown("fast", function() {
                 $(this).addClass('selected');
                 $("#element_src").val($(this).data("src"));
                 $("#element_alt").val($(this).data("alt"));
-                editPanel.find(".sibu_center").html('<img src="' + $("#element_src").val() + '"/>');
+                editPanel.find(".sibu_center").html('<img src="' + $("#element_src").val() + '"/><div id="sibu_center_pos" style="display: none;">✕</div>');
                 editPanel.find(".sibu_selected_image > p:first-child").hide();
                 editPanel.find(".sibu_selected_image").find(".sibu_custom_center").show();
                 editPanel.find(".sibu_selected_image").find(".sibu_field").show();
                 if(customCenter.is(":checked")) {
-                    customCtr = initCustomCenter();
+                    customCenter.removeAttr("checked");
+                    $("#element_class").val("");
+                    $(".sibu_center").attr("style", "");
                 }
             }
         });
         if(editPanel.find(".sibu_center img").size() > 0) {
             if(customCenter.is(":checked")) {
-                customCtr = initCustomCenter("<%= @element_id %>");
+                initCustomCenter("<%= @element_id %>");
             }
         }
         customCenter.change(function() {
           if($(this).is(":checked")) {
-              customCtr = initCustomCenter("<%= @element_id %>");
+              initCustomCenter("<%= @element_id %>");
           } else {
-              $("#element_style").val("");
+              $("#element_class").val("");
               $(".sibu_center").attr("style", "");
-//              if(cropper) {
-//                  cropper.destroy();
-//              }
+              $(".sibu_center > #sibu_center_pos").hide();
           }
         });
     <% when 'link' %>

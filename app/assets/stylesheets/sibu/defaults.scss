@@ -255,6 +255,8 @@ $sibu-color3 : #333 !default;
 #sections_panel {
   .sibu_sections {
     padding: 2rem;
+    max-height: 60vh;
+    overflow-y: scroll;
 
     > div {
       > * {
@@ -276,6 +278,51 @@ $sibu-color3 : #333 !default;
           margin-bottom: 0 !important;
         }
       }
+    }
+
+    .tabs__list {
+      margin: 0;
+      padding: 0;
+    }
+    .tabs__item {
+      display: inline-block;
+      > a {
+        text-decoration: none;
+      }
+    }
+
+    .tabs__link {
+      display: inline-block;
+      cursor: pointer;
+      margin-bottom: -2px;
+      padding: 1rem 2.5rem;
+      border-bottom: 4px solid transparent;
+      color: $sibu-color1;
+      text-decoration: none;
+      border-radius: 0 0 0 0;
+      transition: .25s;
+      transition-property: color, border, background-color;
+      font-size: 2rem;
+      &:focus {
+        border-bottom-color: $sibu-color2;
+        color: $sibu-color2;
+        outline: 0;
+      }
+    }
+
+    [aria-selected="true"].tabs__link {
+      border-bottom-color: $sibu-color2;
+      color: $sibu-color2;
+      outline: 0;
+    }
+
+    .tabs__content {
+      padding: 3rem 2rem;
+      background-color: white;
+    }
+
+    [aria-hidden="true"].tabs__content {
+      display: none;
     }
   }
 

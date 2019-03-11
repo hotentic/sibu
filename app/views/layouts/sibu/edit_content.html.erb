@@ -90,6 +90,13 @@
 
     function newSection(isAfter) {
         var section = $(".sb-editing").first();
+        var sectionsPanel = $("#sections_panel");
+        sectionsPanel.html(
+            '<div class="sibu_panel sibu_view"><h2>Choix du type de section</h2></div>' +
+            '<div><div class="sibu_sections sibu_site_content" style="text-align: center;">Chargement en cours...</div></div>' +
+            '<div class="sibu_panel sibu_view"><div class="sibu_actions"><a href="#" onclick="cancelSectionsEdit(); return false;">Annuler</a></div></div>'
+        );
+        sectionsPanel.slideDown("fast");
         $.ajax({
             url: "<%= new_section_site_page_path(@site.id, @page.id) %>",
             method: "GET",
