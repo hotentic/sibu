@@ -258,34 +258,14 @@ $sibu-color3 : #333 !default;
     max-height: 60vh;
     overflow-y: scroll;
 
-    > div {
-      > * {
-        padding: 2rem;
-        border-bottom: 2px solid $sibu-color1;
-        &:hover {
-          cursor: pointer;
-          outline: dashed $sibu-color2 4px;
-          outline-offset: -5px;
-        }
-
-        &.selected {
-          outline: solid $sibu-color2 5px;
-          outline-offset: -5px;
-        }
-
-        > * {
-          margin-top: 0 !important;
-          margin-bottom: 0 !important;
-        }
-      }
-    }
-
     .tabs__list {
       margin: 0;
       padding: 0;
+      display: table;
+      width: 100%;
     }
     .tabs__item {
-      display: inline-block;
+      display: table-cell;
       > a {
         text-decoration: none;
       }
@@ -317,8 +297,33 @@ $sibu-color3 : #333 !default;
     }
 
     .tabs__content {
-      padding: 3rem 2rem;
+      padding: 2rem 0;
       background-color: white;
+      max-height: calc(100% - 40px);
+      overflow-y: scroll;
+
+      > * {
+        padding: 4px 0;
+        margin: 0 1rem 2rem 1rem;
+        min-height: auto;
+        box-shadow: 0 0 5px #cdcdcd;
+
+        &:hover {
+          cursor: pointer;
+          outline: dashed $sibu-color2 4px;
+          outline-offset: -5px;
+        }
+
+        &.selected {
+          outline: solid $sibu-color1 5px;
+          outline-offset: -5px;
+        }
+
+        > * {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+      }
     }
 
     [aria-hidden="true"].tabs__content {
