@@ -1,13 +1,31 @@
-<div class="sibu_view">
+<div id="images" class="sibu_view">
   <div class="actions">
     <%= link_to 'Télécharger une image', new_image_path %> <%= link_to 'Retour', :back %>
   </div>
   <h2>Images téléchargées</h2>
-  <div class="sibu_images">
+  <table class="sibu_images">
+    <thead>
+    <tr>
+      <th>Aperçu</th>
+      <th>Descriptif</th>
+      <th>Crédits</th>
+    </tr>
+    </thead>
+    <tbody>
     <% @images.each do |image| %>
-      <%= link_to image_tag(image.file_url(:small)), edit_image_path(image.id), class: 'sibu_image', id: "sibu_image_#{image.id}", remote: true %>
+      <tr>
+        <td><%= link_to image_tag(image.file_url(:small)), edit_image_path(image.id), class: 'sibu_image', id: "sibu_image_#{image.id}", remote: true %></td>
+        <td><%= image.alt %></td>
+        <td><%= image.credits %></td>
+      </tr>
     <% end %>
-  </div>
+    <% if @images.empty? %>
+      <tr>
+        <td colspan="3">Aucune image téléchargée pour le moment.</td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
   <div class="sibu_edit_image">Sélectionnez une image pour voir ses informations.</div>
 </div>
 
