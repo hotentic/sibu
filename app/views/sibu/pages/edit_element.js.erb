@@ -38,15 +38,19 @@ editPanel.slideDown("fast", function() {
             "text-align": wrapper.css("text-align")
         });
     <% when 'media' %>
-        var images = editPanel.find(".sibu_image img");
-        var customCenter = $("#custom_center"), customCtr;
+        var images = editPanel.find(".sibu_image");
+        var customCenter = $("#custom_center");
         images.click(function() {
             if(!$(this).hasClass('selected')) {
                 images.removeClass('selected');
                 $(this).addClass('selected');
-                $("#element_src").val($(this).data("src"));
-                $("#element_alt").val($(this).data("alt"));
-                editPanel.find(".sibu_center").html('<img src="' + $("#element_src").val() + '"/><div id="sibu_center_pos" style="display: none;">✕</div>');
+                var imgElt = $(this).find("img");
+                $("#element_src").val(imgElt.data("src"));
+                $("#element_alt").val(imgElt.data("alt"));
+                editPanel.find(".sibu_center").html(
+                    '<img src="' + $("#element_src").val() + '"/>' +
+                    '<div id="sibu_center_pos" style="display: none;">✕</div>' +
+                    '<div id="sibu_center_desc" style="display: none;"><em>Cliquez sur l\'image pour la recentrer sur un point donné (à utiliser lorsque l\'image est tronquée car la zone d\'affichage est trop petite)</em></div>');
                 editPanel.find(".sibu_selected_image > p:first-child").hide();
                 editPanel.find(".sibu_selected_image").find(".sibu_custom_center").show();
                 editPanel.find(".sibu_selected_image").find(".sibu_field").show();
@@ -69,6 +73,7 @@ editPanel.slideDown("fast", function() {
               $("#element_class").val("");
               $(".sibu_center").attr("style", "");
               $(".sibu_center > #sibu_center_pos").hide();
+              $(".sibu_center > #sibu_center_desc").hide();
           }
         });
     <% when 'link' %>

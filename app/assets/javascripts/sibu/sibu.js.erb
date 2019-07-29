@@ -113,6 +113,7 @@ function initQuillEditor(container) {
 function initCustomCenter() {
     var wrapper = $(".sibu_center > img"), centerPos = $(".sibu_center > #sibu_center_pos");
     displayCurrentCenter(wrapper[0], centerPos);
+    $(".sibu_center > #sibu_center_desc").show();
     wrapper.click(function(e) {
         var rect = e.target.getBoundingClientRect();
         var x = e.clientX - rect.left;

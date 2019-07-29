@@ -58,6 +58,10 @@ $sibu-color3 : #333 !default;
     &.selected {
       background-color: $sibu-color3;
     }
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .sibu_form {
@@ -163,35 +167,6 @@ $sibu-color3 : #333 !default;
       width: 70%;
       max-height: calc(100vh - 300px);
       overflow: auto;
-
-      .sibu_image {
-        position: relative;
-        span {
-          position: absolute;
-          z-index: -1;
-          line-height: 1;
-          width: 100%;
-          text-align: center;
-          top: 30px;
-
-          & + .selected {
-            background-color: transparentize($sibu-color3, 0.5);
-          }
-        }
-      }
-
-      img {
-        padding: 5px;
-        border: 1px solid $sibu-color3;
-
-        &.selected {
-          background-color: $sibu-color3;
-        }
-
-        &:hover {
-          cursor: pointer;
-        }
-      }
     }
 
     .sibu_selected_image {
@@ -218,6 +193,12 @@ $sibu-color3 : #333 !default;
           font-weight: bold;
           color: white;
           text-shadow: 0 2px grey;
+        }
+
+        #sibu_center_desc {
+          font-size: 10px;
+          line-height: 1.2;
+          margin-top: 5px;
         }
       }
     }
