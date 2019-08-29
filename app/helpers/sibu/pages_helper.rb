@@ -90,6 +90,14 @@ module Sibu
       content_tag(wrapper, capture(*elts(elt), &block), opts)
     end
 
+    def empty_tag(elt, tag, type, opts = {})
+      repeat = opts.delete(:repeat)
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt}.merge!(default_content(type))
+      opts = defaults.merge(opts)
+      opts.merge!({data: {id: elt_id(elt), type: type, repeat: repeat}}) if action_name != 'show'
+      content_tag(tag, nil, opts)
+    end
+
     def form_label(elt, html_opts = {}, &block)
       defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => DEFAULT_TEXT}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
@@ -189,6 +197,21 @@ module Sibu
 
     def elt_id(elt)
       elt.is_a?(Hash) ? (elt["data-id"] || elt["id"]) : elt
+    end
+
+    def default_content(type)
+      case type
+      when "text"
+        {"text" => DEFAULT_TEXT}
+      when "link"
+        {"value" => "", "text" => DEFAULT_TEXT}
+      when "paragraph"
+        {"text" => DEFAULT_PARAGRAPH}
+      when "media"
+        {"src" => DEFAULT_IMG}
+      when "embed"
+        {"code" => '<p>Contenu HTML personnalisé (iframe, etc...)</p>'}
+      end
     end
   end
 end
