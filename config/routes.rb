@@ -1,5 +1,8 @@
 Sibu::Engine.routes.draw do
 
+  scope format: true, constraints: { format: /jpg|png|gif|svg/ } do
+    get '/*missed', to: proc { [404, {}, ['']] }
+  end
   get '/', to: 'pages#show', constraints: lambda {|req| req.host != Rails.application.config.sibu[:host]}
   get '*path', to: 'pages#show', constraints: lambda {|req| req.host != Rails.application.config.sibu[:host]}
 

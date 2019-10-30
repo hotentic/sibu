@@ -234,6 +234,25 @@ $sibu-color3 : #333 !default;
 }
 
 #sections_panel {
+  position: relative;
+
+  &:before {
+    box-shadow: 0 -15px 15px -15px inset;
+    content: " ";
+    width: 100%;
+    left: 0;
+    top: -15px;
+    position: absolute;
+    z-index: 0;
+    height: 15px;
+    opacity: 0.4;
+    color: $sibu-color3;
+  }
+
+  .sibu_sections_tabs, .tabs {
+    height: 100%;
+  }
+
   .sibu_sections {
     padding: 2rem;
     max-height: 60vh;
@@ -314,5 +333,47 @@ $sibu-color3 : #333 !default;
 
   .sibu_actions {
     text-align: center;
+    margin: 1rem 0;
+  }
+
+  form {
+    .sibu_panel.sibu_view {
+      border-top: 2px solid $sibu-color3;
+    }
+  }
+}
+
+#edit_panel {
+  background-color: white;
+  border-top: 1px solid $sibu-color3;
+  max-height: 100%;
+  overflow: auto;
+
+  #element_actions {
+    display: block;
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+  }
+}
+
+#edit_mode_overlay {
+  .overlay_top, .overlay_bottom, .overlay_left, .overlay_right {
+    background-color: transparentize($sibu-color2, 0.2);
+  }
+
+  .edit_mode_actions {
+    display: flex;
+    color: white;
+    min-width: 300px;
+    align-items: flex-start;
+    padding: 1rem 0;
+
+    p {
+      font-weight: bold;
+      font-size: 2rem;
+      flex: 1 1 0%;
+      margin: 0;
+    }
   }
 }

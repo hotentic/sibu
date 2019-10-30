@@ -10,12 +10,48 @@
     <%= stylesheet_link_tag (conf[:custom_styles] ? @site.style_url : @site.site_template.path), media: "all" %>
     <%= javascript_include_tag @site.site_template.path %>
     <% unless @site.analytics_id.blank? %>
-      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= @site.analytics_id %>"></script>
-      <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '<%= @site.analytics_id %>');
+      <%= stylesheet_link_tag 'tarteaucitron/tarteaucitron' %>
+      <%= javascript_include_tag 'tarteaucitron/tarteaucitron' %>
+      <script type="text/javascript">
+        var defaultOpts = {
+            "privacyUrl": "", /* Privacy policy url */
+            "hashtag": "#tarteaucitron", /* Open the panel with this hashtag */
+            "cookieName": "tarteaucitron", /* Cookie name */
+            "orientation": "bottom", /* Banner position (top - bottom) */
+            "showAlertSmall": false, /* Show the small banner on bottom right */
+            "cookieslist": true, /* Show the cookie list */
+            "adblocker": false, /* Show a Warning if an adblocker is detected */
+            "AcceptAllCta": true, /* Show the accept all button when highPrivacy on */
+            "highPrivacy": false, /* Disable auto consent */
+            "handleBrowserDNTRequest": false, /* If Do Not Track == 1, disallow all */
+            "removeCredit": false, /* Remove credit link */
+            "moreInfoLink": true, /* Show more info link */
+            "useExternalCss": true, /* If false, the tarteaucitron.css file will be loaded */
+            "readmoreLink": "/cookiespolicy" /* Change the default readmore link */
+        };
+        if (typeof tarteaucitronOpts === 'undefined') {
+            var tarteaucitronOpts = defaultOpts;
+        } else {
+            tarteaucitronOpts["hashtag"] = "#tarteaucitron";
+            tarteaucitronOpts["cookieName"] = "tarteaucitron";
+            tarteaucitronOpts["orientation"] = tarteaucitronOpts["orientation"] || "top";
+            tarteaucitronOpts["showAlertSmall"] = !(tarteaucitronOpts["showAlertSmall"] === false);
+            tarteaucitronOpts["cookieslist"] = !(tarteaucitronOpts["cookieslist"] === false);
+            tarteaucitronOpts["adblocker"] = tarteaucitronOpts["adblocker"] === true;
+            tarteaucitronOpts["AcceptAllCta"] = tarteaucitronOpts["AcceptAllCta"] === true;
+            tarteaucitronOpts["highPrivacy"] = !(tarteaucitronOpts["AcceptAllCta"] === false);
+            tarteaucitronOpts["handleBrowserDNTRequest"] = !(tarteaucitronOpts["handleBrowserDNTRequest"] === false);
+            tarteaucitronOpts["removeCredit"] = !(tarteaucitronOpts["removeCredit"] === false);
+            tarteaucitronOpts["moreInfoLink"] = tarteaucitronOpts["moreInfoLink"] === true;
+            tarteaucitronOpts["useExternalCss"] = !(tarteaucitronOpts["useExternalCss"] === false);
+            tarteaucitronOpts["cookieDomain"] = "<%= @site.domain %>";
+        }
+        tarteaucitron.init(tarteaucitronOpts);
+      </script>
+      <script type="text/javascript">
+          tarteaucitron.user.analyticsUa = '<%= @site.analytics_id %>';
+          tarteaucitron.user.analyticsMore = function () {  };
+          (tarteaucitron.job = tarteaucitron.job || []).push('analytics');
       </script>
     <% end %>
   <% end %>
