@@ -16,6 +16,9 @@ module Sibu
         sections_list += Dir.glob(dir + "*.erb").map {|f| f.split('/').last}.
             map {|f| f[1..-1].gsub('.html.erb', '')}.map {|f| {"id" => "sibu_template_#{f}", "category" => cat, "template" => f}}
       end
+      if Rails.application.config.sibu[:sections_ordering]
+        sections_list = Rails.application.config.sibu[:sections_ordering].call(sections_list)
+      end
       sections_list
     end
   end
