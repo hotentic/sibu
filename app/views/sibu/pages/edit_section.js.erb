@@ -1,7 +1,11 @@
-var editPanel = $("#edit_panel");
-editPanel.html("");
-editPanel.html("<%= j(render conf[:section_form]) %>");
-editPanel.slideDown("fast", function() {
+var editPanel = document.querySelector("#edit_panel");
+editPanel.innerHTML = "";
+editPanel.innerHTML = "<%= j(render conf[:section_form]) %>";
+//editPanel.slideDown("fast", function() {
+//    sibuCallback("editSection");
+//});
+editPanel.classList.add("active");
+setTimeout(function() {
     sibuCallback("editSection");
-});
+}, 800);
 document.body.style.overflow = "hidden";

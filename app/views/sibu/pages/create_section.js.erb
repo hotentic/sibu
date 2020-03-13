@@ -1,6 +1,6 @@
 <% if @created %>
 location.reload(true);
 <% else %>
-$("#edit_section_msg").html("<p class='sibu_alert'>Une erreur s'est produite lors de l'enregistrement.</p>");
+document.querySelector("#edit_section_msg").innerHTML = "<p class='sibu_alert'>Une erreur s'est produite lors de l'enregistrement.</p>";
 <% end %>
 

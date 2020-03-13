@@ -43,45 +43,51 @@
   <% end %>
 <% end %>
 <script>
-    var rootElt = $('html, body');
-
-    $(function () {
+    document.addEventListener("DOMContentLoaded", function() {
         initOverlays();
         sibuCallback("editContent");
         <% unless @edit_section.blank? %>
-          $("[data-sb-overlay='<%= @edit_section %>']").click();
+          document.querySelector("[data-sb-overlay='<%= @edit_section %>']").click();
         <% end %>
     });
 
     function setEditMode(section, overlay, left, top, width, height) {
-        var editMode = $("#edit_mode_overlay");
-        editMode.find(".overlay_top").css("height", top);
-        editMode.find(".overlay_bottom").css("top", top + height);
-        editMode.find(".overlay_left").css({"height": height, "width": left, "top": top});
-        editMode.find(".overlay_right").css({"height": height, "left": left + width, "top": top});
-        editMode.find(".edit_mode_actions").css({"top": (top <= 120 ? (top + height) : (top - 40 - 20)), left: left, width: width});
-        editMode.find("#edit_section_msg").text("Modifier la section");
-        editMode.show();
-        if(!section.data('sb-repeat')) {
-            editMode.find("#new_section_before").hide();
-            editMode.find("#new_section_after").hide();
-            editMode.find("#delete_section").hide();
+        var editMode = document.querySelector("#edit_mode_overlay");
+        editMode.querySelector(".overlay_top").style.height = top + "px";
+        editMode.querySelector(".overlay_bottom").style.top = top + height + "px";
+        var leftOverlay = editMode.querySelector(".overlay_left"), rightOverlay = editMode.querySelector(".overlay_right"),
+            editModeActions = editMode.querySelector(".edit_mode_actions");
+        leftOverlay.style.height = height + "px";
+        leftOverlay.style.width = left + "px";
+        leftOverlay.style.top = top + "px";
+        rightOverlay.style.height = height + "px";
+        rightOverlay.style.left = left + width + "px";
+        rightOverlay.style.top = top + "px";
+        editModeActions.style.top = (top <= 120 ? (top + height) : (top - 40 - 20)) + "px";
+        editModeActions.style.left = left + "px";
+        editModeActions.style.width = width + "px";
+        editMode.querySelector("#edit_section_msg").innerText = "Modifier la section";
+        editMode.style.display = "block";
+        if(!section.getAttribute('data-sb-repeat')) {
+            editMode.querySelector("#new_section_before").style.display = "none";
+            editMode.querySelector("#new_section_after").style.display = "none";
+            editMode.querySelector("#delete_section").style.display = "none";
         } else {
-            editMode.find("#new_section_before").show();
-            editMode.find("#new_section_after").show();
-            editMode.find("#delete_section").show();
+            editMode.querySelector("#new_section_before").style.display = "block";
+            editMode.querySelector("#new_section_after").style.display = "block";
+            editMode.querySelector("#delete_section").style.display = "block";
         }
-        rootElt.animate({scrollTop: top}, 500);
-        section.addClass('sb-editing');
+        window.scrollTo(0, top);
+        section.classList.add('sb-editing');
         initInnerOverlays(section);
-        $("#edit_overlays").html("");
+        document.querySelector("#edit_overlays").innerHTML = "";
     }
 
     function cancelEditMode() {
         refreshAfterEdit(false);
-        $("#edit_mode_overlay").hide();
+        document.querySelector("#edit_mode_overlay").style.display = "none";
         cancelEdit();
-        $(".sb-editing").removeClass("sb-editing");
+        document.querySelector(".sb-editing").classList.remove("sb-editing");
         initOverlays();
         if(typeof editCancelledCallback === "function") {
             editCancelledCallback();
@@ -89,110 +95,112 @@
     }
 
     function newSection(isAfter) {
-        var section = $(".sb-editing").first();
-        var sectionsPanel = $("#sections_panel");
-        sectionsPanel.html(
+        var section = document.querySelector(".sb-editing");
+        var sectionsPanel = document.querySelector("#sections_panel");
+        sectionsPanel.innerHTML =
             '<div class="sibu_panel sibu_view"><h2>Choix du type de section</h2></div>' +
             '<div><div class="sibu_sections sibu_site_content" style="text-align: center;">Chargement en cours...</div></div>' +
-            '<div class="sibu_panel sibu_view"><div class="sibu_actions"><a href="#" onclick="cancelSectionsEdit(); return false;">Annuler</a></div></div>'
-        );
-        sectionsPanel.slideDown("fast");
-        $.ajax({
-            url: "<%= new_section_site_page_path(@site.id, @page.id) %>",
-            method: "GET",
-            data: {
-                section_id: section.data("sb-id"),
-                entity: section.data("sb-entity"),
+            '<div class="sibu_panel sibu_view"><div class="sibu_actions"><a href="#" onclick="cancelSectionsEdit(); return false;">Annuler</a></div></div>';
+        // sectionsPanel.slideDown("fast");
+        sectionsPanel.classList.add("active");
+        sendXmlHttpRequest(
+            "GET",
+            "<%= new_section_site_page_path(@site.id, @page.id) %>",
+            {
+                section_id: section.getAttribute("data-sb-id"),
+                entity: section.getAttribute("data-sb-entity"),
                 after: isAfter
             }
-        })
+        );
     }
 
     function editSection() {
-        var section = $(".sb-editing").first();
-        $.ajax({
-            url: "<%= edit_section_site_page_path(@site.id, @page.id) %>",
-            method: "GET",
-            data: {
-                section_id: section.data("sb-id"),
-                entity: section.data("sb-entity")
+        var section = document.querySelector(".sb-editing");
+        sendXmlHttpRequest(
+            "GET",
+            "<%= edit_section_site_page_path(@site.id, @page.id) %>",
+            {
+                section_id: section.getAttribute("data-sb-id"),
+                entity: section.getAttribute("data-sb-entity")
             }
-        })
+        );
     }
 
     function deleteSection() {
         if (window.confirm("Supprimer la section ?")) {
-            var section = $(".sb-editing").first();
-            $.ajax({
-                url: "<%= delete_section_site_page_path(@site.id, @page.id) %>",
-                method: "DELETE",
-                data: {
-                    section_id: section.data("sb-id"),
-                    entity: section.data("sb-entity")
+            var section = document.querySelector(".sb-editing");
+            sendXmlHttpRequest(
+                "DELETE",
+                "<%= delete_section_site_page_path(@site.id, @page.id) %>",
+                {
+                    section_id: section.getAttribute("data-sb-id"),
+                    entity: section.getAttribute("data-sb-entity")
                 }
-            })
+            );
         }
     }
 
     function cloneElement(entity, sectionId, elementId) {
         if (window.confirm("Dupliquer l'élément ?")) {
-            $.ajax({
-                url: "<%= clone_element_site_page_path(@site.id, @page.id) %>",
-                method: "POST",
-                data: {
+            sendXmlHttpRequest(
+                "POST",
+                "<%= clone_element_site_page_path(@site.id, @page.id) %>",
+                {
                     section_id: sectionId,
                     element_id: elementId,
                     entity: entity
                 }
-            })
+            );
         }
     }
 
     function deleteElement(entity, sectionId, elementId) {
         if (window.confirm("Supprimer l'élément ?")) {
-            $.ajax({
-                url: "<%= delete_element_site_page_path(@site.id, @page.id) %>",
-                method: "DELETE",
-                data: {
+            sendXmlHttpRequest(
+                "DELETE",
+                "<%= delete_element_site_page_path(@site.id, @page.id) %>",
+                {
                     section_id: sectionId,
                     element_id: elementId,
                     entity: entity
                 }
-            })
+            );
         }
     }
 
     function addChildElement(entity, sectionId, elementId) {
         if (window.confirm("Ajouter un sous-menu ?")) {
-            $.ajax({
-                url: "<%= child_element_site_page_path(@site.id, @page.id) %>",
-                method: "POST",
-                data: {
+            sendXmlHttpRequest(
+                "POST",
+                "<%= child_element_site_page_path(@site.id, @page.id) %>",
+                {
                     section_id: sectionId,
                     element_id: elementId,
                     entity: entity
                 }
-            })
+            );
         }
     }
 
     function cancelEdit() {
-        $("#edit_panel").slideUp("fast");
-        $("#edit_panel").html("");
+        // $("#edit_panel").slideUp("fast");
+        document.querySelector("#edit_panel").classList.remove("active");
+        document.querySelector("#edit_panel").innerHTML = "";
         document.body.style.overflow = "initial";
     }
 
     function cancelSectionsEdit() {
-        $("#sections_panel").slideUp("fast");
-        $("#sections_panel").html("");
+        // $("#sections_panel").slideUp("fast");
+        document.querySelector("#edit_panel").classList.remove("active");
+        document.querySelector("#sections_panel").innerHTML = "";
         document.body.style.overflow = "initial";
     }
 
     function editContent(eltId, sectionId, entity, repeat, contentType, size, children) {
-        $.ajax({
-            url: "<%= edit_element_site_page_path(@site.id, @page.id) %>",
-            method: "GET",
-            data: {
+        sendXmlHttpRequest(
+            "GET",
+            "<%= edit_element_site_page_path(@site.id, @page.id, format: :js) %>",
+            {
                 element_id: eltId,
                 section_id: sectionId,
                 entity: entity,
@@ -201,59 +209,96 @@
                 size: size,
                 children: children
             }
-        })
+        );
     }
 
     function initInnerOverlays(section) {
-        var editables = section.find("[data-type]");
-        editables.off();
-        editables.hover(function(evt) {
-            evt.stopPropagation();
-            $(this).addClass("sb-editable");
-        }, function() {
-            $(this).removeClass("sb-editable");
-        });
-        editables.click(function(evt) {
-            evt.stopPropagation();
-            evt.preventDefault();
-            var elt = $(this), eltId = elt.data("id"), repeat = elt.data("repeat"), type = elt.data("type"),
-                size = elt.data("size"), children = elt.data("children");
-            var sectionId = section.data("sb-id"), entity = section.data("sb-entity");
-            editContent(eltId, sectionId, entity, repeat, type, size, children);
-        })
+        var editables = section.querySelectorAll("[data-type]");
+        for (var i = 0; i < editables.length; i++) {
+            editables[i].addEventListener("mouseenter", function(evt) {
+                evt.stopPropagation();
+                evt.target.classList.add("sb-editable");
+            });
+            editables[i].addEventListener("mouseleave", function(evt) {
+                evt.target.classList.remove("sb-editable");
+            });
+            editables[i].addEventListener("click", function(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                var elt = evt.target, eltId = elt.getAttribute("data-id"), repeat = elt.getAttribute("data-repeat"),
+                    type = elt.getAttribute("data-type"), size = elt.getAttribute("data-size"), children = elt.getAttribute("data-children");
+                var sectionId = section.getAttribute("data-sb-id"), entity = section.getAttribute("data-sb-entity");
+                editContent(eltId, sectionId, entity, repeat, type, size, children);
+            });
+        }
     }
 
     function initOverlays() {
-        var container = $("#edit_overlays");
-        container.html("");
-        $("[data-sb-id]").each(function() {
-          var section = $(this);
-          var offset = section.offset();
-          var yOffset = offset.top - $(".sibu_content_panel").offset().top;
-          var width = section.outerWidth(), height = (section.outerHeight() === 0 ? childrenHeight(section) : section.outerHeight());
-          var overlay = $("<div data-sb-overlay='" + section.attr("data-sb-id") + "'>Modifier</div>");
-          container.append(overlay);
-          overlay.css({top: yOffset, left: offset.left, width: width, height: height});
-          overlay.hover(function() {
-              $(this).css("opacity", 1);
-          }, function() {
-              $(this).css("opacity", 0);
-          });
-          overlay.click(function() {
-              setEditMode(section, $(this), offset.left, yOffset, width, height);
-          })
-        });
+        var container = document.querySelector("#edit_overlays"), sections = document.querySelectorAll("[data-sb-id]");
+        container.innerHTML = "";
+
+        for (var i = 0; i < sections.length; i++) {
+            var sectionBox = sections[i].getBoundingClientRect();
+            var yOffset = sectionBox.top - document.querySelector(".sibu_content_panel").getBoundingClientRect().top;
+            var width = sections[i].offsetWidth, height = (sections[i].offsetHeight === 0 ? childrenHeight(sections[i]) : sections[i].offsetHeight);
+            var overlay = document.createElement("div");
+            overlay.setAttribute("data-sb-overlay", sections[i].getAttribute("data-sb-id"));
+            overlay.innerHTML = "Modifier";
+            container.appendChild(overlay);
+            overlay.style.top = yOffset + "px";
+            overlay.style.left = sectionBox.left + "px";
+            overlay.style.width = width + "px";
+            overlay.style.height = height + "px";
+            overlay.addEventListener("click", (function(section, offsetLeft, offsetTop, editWidth, editHeight) {
+                return function(evt) {
+                    setEditMode(section, evt.target, offsetLeft, offsetTop, editWidth, editHeight);
+                };
+            })(sections[i], sectionBox.left, yOffset, width, height));
+        }
     }
 
     function childrenHeight(parentElt) {
-        var height = 0;
-        parentElt.find("*").each(function() {
-            var childHeight = $(this).height();
+        var height = 0, children = parentElt.querySelectorAll("*");
+        for (var i = 0; i < children.length; i++) {
+            var childHeight = children[i].clientHeight;
             if(childHeight > height) {
                 height = childHeight;
             }
-        });
+        }
         return height;
+    }
+
+    function sendXmlHttpRequest(method, url, data, callback) {
+        var req = new XMLHttpRequest(), param;
+        if (callback) {
+            req.onload = callback;
+        } else {
+            req.onload = function() {
+                eval(req.responseText);
+            }
+        }
+
+        if (method === 'GET') {
+            var params = [];
+            for(param in data ) {
+                if (data.hasOwnProperty(param)) {
+                    params.push(encodeURIComponent(param) + '=' + encodeURIComponent(data[param] || ""));
+                }
+            }
+            req.open(method, url + '?' + params.join('&').replace(/%20/g, '+'));
+            req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            req.send();
+        } else {
+            var formData = new FormData();
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    formData.append(key, data[key]);
+                }
+            }
+            req.open(method, url);
+            req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            req.send(formData);
+        }
     }
 </script>
 <%= yield :site_scripts %>

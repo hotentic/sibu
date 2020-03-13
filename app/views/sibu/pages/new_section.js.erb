@@ -1,16 +1,21 @@
-var sectionsPanel = $("#sections_panel");
-if (sectionsPanel.size()) {
-    sectionsPanel.html("<%= j(render 'new_section_panel') %>");
-    van11yAccessibleTabPanelAria($(".sibu_sections_tabs")[0]);
-    var sections = sectionsPanel.find(".sibu_sections [data-sb-template]");
-    sections.click(function() {
-        if(!$(this).hasClass('selected')) {
-            sections.removeClass('selected');
-            $(this).addClass('selected');
-            $("#section_template").val($(this).data("sb-template"));
-            $("#section_category").val($(this).data("sb-category"));
-        }
-    });
+var sectionsPanel = document.querySelector("#sections_panel");
+if (sectionsPanel) {
+    sectionsPanel.innerHTML = "<%= j(render 'new_section_panel') %>";
+    van11yAccessibleTabPanelAria(document.querySelector(".sibu_sections_tabs"));
+    var sections = sectionsPanel.querySelectorAll(".sibu_sections [data-sb-template]");
+    for (var i = 0; i < sections.length; i++) {
+      sections[i].addEventListener("click", function(evt) {
+          if(!evt.currentTarget.classList.contains('selected')) {
+              var selected = sectionsPanel.querySelector(".sibu_sections [data-sb-template].selected");
+              if (selected) {
+                  selected.classList.remove('selected');
+              }
+              evt.currentTarget.classList.add('selected');
+              document.querySelector("#section_template").value = evt.currentTarget.getAttribute('data-sb-template');
+              document.querySelector("#section_category").value = evt.currentTarget.getAttribute('data-sb-category');
+          }
+      });
+    }
     if(typeof initSectionsForm === "function") {
         initSectionsForm();
     }

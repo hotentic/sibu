@@ -30,12 +30,12 @@ module Sibu
       save
     end
 
-    def update_path
+    def update_path(force_update = false)
       prefix = site.version == Sibu::Site::DEFAULT_VERSION ? '' : "#{site.version}/"
       if is_home == 'true'
-        self.path = ''
+        self.path = prefix
       else
-        self.path = "#{prefix}#{name.parameterize}" if self.path.blank?
+        self.path = "#{prefix}#{name.parameterize}" if self.path.blank? || force_update
       end
     end
 

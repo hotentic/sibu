@@ -63,6 +63,10 @@
     background-color: white;
 }
 
+#edit_panel.active, #sections_panel.active {
+    display: block;
+}
+
 #element_actions button {
     display: none;
 }
@@ -76,6 +80,10 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+#edit_overlays > *:hover {
+    opacity: 1;
 }
 
 .sb-editing [data-type] {

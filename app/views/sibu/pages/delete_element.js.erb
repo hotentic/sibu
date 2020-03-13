@@ -1,6 +1,6 @@
 <% if @deleted %>
 refreshAfterEdit(true, '<%= @section_id %>');
 <% else %>
-$("#edit_section_msg").text("La suppression n'a pas pu être effectuée.");
+document.querySelector("#edit_section_msg").innerHTML = "<p class='sibu_alert'>La suppression n'a pas pu être effectuée.</p>";
 <% end %>
 

@@ -234,21 +234,6 @@ $sibu-color3 : #333 !default;
 }
 
 #sections_panel {
-  position: relative;
-
-  &:before {
-    box-shadow: 0 -15px 15px -15px inset;
-    content: " ";
-    width: 100%;
-    left: 0;
-    top: -15px;
-    position: absolute;
-    z-index: 0;
-    height: 15px;
-    opacity: 0.4;
-    color: $sibu-color3;
-  }
-
   .sibu_sections_tabs, .tabs {
     height: 100%;
   }

@@ -152,6 +152,22 @@ function refreshAfterEdit(reload, sectionId) {
     }
 }
 
+function setLinkMode(elt) {
+    var selected = elt.value,
+        enabledElts = document.querySelector("#link_" + selected).querySelectorAll("#element_value, #element_target");
+    for (var i = 0; i < enabledElts.length; i++) {
+        enabledElts[i].removeAttribute("disabled");
+    }
+
+    var linkModes = document.querySelectorAll(".sibu_edit_form .link_mode");
+    for (var j = 0; j < linkModes.length; j++) {
+        if(linkModes[j].getAttribute("id") !== ("link_" + selected)) {
+            linkModes[j].querySelector("#element_value").setAttribute("disabled", "disabled");
+            linkModes[j].querySelector("#element_target").setAttribute("disabled", "disabled");
+        }
+    }
+}
+
 function initSectionsPanel() {
 
 }

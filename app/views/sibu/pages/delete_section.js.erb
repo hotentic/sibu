@@ -1,6 +1,6 @@
 <% if @deleted %>
 location.reload(true);
 <% else %>
-$("#edit_section_msg").text("Une erreur s'est produite lors de la suppression.");
+document.querySelector("#edit_section_msg").innerHTML = "<p class='sibu_alert'>Une erreur s'est produite lors de la suppression..</p>";
 <% end %>
 

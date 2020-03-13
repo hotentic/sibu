@@ -1,105 +1,102 @@
-var editPanel = $("#edit_panel");
-editPanel.html("");
+var editPanel = document.querySelector("#edit_panel");
+editPanel.innerHTML = "";
+
 <% case @content_type %>
 <% when 'text' %>
-  editPanel.html("<%= j(render 'text_edit_panel') %>");
+  editPanel.innerHTML = "<%= j(render 'text_edit_panel') %>";
 <% when 'embed' %>
-  editPanel.html("<%= j(render 'code_edit_panel') %>");
+  editPanel.innerHTML = "<%= j(render 'code_edit_panel') %>";
 <% when 'paragraph' %>
-  editPanel.html("<%= j(render 'paragraph_edit_panel') %>");
+  editPanel.innerHTML = "<%= j(render 'paragraph_edit_panel') %>";
 <% when 'media' %>
-  editPanel.html("<%= j(render 'media_edit_panel') %>");
+  editPanel.innerHTML = "<%= j(render 'media_edit_panel') %>";
 <% when 'link' %>
-  editPanel.html("<%= j(render 'link_edit_panel') %>");
+  editPanel.innerHTML = "<%= j(render 'link_edit_panel') %>";
 <% when 'group' %>
-  editPanel.html("<%= j(render 'group_edit_panel') %>");
+  editPanel.innerHTML = "<%= j(render 'group_edit_panel') %>";
 <% when 'map' %>
-  editPanel.html("<%= j(render 'map_edit_panel') %>");
+  editPanel.innerHTML = "<%= j(render 'map_edit_panel') %>";
 <% when /^widget/ %>
-  editPanel.html("<%= j(render "shared/sibu/#{@content_type}_panel") %>");
+  editPanel.innerHTML = "<%= j(render "shared/sibu/#{@content_type}_panel") %>";
 <% else %>
-  editPanel.html("<%= j(render 'error_panel') %>");
+  editPanel.innerHTML = "<%= j(render 'error_panel') %>";
 <% end %>
 
+// @Todo: migrate other js files and fix remaining todos in edit_content
 
-editPanel.slideDown("fast", function() {
+editPanel.classList.add("active");
+setTimeout(function() {
     <% case @content_type %>
     <% when 'paragraph' %>
         var quill = initQuillEditor('#editor-container');
         quill.root.innerHTML = "<%= j(raw(@element["text"] || 'Texte à modifier')) %>";
         quill.on('text-change', function() {
-            $("#element_text").val(quill.root.innerHTML);
+            document.querySelector("#element_text").value = quill.root.innerHTML;
         });
-        var wrapper = $("[data-sb-id='<%= @section_id %>']").find("[data-id='<%= @element_id %>']");
-        editPanel.find(".ql-editor").css({
-            "font-family": wrapper.css("font-family"),
-            "font-size": wrapper.css("font-size"),
-            "color": wrapper.css("color"),
-            "text-align": wrapper.css("text-align")
-        });
+        var wrapper = document.querySelector("[data-sb-id='<%= @section_id %>'] [data-id='<%= @element_id %>']"),
+            editor = editPanel.querySelector(".ql-editor");
+        editor.style['font-family'] = wrapper.style['font-family'];
+        editor.style['font-size'] = wrapper.style['font-size'];
+        editor.style.color = wrapper.style.color;
+        editor.style['text-align'] = wrapper.style['text-align'];
     <% when 'media' %>
-        var images = editPanel.find(".sibu_image");
-        var customCenter = $("#custom_center");
-        images.click(function() {
-            if(!$(this).hasClass('selected')) {
-                images.removeClass('selected');
-                $(this).addClass('selected');
-                var imgElt = $(this).find("img");
-                $("#element_src").val(imgElt.data("src"));
-                $("#element_alt").val(imgElt.data("alt"));
-                editPanel.find(".sibu_center").html(
-                    '<img src="' + $("#element_src").val() + '"/>' +
-                    '<div id="sibu_center_pos" style="display: none;">✕</div>' +
-                    '<div id="sibu_center_desc" style="display: none;"><em>Cliquez sur l\'image pour la recentrer sur un point donné (à utiliser lorsque l\'image est tronquée car la zone d\'affichage est trop petite)</em></div>');
-                editPanel.find(".sibu_selected_image > p:first-child").hide();
-                editPanel.find(".sibu_selected_image").find(".sibu_custom_center").show();
-                editPanel.find(".sibu_selected_image").find(".sibu_field").show();
-                if(customCenter.is(":checked")) {
-                    customCenter.removeAttr("checked");
-                    $("#element_class").val("");
-                    $(".sibu_center").attr("style", "");
+        var images = editPanel.querySelectorAll(".sibu_image");
+        var customCenter = document.querySelector("#custom_center");
+        for (var i = 0; i < images.length; i++) {
+            images[i].addEventListener("click", function(evt) {
+                if(!evt.currentTarget.classList.contains('selected')) {
+                    evt.currentTarget.classList.remove('selected');
+                    evt.currentTarget.classList.add('selected');
+                    var imgElt = evt.currentTarget.querySelector("img");
+                    document.querySelector("#element_src").value = imgElt.getAttribute("data-src");
+                    document.querySelector("#element_alt").value = imgElt.getAttribute("data-alt");
+                    editPanel.querySelector(".sibu_center").innerHTML =
+                        '<img src="' + $("#element_src").val() + '"/>' +
+                        '<div id="sibu_center_pos" style="display: none;">✕</div>' +
+                        '<div id="sibu_center_desc" style="display: none;"><em>Cliquez sur l\'image pour la recentrer sur un point donné (à utiliser lorsque l\'image est tronquée car la zone d\'affichage est trop petite)</em></div>';
+                    editPanel.querySelector(".sibu_selected_image > p:first-child").style.display = "none";
+                    editPanel.querySelector(".sibu_selected_image .sibu_custom_center").style.display = "block";
+                    editPanel.find(".sibu_selected_image .sibu_field").style.display = "";
+                    if(customCenter.checked) {
+                        customCenter.removeAttribute("checked");
+                        document.querySelector("#element_class").value = "";
+                        document.querySelector(".sibu_center").setAttribute("style", "");
+                    }
                 }
-            }
-        });
-        if(editPanel.find(".sibu_center img").size() > 0) {
-            if(customCenter.is(":checked")) {
+            })
+        }
+        if(editPanel.querySelectorAll(".sibu_center img").length > 0) {
+            if(customCenter.checked) {
                 initCustomCenter("<%= @element_id %>");
             }
         }
-        customCenter.change(function() {
-          if($(this).is(":checked")) {
+        customCenter.onchange = function(evt) {
+          if(this.checked) {
               initCustomCenter("<%= @element_id %>");
           } else {
-              $("#element_class").val("");
-              $(".sibu_center").attr("style", "");
-              $(".sibu_center > #sibu_center_pos").hide();
-              $(".sibu_center > #sibu_center_desc").hide();
+              document.querySelector("#element_class").value = "";
+              document.querySelector(".sibu_center").setAttribute("style", "");
+              document.querySelector(".sibu_center > #sibu_center_pos").style.display = "none";
+              document.querySelector(".sibu_center > #sibu_center_desc").style.display = "none";
           }
-        });
+        };
     <% when 'link' %>
-        $("input[name='mode']").change(function() {
-            var selected = $(this).val();
-            $("#link_" + selected).find("#element_value, #element_target").removeAttr("disabled");
-            $(".sibu_edit_form").find(".link_mode").each(function() {
-              if($(this).attr("id") !== ("link_" + selected)) {
-                $(this).find("#element_value, #element_target").attr("disabled", "disabled");
-              }
-            });
-        });
     <% else %>
     <% end %>
 
     <% if @repeat %>
-        $("#clone_elt, #duplicate_elt").show();
+        document.querySelector("#clone_elt").style.display = "";
+        document.querySelector("#duplicate_elt").style.display = "";
     <% else %>
-        $("#clone_elt, #duplicate_elt").remove();
+        document.querySelector("#clone_elt").remove();
+        document.querySelector("#duplicate_elt").remove();
     <% end %>
 
     <% if @children %>
-        $("#child_elt").show();
+        document.querySelector("#child_elt").style.display = "";
     <% else %>
-        $("#child_elt").remove();
+        document.querySelector("#child_elt").remove();
     <% end %>
     sibuCallback("editElement", "<%= @content_type %>");
-});
+}, 800);
 document.body.style.overflow = "hidden";
