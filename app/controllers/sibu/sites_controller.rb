@@ -37,6 +37,9 @@ module Sibu
         if conf[:custom_styles] && @site.previous_changes.has_key?(:custom_data)
           generate_styles(@site)
         end
+        if @site.previous_changes.has_key?(:version)
+          @site.update_paths
+        end
         redirect_to sites_url, notice: "Le site a bien été mis à jour."
       else
         flash.now[:alert] = "Une erreur s'est produite lors de l'enregistrement du site."
