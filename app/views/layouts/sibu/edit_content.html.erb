@@ -101,7 +101,6 @@
             '<div class="sibu_panel sibu_view"><h2>Choix du type de section</h2></div>' +
             '<div><div class="sibu_sections sibu_site_content" style="text-align: center;">Chargement en cours...</div></div>' +
             '<div class="sibu_panel sibu_view"><div class="sibu_actions"><a href="#" onclick="cancelSectionsEdit(); return false;">Annuler</a></div></div>';
-        // sectionsPanel.slideDown("fast");
         sectionsPanel.classList.add("active");
         sendXmlHttpRequest(
             "GET",
@@ -183,14 +182,12 @@
     }
 
     function cancelEdit() {
-        // $("#edit_panel").slideUp("fast");
         document.querySelector("#edit_panel").classList.remove("active");
         document.querySelector("#edit_panel").innerHTML = "";
         document.body.style.overflow = "initial";
     }
 
     function cancelSectionsEdit() {
-        // $("#sections_panel").slideUp("fast");
         document.querySelector("#edit_panel").classList.remove("active");
         document.querySelector("#sections_panel").innerHTML = "";
         document.body.style.overflow = "initial";
@@ -217,15 +214,15 @@
         for (var i = 0; i < editables.length; i++) {
             editables[i].addEventListener("mouseenter", function(evt) {
                 evt.stopPropagation();
-                evt.target.classList.add("sb-editable");
+                evt.currentTarget.classList.add("sb-editable");
             });
             editables[i].addEventListener("mouseleave", function(evt) {
-                evt.target.classList.remove("sb-editable");
+                evt.currentTarget.classList.remove("sb-editable");
             });
             editables[i].addEventListener("click", function(evt) {
                 evt.stopPropagation();
                 evt.preventDefault();
-                var elt = evt.target, eltId = elt.getAttribute("data-id"), repeat = elt.getAttribute("data-repeat"),
+                var elt = evt.currentTarget, eltId = elt.getAttribute("data-id"), repeat = elt.getAttribute("data-repeat"),
                     type = elt.getAttribute("data-type"), size = elt.getAttribute("data-size"), children = elt.getAttribute("data-children");
                 var sectionId = section.getAttribute("data-sb-id"), entity = section.getAttribute("data-sb-entity");
                 editContent(eltId, sectionId, entity, repeat, type, size, children);
@@ -251,7 +248,7 @@
             overlay.style.height = height + "px";
             overlay.addEventListener("click", (function(section, offsetLeft, offsetTop, editWidth, editHeight) {
                 return function(evt) {
-                    setEditMode(section, evt.target, offsetLeft, offsetTop, editWidth, editHeight);
+                    setEditMode(section, evt.currentTarget, offsetLeft, offsetTop, editWidth, editHeight);
                 };
             })(sections[i], sectionBox.left, yOffset, width, height));
         }
@@ -297,6 +294,9 @@
             }
             req.open(method, url);
             req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            var token = document.getElementsByName("csrf-token")[0].content;
+            req.setRequestHeader('X-CSRF-Token', token);
+
             req.send(formData);
         }
     }

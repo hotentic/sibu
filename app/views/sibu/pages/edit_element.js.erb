@@ -22,8 +22,6 @@ editPanel.innerHTML = "";
   editPanel.innerHTML = "<%= j(render 'error_panel') %>";
 <% end %>
 
-// @Todo: migrate other js files and fix remaining todos in edit_content
-
 editPanel.classList.add("active");
 setTimeout(function() {
     <% case @content_type %>
@@ -56,7 +54,7 @@ setTimeout(function() {
                         '<div id="sibu_center_desc" style="display: none;"><em>Cliquez sur l\'image pour la recentrer sur un point donné (à utiliser lorsque l\'image est tronquée car la zone d\'affichage est trop petite)</em></div>';
                     editPanel.querySelector(".sibu_selected_image > p:first-child").style.display = "none";
                     editPanel.querySelector(".sibu_selected_image .sibu_custom_center").style.display = "block";
-                    editPanel.find(".sibu_selected_image .sibu_field").style.display = "";
+                    editPanel.querySelector(".sibu_selected_image .sibu_field").style.display = "";
                     if(customCenter.checked) {
                         customCenter.removeAttribute("checked");
                         document.querySelector("#element_class").value = "";
@@ -85,15 +83,15 @@ setTimeout(function() {
     <% end %>
 
     <% if @repeat %>
-        document.querySelector("#clone_elt").style.display = "";
-        document.querySelector("#duplicate_elt").style.display = "";
+        document.querySelector("#clone_elt").style.display = "inline-block";
+        document.querySelector("#duplicate_elt").style.display = "inline-block";
     <% else %>
         document.querySelector("#clone_elt").remove();
         document.querySelector("#duplicate_elt").remove();
     <% end %>
 
     <% if @children %>
-        document.querySelector("#child_elt").style.display = "";
+        document.querySelector("#child_elt").style.display = "inline-block";
     <% else %>
         document.querySelector("#child_elt").remove();
     <% end %>

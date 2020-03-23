@@ -1,9 +1,6 @@
 var editPanel = document.querySelector("#edit_panel");
 editPanel.innerHTML = "";
 editPanel.innerHTML = "<%= j(render conf[:section_form]) %>";
-//editPanel.slideDown("fast", function() {
-//    sibuCallback("editSection");
-//});
 editPanel.classList.add("active");
 setTimeout(function() {
     sibuCallback("editSection");
