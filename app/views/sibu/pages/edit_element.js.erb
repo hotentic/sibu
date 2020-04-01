@@ -95,6 +95,13 @@ setTimeout(function() {
     <% else %>
         document.querySelector("#child_elt").remove();
     <% end %>
+    var formElt = document.querySelector("form.edit_element_form");
+    if (formElt) {
+        formElt.onsubmit = function(evt) {
+            evt.preventDefault();
+            submitForm(formElt);
+        }
+    }
     sibuCallback("editElement", "<%= @content_type %>");
 }, 800);
 document.body.style.overflow = "hidden";

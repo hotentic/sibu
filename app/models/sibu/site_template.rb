@@ -6,7 +6,7 @@ module Sibu
     store :default_styles, accessors: [:primary_font, :secondary_font, :primary_color, :secondary_color], coder: JSON
 
     def reference
-      name.parameterize.gsub('-', '_')
+      ref || name.parameterize.gsub('-', '_')
     end
 
     def available_sections(path_prefix = 'app/views/shared')

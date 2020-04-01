@@ -146,7 +146,6 @@ module Sibu
     end
 
     def update_section
-      # {"utf8"=>"✓", "section"=>{"color"=>"#AFCA0B", "filters"=>"school_camps"}, "section_id"=>"cs1536301729", "refresh"=>"true", "commit"=>"Valider", "site_id"=>"3", "id"=>"1392"}
       @entity.section(params[:section_id]).merge!(section_params)
       logger.debug @entity.section(params[:section_id])
       @updated = @entity.save
@@ -161,10 +160,12 @@ module Sibu
     def set_page
       @page = Sibu::Page.find(params[:id])
       @site = Sibu::Site.includes(:pages).find(@page.site_id) if @page
+      check_site_ownership!
     end
 
     def set_site
       @site = Sibu::Site.find(params[:site_id])
+      check_site_ownership!
     end
 
     def set_edit_context

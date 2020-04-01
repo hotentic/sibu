@@ -70,6 +70,7 @@ module Sibu
 
     def set_site
       @site = Sibu::Site.find(params[:id])
+      check_site_ownership!
     end
 
     def site_params

@@ -1,7 +1,7 @@
 <h2>Modifier le contenu</h2>
 <div id="edit_msg"></div>
 <div class="sibu_edit_form">
-  <%= form_tag(update_element_site_page_path(@site.id, @page.id), method: :patch, remote: true) do |f| %>
+  <form class="edit_element_form" action="<%= update_element_site_page_path(@site.id, @page.id, format: :js) %>" accept-charset="UTF-8" method="patch">
     <div class="sibu_field">
       <%= label_tag 'element[code]', "Code d'intégration du contenu" %>
       <%= text_area_tag 'element[code]', @element["code"], placeholder: ' ex: <iframe src="..."></iframe>'  %>
@@ -14,5 +14,5 @@
       <%= submit_tag 'Valider' %>
       <%= link_to 'Annuler', '#', onclick: 'cancelEdit(); return false;' %>
     </div>
-  <% end %>
+  </form>
 </div>

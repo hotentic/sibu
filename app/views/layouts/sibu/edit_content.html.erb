@@ -3,12 +3,12 @@
 <head>
   <title><%= conf[:title] %></title>
   <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
-  <%= stylesheet_link_tag "#{conf[:stylesheet]}-edit", media: 'all' %>
+  <%= stylesheet_link_tag conf[:stylesheet], media: 'all' %>
   <%= javascript_include_tag 'sibu/sibu' %>
-  <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
+  <%= javascript_include_tag conf[:javascript] %>
   <% if @site %>
     <%= stylesheet_link_tag (conf[:custom_styles] ? @site.style_url : @site.site_template.path), media: "all" %>
-    <%= javascript_include_tag "#{@site.site_template.path}-core" %>
+    <%= javascript_include_tag @site.site_template.path %>
   <% end %>
   <%= csrf_meta_tags %>
   <%= yield :styles %>
@@ -265,6 +265,11 @@
         return height;
     }
 
+    function submitForm(formElt, callback) {
+        sendXmlHttpRequest(formElt.getAttribute("method").toUpperCase(), formElt.getAttribute("action"),
+            new FormData(formElt))
+    }
+
     function sendXmlHttpRequest(method, url, data, callback) {
         var req = new XMLHttpRequest(), param;
         if (callback) {
@@ -286,12 +291,17 @@
             req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             req.send();
         } else {
-            var formData = new FormData();
-            for (var key in data) {
-                if (data.hasOwnProperty(key)) {
-                    formData.append(key, data[key]);
+            if (data instanceof FormData) {
+                formData = data;
+            } else {
+                var formData = new FormData();
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        formData.append(key, data[key]);
+                    }
                 }
             }
+
             req.open(method, url);
             req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             var token = document.getElementsByName("csrf-token")[0].content;

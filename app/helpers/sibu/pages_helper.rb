@@ -136,11 +136,11 @@ module Sibu
     def render_page_section(s)
       @sb_section = [s['id']]
       @sb_entity = @page
-      render partial: "shared/#{@site.section_template(s)}", locals: {sibu: self, section: s, sibu_attrs: sibu_attributes(s)}
+      render partial: "shared/#{@site.section_template(s)}", locals: {sibu: self, section: s, sibu_attrs: sibu_attributes(s).html_safe}
     end
 
     def sibu_attributes(section)
-      action_name != 'show' ? "data-sb-id='#{section['id']}' data-sb-repeat='true' data-sb-entity='page'" : ""
+      action_name != 'show' ? ('data-sb-id="' + section['id'] + '" data-sb-repeat="true" data-sb-entity="page"') : ''
     end
 
     def section(id, tag, html_opts = {}, &block)
