@@ -37,7 +37,7 @@ module Sibu
 
     [:h1, :h2, :h3, :h4, :h5, :h6, :span].each do |t|
       define_method(t) do |elt, html_opts = {}|
-        defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => DEFAULT_TEXT}
+        defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_TEXT}
         content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
         html_opts.merge!({data: {id: elt_id(elt), type: "text"}}) if action_name != 'show'
         content_tag(t, raw(content["text"]).html_safe, html_opts)
@@ -46,7 +46,7 @@ module Sibu
 
     def p(elt, opts = {})
       repeat = opts.delete(:repeat)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => DEFAULT_PARAGRAPH}
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_PARAGRAPH}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
       opts.merge!({data: {id: elt_id(elt), repeat: repeat, type: "paragraph"}}) if action_name != 'show'
       content_tag(:div, content_tag(:p, raw(content["text"]).html_safe), opts)
@@ -69,7 +69,7 @@ module Sibu
       wrapper = opts.delete(:wrapper)
       repeat = opts.delete(:repeat)
       size = opts.delete(:size)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => DEFAULT_IMG}
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => Sibu::DEFAULT_IMG}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
       if action_name == 'show'
         content["src"] = ("/#{conf[:deployment_path]}" + content["src"]) if @online && conf[:deployment_path]
@@ -99,7 +99,7 @@ module Sibu
     end
 
     def form_label(elt, html_opts = {}, &block)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => DEFAULT_TEXT}
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_TEXT}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
       html_opts.merge!({data: {id: elt_id(elt), type: "text"}}) if action_name != 'show'
       content_tag(:label, raw(content["text"]).html_safe, html_opts)
@@ -155,7 +155,7 @@ module Sibu
     def link(elt, html_opts = {}, &block)
       repeat = html_opts.delete(:repeat)
       children = html_opts.delete(:children)
-      defaults = {"id" => elt_id(elt), "value" => "", "text" => DEFAULT_TEXT}
+      defaults = {"id" => elt_id(elt), "value" => "", "text" => Sibu::DEFAULT_TEXT}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
       val = content.delete("value") || ""
       text = content.delete("text")
@@ -181,7 +181,7 @@ module Sibu
     end
 
     def interactive_map(elt, html_opts = {})
-      defaults = {"data-lat" => "45.68854", "data-lng" => "5.91587", "data-title" => DEFAULT_TEXT}
+      defaults = {"data-lat" => "45.68854", "data-lng" => "5.91587", "data-title" => Sibu::DEFAULT_TEXT}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {"id" => elt}))
       html_opts.merge!({data: {id: elt_id(elt), type: "map"}}) if action_name != 'show'
       content_tag(:div, nil, content.merge(html_opts))
@@ -194,13 +194,13 @@ module Sibu
     def default_content(type)
       case type
       when "text"
-        {"text" => DEFAULT_TEXT}
+        {"text" => Sibu::DEFAULT_TEXT}
       when "link"
-        {"value" => "", "text" => DEFAULT_TEXT}
+        {"value" => "", "text" => Sibu::DEFAULT_TEXT}
       when "paragraph"
-        {"text" => DEFAULT_PARAGRAPH}
+        {"text" => Sibu::DEFAULT_PARAGRAPH}
       when "media"
-        {"src" => DEFAULT_IMG}
+        {"src" => Sibu::DEFAULT_IMG}
       when "embed"
         {"code" => '<p>Contenu HTML personnalisé (iframe, etc...)</p>'}
       end

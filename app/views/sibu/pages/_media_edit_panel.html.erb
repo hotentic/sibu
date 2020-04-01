@@ -32,19 +32,19 @@
         </table>
       </div>
       <div class="sibu_selected_image">
-        <% if @element["src"] == DEFAULT_IMG || @element["src"].blank? %>
+        <% if @element["src"] == Sibu::DEFAULT_IMG || @element["src"].blank? %>
           <p>Veuillez sélectionner une image.</p>
         <% end %>
-        <div class="sibu_custom_center" style="display: <%= (@element["src"] == DEFAULT_IMG || @element["src"].blank?) ? 'none' : 'block' %>">
+        <div class="sibu_custom_center" style="display: <%= (@element["src"] == Sibu::DEFAULT_IMG || @element["src"].blank?) ? 'none' : 'block' %>">
           <%= check_box_tag('custom_center', true, (!@element["class"].blank? && @element["class"].include?('posx')), id: 'custom_center', class: 'checkbox') %>
           <%= label_tag 'custom_center', "Recentrer l'image" %>
         </div>
         <div class="sibu_center">
-          <%= image_tag(@element["src"]) unless @element["src"] == DEFAULT_IMG || @element["src"].blank? %>
+          <%= image_tag(@element["src"]) unless @element["src"] == Sibu::DEFAULT_IMG || @element["src"].blank? %>
           <div id="sibu_center_pos" style="display: none;">✕</div>
           <div id="sibu_center_desc" style="display: none;"><em>Cliquez sur l'image pour la recentrer sur un point donné (à utiliser lorsque l'image est tronquée car la zone d'affichage est trop petite).</em></div>
         </div>
-        <div class="sibu_field" style="display: <%= (@element["src"] == DEFAULT_IMG || @element["src"].blank?) ? 'none' : 'block' %>">
+        <div class="sibu_field" style="display: <%= (@element["src"] == Sibu::DEFAULT_IMG || @element["src"].blank?) ? 'none' : 'block' %>">
           <%= label_tag 'element[alt]', 'Légende / texte alternatif' %>
           <%= text_field_tag 'element[alt]', @element["alt"] %>
         </div>
