@@ -41,6 +41,10 @@ $sibu-color3 : #333 !default;
         font-weight: bold;
       }
     }
+
+    img {
+      max-height: 45vh;
+    }
   }
 
   .sibu_image {

@@ -36,7 +36,7 @@ module Sibu
     end
 
     def section_template(section)
-        "#{site_template.path}/#{section["category"]}/#{section["template"]}"
+      "#{site_template.path}/#{section["category"]}/#{section["template"]}"
     end
 
     def not_found
@@ -74,6 +74,13 @@ module Sibu
 
     def pages_path_by_id
       Hash[pages.collect {|p| [p.id.to_s, p.path]}]
+    end
+
+    def update_paths
+      pages.each do |p|
+        p.update_path(true)
+        p.save
+      end
     end
 
     def init_pages(source)
