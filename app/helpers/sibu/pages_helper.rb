@@ -44,16 +44,32 @@ module Sibu
       end
     end
 
-    def p(elt, opts = {})
-      repeat = opts.delete(:repeat)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_PARAGRAPH}
-      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      opts.merge!({data: {id: elt_id(elt), repeat: repeat, type: "paragraph"}}) if action_name != 'show'
-      content_tag(:div, content_tag(:p, raw(content["text"]).html_safe), opts)
+    [:div, :section, :article, :aside, :header, :footer, :nav, :main, :ul].each do |t|
+      define_method(t) do |elt, html_opts = {}, &block|
+        t_id = elt.is_a?(Hash) ? elt["id"] : elt
+        @sb_section = (@sb_section || []) + [t_id]
+        html_opts = {"id" => t_id}.merge(html_opts)
+        html_opts.merge!(@sb_section.length == 1 ? {"data-sb-id" => t_id, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'} : {"data-id" => elt_id(elt), "data-type" =>  "group", "data-repeat" => false, "data-children" => false}) if action_name != 'show'
+        html_output = content_tag(t, capture(current_elt(elt), nested_elements(t_id), &block), html_opts)
+        @sb_section -= [t_id]
+        html_output
+      end
     end
 
     def sb
       self
+    end
+
+    def join_tokens(tokens, suffix)
+      (tokens + [suffix]).select {|t| !t.blank?}.join("|")
+    end
+
+    def nested_elements(id)
+      element_id = elt_id(id)
+      element_id_tokens = (@sb_section + element_id.split("|")).uniq
+      nested_elts = @sb_entity.elements(*element_id_tokens)
+      nested_elts.blank? ? [{"id" => element_id.split("|").last, "data-id" => join_tokens(element_id_tokens[1..-1], "#{element_id}0")}] :
+          nested_elts.map {|e| e.merge({"data-id" => join_tokens(element_id_tokens[1..-1], e['id'])})}
     end
 
     def select_element(id)
@@ -63,6 +79,14 @@ module Sibu
     def elements(id = nil)
       items = id ? select_element(id)["elements"] : @sb_entity.find_or_init(*@sb_section)["elements"]
       items.blank? ? [{"id" => "el#{Time.current.to_i}"}] : items
+    end
+
+    def p(elt, opts = {})
+      repeat = opts.delete(:repeat)
+      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_PARAGRAPH}
+      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
+      opts.merge!({data: {id: elt_id(elt), repeat: repeat, type: "paragraph"}}) if action_name != 'show'
+      content_tag(:div, content_tag(:p, raw(content["text"]).html_safe), opts)
     end
 
     def img(elt, opts = {})
@@ -136,16 +160,17 @@ module Sibu
     def render_page_section(s)
       @sb_section = [s['id']]
       @sb_entity = @page
-      render partial: "shared/#{@site.section_template(s)}", locals: {sibu: self, section: s, sibu_attrs: sibu_attributes(s).html_safe}
+      render partial: "shared/#{@site.section_template(s)}",
+             locals: {sibu: self, sibu_section: s, sibu_attrs: sibu_attributes(s).html_safe}
     end
 
     def sibu_attributes(section)
-      action_name != 'show' ? ('data-sb-id="' + section['id'] + '" data-sb-repeat="true" data-sb-entity="page"') : ''
+      action_name != 'show' ? ('data-sb-id="' + section['id'] + '" data-sb-entity="page"') : ''
     end
 
     def section(id, tag, html_opts = {}, &block)
       @sb_section = [id]
-      opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => id, "data-sb-repeat" => @sb_entity != @site, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
+      opts = action_name != 'show' ? html_opts.merge({"data-sb-id" => id, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'}) : html_opts
       content_tag(tag, capture(self, &block), opts)
     end
 
@@ -166,7 +191,8 @@ module Sibu
       repeat = html_opts.delete(:repeat)
       children = html_opts.delete(:children)
       defaults = {"id" => elt_id(elt), "value" => "", "text" => Sibu::DEFAULT_TEXT}
-      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
+      link_elt = current_elt(elt)
+      content = defaults.merge(link_elt)
       val = content.delete("value") || ""
       text = content.delete("text")
       html_opts.merge!({data: {id: elt_id(elt), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
@@ -182,9 +208,11 @@ module Sibu
       else
         content["href"] = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
       end
-      # Note : sends elts in given order
       if block_given?
-        content_tag(:a, capture(*([raw(text)] + elts(elt)), &block), content.merge(html_opts).except("elements"))
+        @sb_section = (@sb_section || []) + [elt_id(elt)]
+        html_output = content_tag(:a, capture(link_elt, elts(elt), &block), content.merge(html_opts).except("elements"))
+        @sb_section -= [elt_id(elt)]
+        html_output
       else
         content_tag(:a, raw(text), content.merge(html_opts).except("elements"))
       end
@@ -199,6 +227,10 @@ module Sibu
 
     def elt_id(elt)
       elt.is_a?(Hash) ? (elt["data-id"] || elt["id"]) : elt
+    end
+
+    def current_elt(elt)
+      (elt.is_a?(Hash) ? elt : (select_element(elt) || {})).except('elements')
     end
 
     def default_content(type)
