@@ -1,3 +1,5 @@
-$(".sibu_edit_image").html("<%= j(render 'edit_form') %>");
-$(".sibu_image").removeClass("selected");
-$("<%= "#sibu_image_#{@image.id}" %>").addClass("selected");
+document.querySelector(".sibu_edit_image").innerHTML = "<%= j(render 'edit_form') %>";
+if (document.querySelector(".sibu_image.selected")) {
+    document.querySelector(".sibu_image.selected").classList.remove("selected");
+}
+document.querySelector("<%= "#sibu_image_#{@image.id}" %>").classList.add("selected");

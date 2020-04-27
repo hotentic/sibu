@@ -5,7 +5,7 @@
   <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
   <%= stylesheet_link_tag conf[:stylesheet], media: 'all' %>
   <%= javascript_include_tag 'sibu/sibu' %>
-  <%= javascript_include_tag conf[:javascript] %>
+  <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
   <% if @site %>
     <%= stylesheet_link_tag (conf[:custom_styles] ? @site.style_url : @site.site_template.path), media: "all" %>
     <%= javascript_include_tag @site.site_template.path %>
