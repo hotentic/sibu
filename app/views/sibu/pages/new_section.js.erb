@@ -1,7 +1,11 @@
 var sectionsPanel = document.querySelector("#sections_panel");
 if (sectionsPanel) {
     sectionsPanel.innerHTML = "<%= j(render 'new_section_panel') %>";
-    van11yAccessibleTabPanelAria(document.querySelector(".sibu_sections_tabs"));
+    try {
+      sibuVan11yAccessibleTabPanelAria(document.querySelector(".sibu_sections_tabs"));
+    } catch (e) {
+        console.log('Sibu sections - Tabs init error : ' + e);
+    }
     var sections = sectionsPanel.querySelectorAll(".sibu_sections [data-sb-template]");
     for (var i = 0; i < sections.length; i++) {
       sections[i].addEventListener("click", function(evt) {
