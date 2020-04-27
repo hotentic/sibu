@@ -36,11 +36,18 @@ module Sibu
     end
 
     [:h1, :h2, :h3, :h4, :h5, :h6, :span].each do |t|
-      define_method(t) do |elt, html_opts = {}|
+      define_method(t) do |elt, html_opts = {}, &block|
         defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_TEXT}
         content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
         html_opts.merge!({data: {id: elt_id(elt), type: "text"}}) if action_name != 'show'
-        content_tag(t, raw(content["text"]).html_safe, html_opts)
+        if block
+          @sb_section = (@sb_section || []) + [elt_id(elt)]
+          html_output = content_tag(t, capture(content, nested_elements(elt), &block), html_opts)
+          @sb_section -= [elt_id(elt)]
+          html_output
+        else
+          content_tag(t, raw(content["text"]).html_safe, html_opts)
+        end
       end
     end
 
