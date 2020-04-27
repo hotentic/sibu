@@ -19,7 +19,7 @@
             <h3 style="display: none;"><%= t "sibu.section.category.#{cat}" %></h3>
             <% sections.each do |st| %>
               <div data-sb-template="<%= st["template"] %>" data-sb-category="<%= st["category"] %>">
-                <%= render "shared/#{@site.section_template(st)}", sec: st %>
+                <%= render_page_section st %>
               </div>
             <% end %>
           </div>
