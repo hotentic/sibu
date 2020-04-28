@@ -35,29 +35,53 @@ module Sibu
       end
     end
 
-    [:h1, :h2, :h3, :h4, :h5, :h6, :span].each do |t|
-      define_method(t) do |elt, html_opts = {}, &block|
-        defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_TEXT}
+    [:h1, :h2, :h3, :h4, :h5, :h6, :span, :p, :li].each do |t|
+      define_method(t) do |elt, opts = {}, &block|
+        t_id = elt.is_a?(Hash) ? elt["id"] : elt
+        defaults = {"id" => t_id, "text" => (t == :p ? Sibu::DEFAULT_PARAGRAPH : Sibu::DEFAULT_TEXT)}
         content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-        html_opts.merge!({data: {id: elt_id(elt), type: "text"}}) if action_name != 'show'
-        if block
-          @sb_section = (@sb_section || []) + [elt_id(elt)]
-          html_output = content_tag(t, capture(content, nested_elements(elt), &block), html_opts)
-          @sb_section -= [elt_id(elt)]
-          html_output
-        else
-          content_tag(t, raw(content["text"]).html_safe, html_opts)
+        html_opts = {"id" => t_id}.merge(opts.except(:repeat, :children).stringify_keys)
+        @sb_section = (@sb_section || []) + [t_id]
+        if action_name != 'show'
+          html_opts.merge!({
+                               "data-id" => @sb_section[1..-1].join('|'),
+                               "data-type" => (t == :p ? "paragraph" : "text"),
+                               "data-repeat" => opts.delete(:repeat),
+                               "data-children" => opts.delete(:children)
+                           })
         end
+        if block
+          if t == :p
+            html_output = content_tag(:div, content_tag(t, capture(content, nested_elements(elt), &block)), html_opts)
+          else
+            html_output = content_tag(t, capture(content, nested_elements(t_id), &block), html_opts)
+          end
+        else
+          if t == :p
+            html_output = content_tag(:div, content_tag(t, raw(content["text"]).html_safe, html_opts), html_opts)
+          else
+            html_output = content_tag(t, raw(content["text"]).html_safe, html_opts)
+          end
+        end
+        @sb_section -= [t_id]
+        html_output
       end
     end
 
-    [:div, :section, :article, :aside, :header, :footer, :nav, :main, :ul].each do |t|
-      define_method(t) do |elt, html_opts = {}, &block|
+    [:div, :section, :article, :aside, :header, :footer, :nav, :main, :ul, :ol, :wrapper].each do |t|
+      define_method(t) do |elt, opts = {}, &block|
         t_id = elt.is_a?(Hash) ? elt["id"] : elt
         @sb_section = (@sb_section || []) + [t_id]
-        html_opts = {"id" => t_id}.merge(html_opts)
-        html_opts.merge!(@sb_section.length == 1 ? {"data-sb-id" => t_id, "data-sb-entity" => @sb_entity == @site ? 'site' : 'page'} : {"data-id" => elt_id(elt), "data-type" =>  "group", "data-repeat" => false, "data-children" => false}) if action_name != 'show'
-        html_output = content_tag(t, capture(current_elt(elt), nested_elements(t_id), &block), html_opts)
+        html_opts = {"id" => t_id}.merge(opts.except(:repeat, :children).stringify_keys)
+        if action_name != 'show'
+          html_opts.merge!({
+                               "data-id" => @sb_section[1..-1].join('|'),
+                               "data-type" => "group",
+                               "data-repeat" => opts.delete(:repeat),
+                               "data-children" => opts.delete(:children)
+                           })
+        end
+        html_output = t == :wrapper ? capture(current_elt(elt), nested_elements(t_id), &block) : content_tag(t, capture(current_elt(elt), nested_elements(t_id), &block), html_opts)
         @sb_section -= [t_id]
         html_output
       end
@@ -86,14 +110,6 @@ module Sibu
     def elements(id = nil)
       items = id ? select_element(id)["elements"] : @sb_entity.find_or_init(*@sb_section)["elements"]
       items.blank? ? [{"id" => "el#{Time.current.to_i}"}] : items
-    end
-
-    def p(elt, opts = {})
-      repeat = opts.delete(:repeat)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_PARAGRAPH}
-      content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      opts.merge!({data: {id: elt_id(elt), repeat: repeat, type: "paragraph"}}) if action_name != 'show'
-      content_tag(:div, content_tag(:p, raw(content["text"]).html_safe), opts)
     end
 
     def img(elt, opts = {})
