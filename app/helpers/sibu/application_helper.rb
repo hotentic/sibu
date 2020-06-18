@@ -5,7 +5,7 @@ module Sibu
     end
 
     def sibu_user
-      send(Rails.application.config.sibu[:current_user])
+      send(conf[:current_user])
     end
   end
 end
