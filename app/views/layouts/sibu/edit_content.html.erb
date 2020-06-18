@@ -123,55 +123,40 @@
     function deleteSection() {
         if (window.confirm("Supprimer la section ?")) {
             var section = $(".sb-editing").first();
-            $.ajax({
+            Rails.ajax({
                 url: "<%= delete_section_site_page_path(@site.id, @page.id) %>",
-                method: "DELETE",
-                data: {
-                    section_id: section.data("sb-id"),
-                    entity: section.data("sb-entity")
-                }
+                type: "DELETE",
+                data: new URLSearchParams({section_id: section.data("sb-id"), entity: section.data("sb-entity")}).toString()
             })
         }
     }
 
     function cloneElement(entity, sectionId, elementId) {
         if (window.confirm("Dupliquer l'élément ?")) {
-            $.ajax({
+            Rails.ajax({
                 url: "<%= clone_element_site_page_path(@site.id, @page.id) %>",
-                method: "POST",
-                data: {
-                    section_id: sectionId,
-                    element_id: elementId,
-                    entity: entity
-                }
+                type: "POST",
+                data: new URLSearchParams({section_id: sectionId, element_id: elementId, entity: entity})
             })
         }
     }
 
     function deleteElement(entity, sectionId, elementId) {
         if (window.confirm("Supprimer l'élément ?")) {
-            $.ajax({
+            Rails.ajax({
                 url: "<%= delete_element_site_page_path(@site.id, @page.id) %>",
-                method: "DELETE",
-                data: {
-                    section_id: sectionId,
-                    element_id: elementId,
-                    entity: entity
-                }
+                type: "DELETE",
+                data: new URLSearchParams({section_id: sectionId, element_id: elementId, entity: entity})
             })
         }
     }
 
     function addChildElement(entity, sectionId, elementId) {
         if (window.confirm("Ajouter un sous-menu ?")) {
-            $.ajax({
+            Rails.ajax({
                 url: "<%= child_element_site_page_path(@site.id, @page.id) %>",
-                method: "POST",
-                data: {
-                    section_id: sectionId,
-                    element_id: elementId,
-                    entity: entity
-                }
+                type: "POST",
+                data: new URLSearchParams({section_id: sectionId, element_id: elementId, entity: entity})
             })
         }
     }
