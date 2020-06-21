@@ -2,6 +2,7 @@ require_dependency "sibu/application_controller"
 
 module Sibu
   class PagesController < ApplicationController
+    before_action :compile_assets, only: [:show, :edit]
     before_action :set_page, only: [:edit, :update, :destroy, :duplicate, :edit_element, :update_element, :clone_element,
                                     :delete_element, :child_element, :new_section, :create_section, :edit_section,
                                     :update_section, :delete_section]
@@ -10,6 +11,7 @@ module Sibu
                                             :child_element, :new_section, :create_section, :edit_section,
                                             :update_section, :delete_section]
     before_action :set_online, only: [:show, :edit]
+
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
@@ -193,6 +195,10 @@ module Sibu
 
     def show_params
       params.permit!
+    end
+
+    def compile_assets
+      Sibu::DynamicStyle.new(params[:site_id]).compile if Rails.env.development? && conf[:custom_styles] && !params[:site_id].blank?
     end
   end
 end
