@@ -4,7 +4,6 @@
   <title><%= conf[:title] %></title>
   <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
   <%= stylesheet_link_tag conf[:stylesheet], media: 'all' %>
-  <%= javascript_include_tag 'sibu/sibu' %>
   <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
   <% if @site %>
     <%= stylesheet_link_tag (conf[:custom_styles] ? @site.style_url : @site.site_template.path), media: "all" %>
@@ -42,6 +41,7 @@
     </div>
   <% end %>
 <% end %>
+<%= javascript_include_tag 'sibu/sibu' %>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         initOverlays();
@@ -212,7 +212,7 @@
     function initInnerOverlays(section) {
         var editables = section.querySelectorAll("[data-type]");
         for (var i = 0; i < editables.length; i++) {
-            if (editables[i].getAttribute("data-type") !== 'group' || editables[i].getAttribute("data-repeat") !== 'false' || editables[i].getAttribute("data-children") !== 'false') {
+            if (editables[i].getAttribute("data-type") !== 'group' || editables[i].getAttribute("data-repeat") === 'true' || editables[i].getAttribute("data-children") === 'true') {
                 editables[i].addEventListener("mouseenter", function(evt) {
                     evt.stopPropagation();
                     evt.currentTarget.classList.add("sb-editable");
@@ -233,27 +233,29 @@
     }
 
     function initOverlays() {
-        var container = document.querySelector("#edit_overlays"), sections = document.querySelectorAll("[data-sb-id]");
-        container.innerHTML = "";
+        setTimeout(function() {
+            var container = document.querySelector("#edit_overlays"), sections = document.querySelectorAll("[data-sb-id]");
+            container.innerHTML = "";
 
-        for (var i = 0; i < sections.length; i++) {
-            var sectionBox = sections[i].getBoundingClientRect();
-            var yOffset = sectionBox.top - document.querySelector(".sibu_content_panel").getBoundingClientRect().top;
-            var width = sections[i].offsetWidth, height = (sections[i].offsetHeight === 0 ? childrenHeight(sections[i]) : sections[i].offsetHeight);
-            var overlay = document.createElement("div");
-            overlay.setAttribute("data-sb-overlay", sections[i].getAttribute("data-sb-id"));
-            overlay.innerHTML = "Modifier";
-            container.appendChild(overlay);
-            overlay.style.top = yOffset + "px";
-            overlay.style.left = sectionBox.left + "px";
-            overlay.style.width = width + "px";
-            overlay.style.height = height + "px";
-            overlay.addEventListener("click", (function(section, offsetLeft, offsetTop, editWidth, editHeight) {
-                return function(evt) {
-                    setEditMode(section, evt.currentTarget, offsetLeft, offsetTop, editWidth, editHeight);
-                };
-            })(sections[i], sectionBox.left, yOffset, width, height));
-        }
+            for (var i = 0; i < sections.length; i++) {
+                var sectionBox = sections[i].getBoundingClientRect();
+                var yOffset = sectionBox.top - document.querySelector(".sibu_content_panel").getBoundingClientRect().top;
+                var width = sections[i].offsetWidth, height = (sections[i].offsetHeight === 0 ? childrenHeight(sections[i]) : sections[i].offsetHeight);
+                var overlay = document.createElement("div");
+                overlay.setAttribute("data-sb-overlay", sections[i].getAttribute("data-sb-id"));
+                overlay.innerHTML = "Modifier";
+                container.appendChild(overlay);
+                overlay.style.top = yOffset + "px";
+                overlay.style.left = sectionBox.left + "px";
+                overlay.style.width = width + "px";
+                overlay.style.height = height + "px";
+                overlay.addEventListener("click", (function(section, offsetLeft, offsetTop, editWidth, editHeight) {
+                    return function(evt) {
+                        setEditMode(section, evt.currentTarget, offsetLeft, offsetTop, editWidth, editHeight);
+                    };
+                })(sections[i], sectionBox.left, yOffset, width, height));
+            }
+        }, 800);
     }
 
     function childrenHeight(parentElt) {
