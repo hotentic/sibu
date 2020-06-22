@@ -7,6 +7,10 @@ module Sibu
       p ? (request.host == conf[:host] ? site_page_path(@site.id, p.id) : (conf[:deployment_path] ? "/#{conf[:deployment_path]}/#{p.path}" : "/#{p.path}")) : "#"
     end
 
+    def is_current_page(link_val)
+      /\d+/.match?(link_val) && link_val.to_i == @page.id
+    end
+
     def sections_templates
       @site.site_template.available_sections
     end
@@ -95,8 +99,9 @@ module Sibu
       (tokens + [suffix]).select {|t| !t.blank?}.join("|")
     end
 
-    def nested_elements(id)
-      element_id = elt_id(id)
+    # Note : add "each_with_elements" and "elements" on section/elts enumerables
+    def nested_elements(elt_or_id)
+      element_id = elt_id(elt_or_id)
       element_id_tokens = (@sb_section + element_id.split("|")).uniq
       nested_elts = @sb_entity.elements(*element_id_tokens)
       nested_elts.blank? ? [{"id" => element_id.split("|").last, "data-id" => join_tokens(element_id_tokens[1..-1], "#{element_id}0")}] :
@@ -187,8 +192,16 @@ module Sibu
              locals: {sibu: self, sibu_section: s, sibu_attrs: sibu_attributes(s).html_safe}
     end
 
+    # Page sections attrs
     def sibu_attributes(section)
       action_name != 'show' ? ('data-sb-id="' + section['id'] + '" data-sb-entity="page"') : ''
+    end
+
+    # Site sections attrs
+    def sibu_attrs(section_id)
+      @sb_section = [section_id]
+      @sb_entity = @site
+      action_name != 'show' ? ('data-sb-id="' + section_id + '" data-sb-entity="site"').html_safe : ''
     end
 
     def section(id, tag, html_opts = {}, &block)
@@ -242,7 +255,7 @@ module Sibu
     end
 
     def interactive_map(elt, html_opts = {})
-      defaults = {"data-lat" => "45.68854", "data-lng" => "5.91587", "data-title" => Sibu::DEFAULT_TEXT}
+      defaults = {"data-lat" => "46.1988027", "data-lng" => "5.1748288", "data-title" => Sibu::DEFAULT_TEXT}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {"id" => elt}))
       html_opts.merge!({data: {id: elt_id(elt), type: "map"}}) if action_name != 'show'
       content_tag(:div, nil, content.merge(html_opts))

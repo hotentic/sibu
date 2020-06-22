@@ -3,7 +3,7 @@
 <head>
   <title><%= conf[:title] %></title>
   <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
-  <%= stylesheet_link_tag conf[:stylesheet], media: 'all' %>
+  <%= stylesheet_link_tag "#{conf[:stylesheet]}-edit", media: 'all' %>
   <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
   <% if @site %>
     <%= stylesheet_link_tag (conf[:custom_styles] ? @site.style_url : @site.site_template.path), media: "all" %>
@@ -44,11 +44,8 @@
 <%= javascript_include_tag 'sibu/sibu' %>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        initOverlays();
+        initOverlays("<%= @edit_section || '' %>");
         sibuCallback("editContent");
-        <% unless @edit_section.blank? %>
-          document.querySelector("[data-sb-overlay='<%= @edit_section %>']").click();
-        <% end %>
     });
 
     function setEditMode(section, overlay, left, top, width, height) {
@@ -232,7 +229,7 @@
         }
     }
 
-    function initOverlays() {
+    function initOverlays(activeSection = "") {
         setTimeout(function() {
             var container = document.querySelector("#edit_overlays"), sections = document.querySelectorAll("[data-sb-id]");
             container.innerHTML = "";
@@ -254,6 +251,9 @@
                         setEditMode(section, evt.currentTarget, offsetLeft, offsetTop, editWidth, editHeight);
                     };
                 })(sections[i], sectionBox.left, yOffset, width, height));
+            }
+            if (activeSection) {
+                document.querySelector("[data-sb-overlay='" + activeSection + "']").click();
             }
         }, 800);
     }

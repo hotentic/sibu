@@ -2,7 +2,7 @@ require_dependency "sibu/application_controller"
 
 module Sibu
   class PagesController < ApplicationController
-    before_action :compile_assets, only: [:show, :edit]
+    before_action :compile_assets, only: [:show, :edit_content]
     before_action :set_page, only: [:edit, :update, :destroy, :duplicate, :edit_element, :update_element, :clone_element,
                                     :delete_element, :child_element, :new_section, :create_section, :edit_section,
                                     :update_section, :delete_section]
@@ -46,7 +46,7 @@ module Sibu
     end
 
     def new
-      @page = Sibu::Page.new(site_id: @site.id)
+      @page = Sibu::Page.new(site_id: @site.id, source: 'Saisie manuelle')
     end
 
     def create

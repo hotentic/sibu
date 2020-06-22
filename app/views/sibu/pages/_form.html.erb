@@ -14,6 +14,13 @@
     </div>
   </div>
   <div class="sibu_field">
+    <%= f.label :source, "Référence" %>
+    <div>
+      <%= f.text_field :source, placeholder: "Référence interne optionnelle (Ex: test mise en page 2) " %>
+      <small>Un bref descriptif de la page, à usage interne uniquement</small>
+    </div>
+  </div>
+  <div class="sibu_field">
     <%= f.label :is_home, "Page d'accueil" %>
     <div>
       <%= f.check_box :is_home, {}, 'true', 'false' %><span>Cocher pour faire de cette page la page d'accueil.</span>
@@ -55,6 +62,7 @@
       <small>Ce code javascript ou CSS sera inséré juste avant la balide fermante &lt;/body&gt; pour cette page uniquement</small>
     </div>
   </div>
+  <%= f.hidden_field :site_id %>
   <%= f.hidden_field :site_id %>
   <div class="sibu_actions">
     <%= f.submit 'Valider' %>
