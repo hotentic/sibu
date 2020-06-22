@@ -1,5 +1,6 @@
 <h2>Modifier le contenu</h2>
 <div id="edit_msg"></div>
+<%= render 'element_actions' %>
 <div class="sibu_edit_form">
   <form class="edit_element_form" action="<%= update_element_site_page_path(@site.id, @page.id, format: :js) %>" accept-charset="UTF-8" method="patch">
     <div class="sibu_field">

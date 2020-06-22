@@ -62,7 +62,7 @@ module Sibu
           end
         else
           if t == :p
-            html_output = content_tag(:div, content_tag(t, raw(content["text"]).html_safe, html_opts), html_opts)
+            html_output = content_tag(:div, content_tag(t, raw(content["text"]).html_safe), html_opts)
           else
             html_output = content_tag(t, raw(content["text"]).html_safe, html_opts)
           end
@@ -99,6 +99,9 @@ module Sibu
       (tokens + [suffix]).select {|t| !t.blank?}.join("|")
     end
 
+    # Note : the best option is probably a "section" helper that is instantiated from the section hash
+    # and that provides all the logic for elements manipulation (ex: section.h3(), section.elements, section.elements(nested_id), etc...)
+    # That will also remove the entity type references (site / page) from the partials (but is still has to be figured out by Sibu)
     # Note : add "each_with_elements" and "elements" on section/elts enumerables
     def nested_elements(elt_or_id)
       element_id = elt_id(elt_or_id)
