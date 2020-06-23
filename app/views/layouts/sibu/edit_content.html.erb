@@ -2,13 +2,13 @@
 <html>
 <head>
   <title><%= conf[:title] %></title>
-  <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
-  <%= stylesheet_link_tag "#{conf[:stylesheet]}-edit", media: 'all' %>
-  <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
   <% if @site %>
     <%= stylesheet_link_tag (conf[:custom_styles] ? @site.style_url : @site.site_template.path), media: "all" %>
     <%= javascript_include_tag @site.site_template.path %>
   <% end %>
+  <%= stylesheet_link_tag 'sibu/sibu', media: 'all' %>
+  <%= stylesheet_link_tag "#{conf[:stylesheet]}-edit", media: 'all' %>
+  <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
   <%= csrf_meta_tags %>
   <%= yield :styles %>
 </head>
