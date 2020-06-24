@@ -6,7 +6,11 @@ module Sibu
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
     def index
-      @sites = Sibu::Site.for_user(sibu_user).order(:name, :version)
+      if conf[:admin_filter].call(sibu_user)
+        @sites = Sibu::Site.all.order(:name, :version)
+      else
+        @sites = Sibu::Site.for_user(sibu_user).order(:name, :version)
+      end
     end
 
     def show
