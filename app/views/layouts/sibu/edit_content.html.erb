@@ -12,7 +12,7 @@
   <%= csrf_meta_tags %>
   <%= yield :styles %>
 </head>
-<body>
+<body class="sibu_edit_content">
 <% [:top_panel, :side_panel, :content_panel, :bottom_panel].each do |panel| %>
   <% unless conf[panel].blank? %>
     <div class="<%= panel == :content_panel ? 'sibu_content_panel' : 'sibu_panel' %>">
@@ -74,7 +74,8 @@
             editMode.querySelector("#new_section_after").style.display = "block";
             editMode.querySelector("#delete_section").style.display = "block";
         }
-        window.scrollTo(0, top);
+        var topPadding = top <= 120 ? 60 : 120;
+        window.scrollTo(0, top - topPadding);
         section.classList.add('sb-editing');
         initInnerOverlays(section);
         document.querySelector("#edit_overlays").innerHTML = "";
@@ -235,8 +236,8 @@
             container.innerHTML = "";
 
             for (var i = 0; i < sections.length; i++) {
-                var sectionBox = sections[i].getBoundingClientRect();
-                var yOffset = sectionBox.top - document.querySelector(".sibu_content_panel").getBoundingClientRect().top;
+                var sectionBox = eltBox(sections[i]);
+                var yOffset = sectionBox.top;
                 var width = sections[i].offsetWidth, height = (sections[i].offsetHeight === 0 ? childrenHeight(sections[i]) : sections[i].offsetHeight);
                 var overlay = document.createElement("div");
                 overlay.setAttribute("data-sb-overlay", sections[i].getAttribute("data-sb-id"));
@@ -256,6 +257,25 @@
                 document.querySelector("[data-sb-overlay='" + activeSection + "']").click();
             }
         }, 800);
+    }
+
+    function eltBox(elt) {
+        var x, y, w, h, bbox = elt.getBoundingClientRect();
+        if (isIE()) {
+            x = bbox.left + window.scrollX;
+            y = bbox.top + window.scrollY;
+        } else {
+            x = bbox.x + window.scrollX;
+            y = bbox.y + window.scrollY;
+        }
+        w = bbox.width;
+        h = bbox.height;
+        return {top: y, left: x, width: w, height: h}
+    }
+
+    function isIE() {
+        let ua = navigator.userAgent;
+        return ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
     }
 
     function childrenHeight(parentElt) {

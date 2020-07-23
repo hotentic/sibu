@@ -86,8 +86,8 @@ setTimeout(function() {
         document.querySelector("#clone_elt").style.display = "inline-block";
         document.querySelector("#duplicate_elt").style.display = "inline-block";
     <% else %>
-        document.querySelector("#clone_elt").remove();
-        document.querySelector("#duplicate_elt").remove();
+        if (document.querySelector("#clone_elt")) document.querySelector("#clone_elt").remove();
+        if (document.querySelector("#duplicate_elt")) document.querySelector("#duplicate_elt").remove();
     <% end %>
 
     <% if @children %>

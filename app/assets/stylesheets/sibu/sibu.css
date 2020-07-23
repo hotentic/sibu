@@ -3,8 +3,19 @@
  *= require_self
  */
 
-.sibu_content_panel {
+body.sibu_edit_content, .sibu_content_panel {
     position: relative
+}
+
+body.sibu_edit_content > .sibu_panel:first-child {
+    position: fixed;
+    width: 100%;
+    z-index: 999999;
+    top: 0;
+}
+
+body.sibu_edit_content > .sibu_content_panel {
+    padding-top: 60px;
 }
 
 .sb-editable {
