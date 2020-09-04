@@ -1,6 +1,9 @@
 <div id="pages" class="sibu_view">
   <div class="actions">
-    <%= link_to 'Créer une page', new_site_page_path(@site.id) %> <%= link_to 'Retour', :back %>
+    <%= link_to "Bibliothèque d'images", images_path %>
+    <%= link_to "Documents", documents_path %>
+    <%= link_to 'Créer une page', new_site_page_path(@site.id) %>
+    <%= link_to 'Retour', :back %>
   </div>
   <h2>Pages du site "<%= @site.name %>"</h2>
   <table>
@@ -24,7 +27,7 @@
           <%= link_to 'Voir', site_page_path(@site.id, p), target: '_blank' %> |
           <%= link_to 'Editer', site_page_edit_content_path(site_id: @site.id, page_id: p.id) %> |
           <%= link_to 'Copier', duplicate_site_page_path(@site.id, p), method: :post, data: {confirm: "Copier la page \"#{p.name}\" ?"} %> |
-          <%= link_to 'Réglages', edit_site_page_path(@site.id, p) %> |
+          <%= link_to 'Paramétrer cette page', edit_site_page_path(@site.id, p) %> |
           <%= link_to 'Supprimer', site_page_path(@site.id, p), method: :delete, data: {confirm: "Supprimer la page \"#{p.name}\" ?"} %>
         </td>
       </tr>

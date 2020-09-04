@@ -62,5 +62,9 @@ module Sibu
         save
       end
     end
+
+    def home?
+      is_home == 'true' || is_home == '1'
+    end
   end
 end

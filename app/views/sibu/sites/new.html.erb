@@ -8,7 +8,7 @@
   </div>
   <h2>Aperçu des modèles</h2>
   <div>
-    <% Sibu::SiteTemplate.all.each do |st| %>
+    <% Sibu::SiteTemplate.all.order(:name).each do |st| %>
       <div class="sibu_template">
         <h3><%= st.name %></h3>
         <%= image_tag "#{st.path}1.jpg" %>

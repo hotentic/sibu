@@ -124,25 +124,33 @@ module Sibu
       wrapper = opts.delete(:wrapper)
       repeat = opts.delete(:repeat)
       size = opts.delete(:size)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "src" => Sibu::DEFAULT_IMG}
+      t_id = elt.is_a?(Hash) ? elt["id"] : elt
+      defaults = {"id" => t_id, "src" => Sibu::DEFAULT_IMG}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
+      @sb_section = (@sb_section || []) + [t_id]
       if action_name == 'show'
         content["src"] = ("/#{conf[:deployment_path]}" + content["src"]) if @online && conf[:deployment_path]
       else
-        opts.merge!({data: {id: elt_id(elt), type: "media", repeat: repeat, size: size}})
+        opts.merge!({data: {id: @sb_section[1..-1].join('|'), type: "media", repeat: repeat, size: size}})
       end
-      wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts)
+      html_output = wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts)
           : content_tag(:img, nil, content.except("id").merge(opts.stringify_keys) {|k, old, new| k == 'class' ? [old, new].join(' ') : new})
+      @sb_section -= [t_id]
+      html_output
     end
 
     def grp(elt, opts = {}, &block)
       wrapper = opts.delete(:wrapper) || :div
       repeat = opts.delete(:repeat)
       children = opts.delete(:children)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt}
+      t_id = elt.is_a?(Hash) ? elt["id"] : elt
+      @sb_section = (@sb_section || []) + [t_id]
+      defaults = {"id" => t_id}
       opts = defaults.merge(opts)
-      opts.merge!({data: {id: elt_id(elt), type: "group", repeat: repeat, children: children}}) if action_name != 'show'
-      content_tag(wrapper, capture(*elts(elt), &block), opts)
+      opts.merge!({data: {id: @sb_section[1..-1].join('|'), type: "group", repeat: repeat, children: children}}) if action_name != 'show'
+      html_output = content_tag(wrapper, capture(*elts(elt), &block), opts)
+      @sb_section -= [t_id]
+      html_output
     end
 
     def empty_tag(elt, tag, type, opts = {})
@@ -229,12 +237,14 @@ module Sibu
     def link(elt, html_opts = {}, &block)
       repeat = html_opts.delete(:repeat)
       children = html_opts.delete(:children)
-      defaults = {"id" => elt_id(elt), "value" => "", "text" => Sibu::DEFAULT_TEXT}
+      t_id = elt.is_a?(Hash) ? elt["id"] : elt
+      defaults = {"id" => t_id, "value" => "", "text" => Sibu::DEFAULT_TEXT}
       link_elt = current_elt(elt)
       content = defaults.merge(link_elt)
       val = content.delete("value") || ""
       text = content.delete("text")
-      html_opts.merge!({data: {id: elt_id(elt), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
+      @sb_section = (@sb_section || []) + [t_id]
+      html_opts.merge!({data: {id: @sb_section[1..-1].join('|'), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
       if val.to_s.start_with?('http')
         content["href"] = val
       elsif val.to_s.start_with?('#')
@@ -248,13 +258,12 @@ module Sibu
         content["href"] = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
       end
       if block_given?
-        @sb_section = (@sb_section || []) + [elt_id(elt)]
         html_output = content_tag(:a, capture(link_elt, elts(elt), &block), content.merge(html_opts).except("elements"))
-        @sb_section -= [elt_id(elt)]
-        html_output
       else
-        content_tag(:a, raw(text), content.merge(html_opts).except("elements"))
+        html_output = content_tag(:a, raw(text), content.merge(html_opts).except("elements"))
       end
+      @sb_section -= [t_id]
+      html_output
     end
 
     def interactive_map(elt, html_opts = {})
