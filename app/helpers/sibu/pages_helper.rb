@@ -258,7 +258,7 @@ module Sibu
         content["href"] = @links.keys.include?(val.to_s) ? (action_name == 'show' ? link_path(val) : site_page_edit_content_path(@site.id, val)) : '#'
       end
       if block_given?
-        html_output = content_tag(:a, capture(link_elt, elts(elt), &block), content.merge(html_opts).except("elements"))
+        html_output = content_tag(:a, capture(link_elt, nested_elements(elt), &block), content.merge(html_opts).except("elements"))
       else
         html_output = content_tag(:a, raw(text), content.merge(html_opts).except("elements"))
       end
