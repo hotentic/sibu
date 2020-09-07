@@ -169,10 +169,14 @@ module Sibu
     end
 
     def form_label(elt, html_opts = {}, &block)
-      defaults = {"id" => elt.is_a?(Hash) ? elt["id"] : elt, "text" => Sibu::DEFAULT_TEXT}
+      t_id = elt.is_a?(Hash) ? elt["id"] : elt
+      defaults = {"id" => t_id, "text" => Sibu::DEFAULT_TEXT}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      html_opts.merge!({data: {id: elt_id(elt), type: "text"}}) if action_name != 'show'
-      content_tag(:label, raw(content["text"]).html_safe, html_opts)
+      @sb_section = (@sb_section || []) + [t_id]
+      html_opts.merge!({data: {id: @sb_section[1..-1].join('|'), type: "text"}}) if action_name != 'show'
+      html_output = content_tag(:label, raw(content["text"]).html_safe, html_opts)
+      @sb_section -= [t_id]
+      html_output
     end
 
     def form_input(elt, html_opts = {})
