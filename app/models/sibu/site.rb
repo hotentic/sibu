@@ -51,13 +51,6 @@ module Sibu
       pages.where(id: page_id).select(:id, :path).first
     end
 
-    def update_paths
-      pages.each do |p|
-        p.update_path(true)
-        p.save
-      end
-    end
-
     def save_and_init
       if valid?
         self.sections = site_template.sections

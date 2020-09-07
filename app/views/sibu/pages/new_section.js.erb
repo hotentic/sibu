@@ -20,9 +20,14 @@ if (sectionsPanel) {
           }
       });
     }
-    if(typeof initSectionsForm === "function") {
-        initSectionsForm();
+
+    var tabs = sectionsPanel.querySelectorAll(".sibu_sections a.tabs__link");
+    for (var j = 0; j < tabs.length; j++) {
+        tabs[j].addEventListener("click", function(evt) {
+            sibuCallback("selectSectionsTab", evt.currentTarget.getAttribute('aria-controls'));
+        });
     }
+
     document.body.style.overflow = "hidden";
     sibuCallback("newSection");
 }

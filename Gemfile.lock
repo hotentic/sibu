@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sibu (1.0.6)
+    sibu (1.0.7)
       image_processing (~> 0.4)
       mini_magick (~> 4.3)
       pg (~> 1.0)

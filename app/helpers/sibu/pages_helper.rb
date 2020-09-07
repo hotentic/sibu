@@ -27,6 +27,13 @@ module Sibu
       options_from_collection_for_select(Sibu::Document.for_user(sibu_user), :file_url, :file_name, @element["value"])
     end
 
+    def input_categories
+      options_for_select([['Nom', 'name'], ['Adresse', 'address'], ['Email', 'email'], ['Téléphone', 'telephone'],
+                          ['Arrivée', 'arrival_date'], ['Départ', 'departure_date'], ['Nombre de personnes', 'people'],
+                          ['Message (texte libre)', 'message'], ['Inscription à la newsletter', 'newsletter']],
+                         @element["field_name"])
+    end
+
     def link_type(val)
       if val.blank? || /^\d+$/.match(val.to_s)
         'internal'
@@ -168,6 +175,41 @@ module Sibu
       content_tag(:label, raw(content["text"]).html_safe, html_opts)
     end
 
+    def form_input(elt, html_opts = {})
+      repeat = html_opts.delete(:repeat)
+      children = html_opts.delete(:children)
+      t_id = elt.is_a?(Hash) ? elt["id"] : elt
+      opts = {"id" => t_id}.merge(html_opts.stringify_keys).merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
+      form_name = opts.delete('form_name') || 'contact'
+      field_name = opts.delete('field_name') || 'name'
+      name_attr = "#{form_name}[#{field_name}]"
+
+      @sb_section = (@sb_section || []) + [t_id]
+      opts.merge!({data: {id: @sb_section[1..-1].join('|'), type: "input", repeat: repeat, children: children}}) if action_name != 'show'
+
+      case field_name
+      when 'name', 'address'
+        html_output = content_tag(:input, nil, opts.merge('type' => 'text', 'name' => name_attr))
+      when 'email'
+        html_output = content_tag(:input, nil, opts.merge('type' => 'email', 'name' => name_attr))
+      when 'telephone'
+        html_output = content_tag(:input, nil, opts.merge('type' => 'tel', 'name' => name_attr))
+      when 'arrival_date', 'departure_date'
+        html_output = content_tag(:input, nil, opts.merge('type' => 'date', 'name' => name_attr))
+      when 'people'
+        html_output = content_tag(:input, nil, opts.merge('type' => 'number', 'name' => name_attr))
+      when 'message'
+        html_output = content_tag(:textarea, nil, opts.merge('name' => name_attr))
+      when 'newsletter'
+        html_output = content_tag(:input, nil, opts.merge('type' => 'checkbox', 'name' => name_attr))
+      else
+        html_output = content_tag(:input, nil, opts.merge('type' => 'text', 'name' => name_attr))
+      end
+
+      @sb_section -= [t_id]
+      html_output
+    end
+
     def widget(elt, widget_type, opts = {}, &block)
       content = elt.is_a?(Hash) ? elt : (select_element(elt) || {})
       opts.merge!({data: {id: elt_id(elt), type: "widget_#{widget_type.to_s.split('::').last.underscore}"}}) if action_name != 'show'
@@ -267,10 +309,10 @@ module Sibu
     end
 
     def interactive_map(elt, html_opts = {})
-      defaults = {"data-lat" => "46.1988027", "data-lng" => "5.1748288", "data-title" => Sibu::DEFAULT_TEXT}
+      defaults = {"data-lat" => "46.1988027", "data-lng" => "5.1748288"}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {"id" => elt}))
       html_opts.merge!({data: {id: elt_id(elt), type: "map"}}) if action_name != 'show'
-      content_tag(:div, nil, content.merge(html_opts))
+      content_tag(:div, nil, content.merge(html_opts.stringify_keys))
     end
 
     def elt_id(elt)

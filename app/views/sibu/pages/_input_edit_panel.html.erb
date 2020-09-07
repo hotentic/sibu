@@ -1,0 +1,24 @@
+<h2>Modifier le champ de saisie</h2>
+<div id="edit_msg"></div>
+<%= render 'element_actions' %>
+<div class="sibu_edit_form">
+  <form class="edit_element_form" action="<%= update_element_site_page_path(@site.id, @page.id, format: :js) %>" accept-charset="UTF-8" method="patch">
+    <div class="sibu_field">
+      <%= label_tag 'element[field_name]', 'Type de champ' %>
+      <%= select_tag 'element[field_name]', input_categories, prompt: 'Sélectionnez un type de champ' %>
+    </div>
+    <div class="sibu_field">
+      <%= label_tag 'element[placeholder]', "Texte d'aide (optionnel)" %>
+      <%= text_field_tag 'element[placeholder]', @element["placeholder"] %>
+    </div>
+
+    <%= hidden_field_tag 'element[id]', @element["id"] %>
+    <%= hidden_field_tag :element_id, @element_id %>
+    <%= hidden_field_tag :section_id, @section_id %>
+    <%= hidden_field_tag :entity, @entity_type %>
+    <div class="sibu_actions">
+      <%= submit_tag 'Valider' %>
+      <%= link_to 'Annuler', '#', onclick: 'cancelEdit(); return false;' %>
+    </div>
+  </form>
+</div>
