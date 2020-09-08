@@ -5,7 +5,7 @@ module Sibu
 
     def initialize(site_id)
       @site = Sibu::Site.find(site_id)
-      @styles_changed = styles_changed?(@site.style_url)
+      @styles_changed = @site.style.nil? || styles_changed?(@site.style_url)
       if @styles_changed
         @filename = "#{site_id}_#{Time.current.to_i}"
         @scss_file = File.new(scss_file_path, 'w')
