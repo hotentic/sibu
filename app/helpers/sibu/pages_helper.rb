@@ -118,6 +118,13 @@ module Sibu
           nested_elts.map {|e| e.merge({"data-id" => join_tokens(element_id_tokens[1..-1], e['id'])})}
     end
 
+    def each_element(elt_or_id)
+      element_id = elt_id(elt_or_id)
+      @sb_section = (@sb_section + element_id.split("|")).uniq unless element_id.blank?
+      (@sb_entity.elements(*@sb_section) || []).map {|el| yield(el)}
+      @sb_section -= [element_id] unless element_id.blank?
+    end
+
     def select_element(id)
       @sb_entity.element(*@sb_section, id)
     end
@@ -142,6 +149,22 @@ module Sibu
       end
       html_output = wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts)
           : content_tag(:img, nil, content.except("id").merge(opts.stringify_keys) {|k, old, new| k == 'class' ? [old, new].join(' ') : new})
+      @sb_section -= [t_id]
+      html_output
+    end
+
+    def svg_image(elt, opts = {})
+      size = opts.delete(:size)
+      t_id = elt.is_a?(Hash) ? elt["id"] : elt
+      defaults = {"id" => t_id, "xlink:href" => Sibu::DEFAULT_IMG}
+      content = defaults.merge((elt.is_a?(Hash) ? elt : (select_element(elt) || {})).transform_keys {|k| k == 'src' ? 'xlink:href' : k})
+      @sb_section = (@sb_section || []) + [t_id]
+      if action_name == 'show'
+        content["xlink:href"] = ("/#{conf[:deployment_path]}" + content["xlink:href"]) if @online && conf[:deployment_path]
+      else
+        opts.merge!({data: {id: @sb_section[1..-1].join('|'), type: "media", repeat: false, size: size}})
+      end
+      html_output = content_tag(:image, nil, content.except("id").merge(opts.stringify_keys) {|k, old, new| k == 'class' ? [old, new].join(' ') : new})
       @sb_section -= [t_id]
       html_output
     end
@@ -242,16 +265,17 @@ module Sibu
 
     alias site sb_site
 
-    def render_page_section(s)
+    def render_page_section(s, set_id = false)
       @sb_section = [s['id']]
       @sb_entity = @page
       render partial: "shared/#{@site.section_template(s)}",
-             locals: {sibu: self, sibu_section: s, sibu_attrs: sibu_attributes(s).html_safe}
+             locals: {sibu: self, sibu_section: s, sibu_attrs: sibu_attributes(s, set_id).html_safe}
     end
 
     # Page sections attrs
-    def sibu_attributes(section)
-      action_name != 'show' ? ('data-sb-id="' + section['id'] + '" data-sb-entity="page"') : ''
+    def sibu_attributes(section, set_id)
+      attrs = set_id ? ('id="' + section['id'] + '" ') : ''
+      attrs + (action_name != 'show' ? ('data-sb-id="' + section['id'] + '" data-sb-entity="page"') : '')
     end
 
     # Site sections attrs

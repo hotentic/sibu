@@ -65,7 +65,7 @@
         rightOverlay.style.height = height + "px";
         rightOverlay.style.left = left + width + "px";
         rightOverlay.style.top = top + "px";
-        editModeActions.style.top = (top <= 120 ? (top + height) : (top - 40 - 20)) + "px";
+        editModeActions.style.top = (top + height) + "px";
         editModeActions.style.left = left + "px";
         editModeActions.style.width = width + "px";
         editMode.querySelector("#edit_section_msg").innerText = "Modifier la section";
@@ -79,8 +79,6 @@
             editMode.querySelector("#new_section_after").style.display = "block";
             editMode.querySelector("#delete_section").style.display = "block";
         }
-        var topPadding = top <= 120 ? 60 : 120;
-        window.scrollTo(0, top - topPadding);
         section.classList.add('sb-editing');
         initInnerOverlays(section);
         document.querySelector("#edit_overlays").innerHTML = "";

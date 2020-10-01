@@ -49,11 +49,11 @@ setTimeout(function() {
                         editPanel.querySelector('.sibu_image.selected').classList.remove('selected');
                     }
                     evt.currentTarget.classList.add('selected');
-                    var imgElt = evt.currentTarget.querySelector("img");
-                    document.querySelector("#element_src").value = imgElt.getAttribute("data-src");
+                    var imgElt = evt.currentTarget.querySelector("img"), eltSrc = document.querySelector("#element_src");
+                    eltSrc.value = imgElt.getAttribute("data-src");
                     document.querySelector("#element_alt").value = imgElt.getAttribute("data-alt");
                     editPanel.querySelector(".sibu_center").innerHTML =
-                        '<img src="' + $("#element_src").val() + '"/>' +
+                        '<img src="' + eltSrc.value + '"/>' +
                         '<div id="sibu_center_pos" style="display: none;">✕</div>' +
                         '<div id="sibu_center_desc" style="display: none;"><em>Cliquez sur l\'image pour la recentrer sur un point donné (à utiliser lorsque l\'image est tronquée car la zone d\'affichage est trop petite)</em></div>';
                     if (editPanel.querySelector(".sibu_selected_image > p:first-child")) {
