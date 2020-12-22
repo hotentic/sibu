@@ -3,9 +3,9 @@ module Sibu
 
     attr_reader :site, :body, :env, :filename, :scss_file, :styles_changed
 
-    def initialize(site_id)
+    def initialize(site_id, force_styles = false)
       @site = Sibu::Site.find(site_id)
-      @styles_changed = @site.style.nil? || styles_changed?(@site.style_url)
+      @styles_changed = @site.style.nil? || force_styles || styles_changed?(@site.style_url)
       if @styles_changed
         @filename = "#{site_id}_#{Time.current.to_i}"
         @scss_file = File.new(scss_file_path, 'w')

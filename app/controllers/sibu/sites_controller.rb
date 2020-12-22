@@ -38,8 +38,8 @@ module Sibu
 
     def update
       if @site.update(site_params)
-        if conf[:custom_styles] && @site.previous_changes.has_key?(:custom_data)
-          generate_styles(@site)
+        if conf[:custom_styles]
+          generate_styles(@site, @site.previous_changes.has_key?(:custom_data))
         end
         if @site.previous_changes.has_key?(:version)
           @site.update_paths
@@ -61,7 +61,7 @@ module Sibu
       if new_site.save
         if conf[:custom_styles]
           generate_styles(@site)
-          generate_styles(new_site)
+          generate_styles(new_site, true)
         end
         redirect_to sites_url, notice: "Le site a bien été copié."
       else
@@ -81,8 +81,8 @@ module Sibu
       params.require(:site).permit!
     end
 
-    def generate_styles(site)
-      ds = Sibu::DynamicStyle.new(site.id)
+    def generate_styles(site, force_styles = false)
+      ds = Sibu::DynamicStyle.new(site.id, force_styles)
       ds.compile
     end
   end
