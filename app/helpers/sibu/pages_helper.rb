@@ -1,3 +1,4 @@
+# Note : methods defined here are included in ActionView::Base
 module Sibu
   module PagesHelper
     include Sibu::Engine.routes.url_helpers
@@ -52,10 +53,10 @@ module Sibu
         defaults = {"id" => t_id, "text" => (t == :p ? Sibu::DEFAULT_PARAGRAPH : Sibu::DEFAULT_TEXT)}
         content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
         html_opts = {"id" => t_id}.merge(opts.except(:repeat, :children).stringify_keys)
-        @sb_section = (@sb_section || []) + [t_id]
+        instance_variable_set("@sb_section", (instance_variable_get("@sb_section") || []) + [t_id])
         if action_name != 'show'
           html_opts.merge!({
-                               "data-id" => @sb_section[1..-1].join('|'),
+                               "data-id" => instance_variable_get("@sb_section")[1..-1].join('|'),
                                "data-type" => (t == :p ? "paragraph" : "text"),
                                "data-repeat" => opts.delete(:repeat),
                                "data-children" => opts.delete(:children)
@@ -74,7 +75,7 @@ module Sibu
             html_output = content_tag(t, raw(content["text"]).html_safe, html_opts)
           end
         end
-        @sb_section -= [t_id]
+        instance_variable_set("@sb_section", instance_variable_get("@sb_section")[0..-2])
         html_output
       end
     end
@@ -82,18 +83,18 @@ module Sibu
     [:div, :section, :article, :aside, :header, :footer, :nav, :main, :ul, :ol, :wrapper].each do |t|
       define_method(t) do |elt, opts = {}, &block|
         t_id = elt.is_a?(Hash) ? elt["id"] : elt
-        @sb_section = (@sb_section || []) + [t_id]
+        instance_variable_set("@sb_section", (instance_variable_get("@sb_section") || []) + [t_id])
         html_opts = {"id" => t_id}.merge(opts.except(:repeat, :children).stringify_keys)
         if action_name != 'show'
           html_opts.merge!({
-                               "data-id" => @sb_section[1..-1].join('|'),
+                               "data-id" => instance_variable_get("@sb_section")[1..-1].join('|'),
                                "data-type" => "group",
                                "data-repeat" => opts.delete(:repeat),
                                "data-children" => opts.delete(:children)
                            })
         end
         html_output = t == :wrapper ? capture(current_elt(elt), nested_elements(t_id), &block) : content_tag(t, capture(current_elt(elt), nested_elements(t_id), &block), html_opts)
-        @sb_section -= [t_id]
+        instance_variable_set("@sb_section", instance_variable_get("@sb_section")[0..-2])
         html_output
       end
     end
@@ -126,7 +127,7 @@ module Sibu
     end
 
     def select_element(id)
-      @sb_entity.element(*@sb_section, id)
+      @sb_entity.element(*instance_variable_get("@sb_section"), id)
     end
 
     def elements(id = nil)
@@ -313,8 +314,9 @@ module Sibu
       content = defaults.merge(link_elt)
       val = content.delete("value") || ""
       text = content.delete("text")
-      @sb_section = (@sb_section || []) + [t_id]
-      html_opts.merge!({data: {id: @sb_section[1..-1].join('|'), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
+      instance_variable_set("@sb_section", (instance_variable_get("@sb_section") || []) + [t_id])
+      # @sb_section = (@sb_section || []) + [t_id]
+      html_opts.merge!({data: {id: instance_variable_get("@sb_section")[1..-1].join('|'), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
       if val.to_s.start_with?('http')
         content["href"] = val
       elsif val.to_s.start_with?('#')
@@ -332,7 +334,8 @@ module Sibu
       else
         html_output = content_tag(:a, raw(text), content.merge(html_opts).except("elements"))
       end
-      @sb_section -= [t_id]
+      instance_variable_set("@sb_section", instance_variable_get("@sb_section") - [t_id])
+      # @sb_section -= [t_id]
       html_output
     end
 
