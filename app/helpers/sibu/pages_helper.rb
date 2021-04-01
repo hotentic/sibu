@@ -53,7 +53,7 @@ module Sibu
         defaults = {"id" => t_id, "text" => (t == :p ? Sibu::DEFAULT_PARAGRAPH : Sibu::DEFAULT_TEXT)}
         content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
         html_opts = {"id" => t_id}.merge(opts.except(:repeat, :children).stringify_keys)
-        instance_variable_set("@sb_section", (instance_variable_get("@sb_section") || []) + [t_id])
+        push_section_ids(t_id)
         if action_name != 'show'
           html_opts.merge!({
                                "data-id" => instance_variable_get("@sb_section")[1..-1].join('|'),
@@ -75,7 +75,7 @@ module Sibu
             html_output = content_tag(t, raw(content["text"]).html_safe, html_opts)
           end
         end
-        instance_variable_set("@sb_section", instance_variable_get("@sb_section")[0..-2])
+        pop_section_id
         html_output
       end
     end
@@ -83,7 +83,7 @@ module Sibu
     [:div, :section, :article, :aside, :header, :footer, :nav, :main, :ul, :ol, :wrapper].each do |t|
       define_method(t) do |elt, opts = {}, &block|
         t_id = elt.is_a?(Hash) ? elt["id"] : elt
-        instance_variable_set("@sb_section", (instance_variable_get("@sb_section") || []) + [t_id])
+        push_section_ids(t_id)
         html_opts = {"id" => t_id}.merge(opts.except(:repeat, :children).stringify_keys)
         if action_name != 'show'
           html_opts.merge!({
@@ -94,7 +94,7 @@ module Sibu
                            })
         end
         html_output = t == :wrapper ? capture(current_elt(elt), nested_elements(t_id), &block) : content_tag(t, capture(current_elt(elt), nested_elements(t_id), &block), html_opts)
-        instance_variable_set("@sb_section", instance_variable_get("@sb_section")[0..-2])
+        pop_section_id
         html_output
       end
     end
@@ -113,7 +113,7 @@ module Sibu
     # Note : add "each_with_elements" and "elements" on section/elts enumerables
     def nested_elements(elt_or_id)
       element_id = elt_id(elt_or_id)
-      element_id_tokens = (@sb_section + element_id.split("|")).uniq
+      element_id_tokens = (instance_variable_get("@sb_section") + element_id.split("|")).uniq
       nested_elts = @sb_entity.elements(*element_id_tokens)
       nested_elts.blank? ? [{"id" => element_id.split("|").last, "data-id" => join_tokens(element_id_tokens[1..-1], "#{element_id}0")}] :
           nested_elts.map {|e| e.merge({"data-id" => join_tokens(element_id_tokens[1..-1], e['id'])})}
@@ -121,9 +121,9 @@ module Sibu
 
     def each_element(elt_or_id)
       element_id = elt_id(elt_or_id)
-      @sb_section = (@sb_section + element_id.split("|")).uniq unless element_id.blank?
-      (@sb_entity.elements(*@sb_section) || []).map {|el| yield(el)}
-      @sb_section -= [element_id] unless element_id.blank?
+      push_section_ids(*element_id.split("|")) unless element_id.blank?
+      (@sb_entity.elements(*instance_variable_get("@sb_section")) || []).map {|el| yield(el)}
+      pop_section_id unless element_id.blank?
     end
 
     def select_element(id)
@@ -135,6 +135,16 @@ module Sibu
       items.blank? ? [{"id" => "el#{Time.current.to_i}"}] : items
     end
 
+    def push_section_ids(*section_ids)
+      # Rails.logger.debug "push section ids #{section_ids}"
+      instance_variable_set("@sb_section", (instance_variable_get("@sb_section") || []) + section_ids)
+    end
+
+    def pop_section_id
+      instance_variable_set("@sb_section", instance_variable_get("@sb_section")[0..-2])
+      # Rails.logger.debug "popped section - now #{instance_variable_get("@sb_section")}"
+    end
+
     def img(elt, opts = {})
       wrapper = opts.delete(:wrapper)
       repeat = opts.delete(:repeat)
@@ -142,15 +152,15 @@ module Sibu
       t_id = elt.is_a?(Hash) ? elt["id"] : elt
       defaults = {"id" => t_id, "src" => Sibu::DEFAULT_IMG}
       content = defaults.merge(elt.is_a?(Hash) ? elt : (select_element(elt) || {}))
-      @sb_section = (@sb_section || []) + [t_id]
+      push_section_ids(t_id)
       if action_name == 'show'
         content["src"] = ("/#{conf[:deployment_path]}" + content["src"]) if @online && conf[:deployment_path]
       else
-        opts.merge!({data: {id: @sb_section[1..-1].join('|'), type: "media", repeat: repeat, size: size}})
+        opts.merge!({data: {id: instance_variable_get("@sb_section")[1..-1].join('|'), type: "media", repeat: repeat, size: size}})
       end
       html_output = wrapper ? content_tag(wrapper, content_tag(:img, nil, content.except("id")), opts)
           : content_tag(:img, nil, content.except("id").merge(opts.stringify_keys) {|k, old, new| k == 'class' ? [old, new].join(' ') : new})
-      @sb_section -= [t_id]
+      pop_section_id
       html_output
     end
 
@@ -266,8 +276,10 @@ module Sibu
 
     alias site sb_site
 
+    # Resets section ids to clean up remaining ids
     def render_page_section(s, set_id = false)
-      @sb_section = [s['id']]
+      instance_variable_set("@sb_section", [])
+      push_section_ids(s['id'])
       @sb_entity = @page
       render partial: "shared/#{@site.section_template(s)}",
              locals: {sibu: self, sibu_section: s, sibu_attrs: sibu_attributes(s, set_id).html_safe}
@@ -279,9 +291,10 @@ module Sibu
       attrs + (action_name != 'show' ? ('data-sb-id="' + section['id'] + '" data-sb-entity="page"') : '')
     end
 
-    # Site sections attrs
+    # Site sections attrs - resets section ids
     def sibu_attrs(section_id)
-      @sb_section = [section_id]
+      instance_variable_set("@sb_section", [])
+      push_section_ids(section_id)
       @sb_entity = @site
       action_name != 'show' ? ('data-sb-id="' + section_id + '" data-sb-entity="site"').html_safe : ''
     end
@@ -314,8 +327,8 @@ module Sibu
       content = defaults.merge(link_elt)
       val = content.delete("value") || ""
       text = content.delete("text")
-      instance_variable_set("@sb_section", (instance_variable_get("@sb_section") || []) + [t_id])
-      # @sb_section = (@sb_section || []) + [t_id]
+      push_section_ids(t_id)
+
       html_opts.merge!({data: {id: instance_variable_get("@sb_section")[1..-1].join('|'), type: "link", repeat: repeat, children: children}}) if action_name != 'show'
       if val.to_s.start_with?('http')
         content["href"] = val
@@ -334,8 +347,7 @@ module Sibu
       else
         html_output = content_tag(:a, raw(text), content.merge(html_opts).except("elements"))
       end
-      instance_variable_set("@sb_section", instance_variable_get("@sb_section") - [t_id])
-      # @sb_section -= [t_id]
+      pop_section_id
       html_output
     end
 
