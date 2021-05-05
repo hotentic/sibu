@@ -25,7 +25,7 @@ class Sibu::ImageUploader < Shrine
   def generate_location(io, context)
     user_id = context[:record] ? context[:record].user_id : nil
     style = context[:version] != :original ? "resized" : "originals"
-    name = super
+    name = "#{context.dig(:metadata, 'filename') ? context.dig(:metadata, 'filename').gsub(/\.\w+$/, '').parameterize : 'image'}-#{super}"
 
     [user_id, style, name].compact.join("/")
   end
