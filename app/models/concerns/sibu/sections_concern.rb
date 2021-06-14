@@ -131,5 +131,9 @@ module Sibu
       end
       node
     end
+
+    def has_section?(section_id)
+      sections && sections.find {|s| s['id'] == section_id}
+    end
   end
 end

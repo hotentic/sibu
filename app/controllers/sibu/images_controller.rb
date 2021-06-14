@@ -20,11 +20,15 @@ module Sibu
           p = Sibu::Page.find(@page_id)
           entity = @entity_type == 'site' ? p.site : p
           ids = (@section_id.split('|') + @element_id.split('|')).uniq[0...-1]
-          elt = entity.update_element(*ids, {"id" => @img_id, "src" => @image.file_url(@size.to_sym), "alt" => @image.alt})
-          if elt.nil?
-            msg = {alert: "Une erreur s'est produite lors de la mise à jour de l'image."}
+          if entity.has_section?(ids.first)
+            elt = entity.update_element(*ids, {"id" => @img_id, "src" => @image.file_url(@size.to_sym), "alt" => @image.alt})
+            if elt.nil?
+              msg = {alert: "Une erreur s'est produite lors de la mise à jour de l'image."}
+            else
+              msg = {notice: "L'image a bien été mise à jour."}
+            end
           else
-            msg = {notice: "L'image a bien été mise à jour."}
+            msg = {alert: "L'image n'a pas pu être ajoutée à la section."}
           end
           redirect_to site_page_edit_content_path(p.site_id, @page_id), msg
         else

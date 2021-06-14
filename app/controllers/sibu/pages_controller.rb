@@ -11,6 +11,8 @@ module Sibu
                                             :child_element, :new_section, :create_section, :edit_section,
                                             :update_section, :delete_section]
     before_action :set_online, only: [:show, :edit]
+    before_action :check_section, only: [:edit_element, :update_element, :clone_element, :delete_element,
+                                         :child_element, :edit_section, :update_section, :delete_section]
 
     skip_before_action Rails.application.config.sibu[:auth_filter], only: [:show]
 
@@ -195,6 +197,13 @@ module Sibu
 
     def show_params
       params.permit!
+    end
+
+    def check_section
+      section_id = params[:section_id]
+      unless @entity && @entity.has_section?(section_id)
+        redirect_to main_app.root_url, alert: "L'opération n'a pas pu aboutir."
+      end
     end
 
     def compile_assets
