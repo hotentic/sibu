@@ -25,7 +25,7 @@ module Sibu
     def save_and_init
       if valid?
         template_defaults = site.site_template.pages.first
-        self.sections = template_defaults[:sections]  if template_defaults
+        self.sections = template_defaults[:sections] if template_defaults
       end
       save
     end
@@ -33,9 +33,8 @@ module Sibu
     def update_path(force_update = false)
       prefix = site.version == Sibu::Site::DEFAULT_VERSION ? '' : "#{site.version}/"
       if is_home == 'true'
-        self.path = prefix
+        self.path = prefix.chomp('/')
       else
-        self.path = "#{prefix}#{name.parameterize}" if self.path.blank?
         self.path = "#{prefix}#{name.parameterize}" if self.path.blank? || force_update
       end
     end
