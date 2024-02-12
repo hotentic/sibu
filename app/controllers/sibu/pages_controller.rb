@@ -21,7 +21,7 @@ module Sibu
       if params[:site_id].blank?
         @page = Sibu::Page.lookup(request.host, params[:path])
         if @page
-          @query_path =  params[:path][@page.path.length + 1..-1] unless @page.path.blank?
+          @query_path = params[:path][@page.path.length + 1..-1] unless @page.path.blank?
           @query_params = show_params.except(:controller, :action, :path).to_h
           @site = @page.site
           @links = @site.pages_path_by_id
