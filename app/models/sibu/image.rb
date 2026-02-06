@@ -1,10 +1,10 @@
 module Sibu
   class Image < ApplicationRecord
-    # include ImageUploader::Attachment.new(:file)
+    include ImageUploader::Attachment(:file)
     extend Sibu::UserConcern
 
     store :metadata, accessors: [:alt, :reference, :credits], coder: JSON
 
-    validates_presence_of :file_data
+    validates_presence_of :file
   end
 end

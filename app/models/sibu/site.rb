@@ -1,6 +1,6 @@
 module Sibu
   class Site < ApplicationRecord
-    # include StyleUploader::Attachment(:style, cache: :styles_cache, store: :styles_store)
+    include StyleUploader::Attachment(:style, cache: :styles_cache, store: :styles_store)
     include Sibu::SectionsConcern
     extend Sibu::UserConcern
 

@@ -12,6 +12,9 @@ Shrine.storages = {
 }
 
 Shrine.plugin :activerecord
+Shrine.plugin :validation
+Shrine.plugin :tempfile
+Shrine.plugin :derivatives, create_on_promote: true
 Shrine.plugin :cached_attachment_data
 
 MiniMagick.configure do |config|
