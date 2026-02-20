@@ -1,0 +1,308 @@
+.sibu_edit_content {
+  --sibu-color1: #acb3c2;
+  --sibu-color2: #727e96;
+  --sibu-color3: #333;
+  --sibu-fonts: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.sibu_view {
+  padding: 2rem;
+  font-family: var(--sibu-fonts);
+}
+.sibu_view h2 {
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--sibu-color1);
+}
+.sibu_view > .actions {
+  float: right;
+}
+.sibu_view > .actions a {
+  text-decoration: none;
+}
+.sibu_view .sibu_images {
+  width: 70%;
+  float: left;
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+}
+.sibu_view .sibu_edit_image {
+  margin-top: 1rem;
+  padding: 1rem;
+  text-align: center;
+  height: calc(100vh - 160px);
+  float: right;
+  width: 30%;
+  background-color: var(--sibu-color2);
+}
+.sibu_view .sibu_edit_image .sibu_field {
+  margin-top: 1rem;
+}
+.sibu_view .sibu_edit_image .sibu_field label {
+  font-weight: bold;
+}
+.sibu_view .sibu_edit_image img {
+  max-height: 45vh;
+}
+.sibu_view .sibu_image {
+  display: inline-block;
+  margin-right: 1rem;
+  margin-top: 1rem;
+}
+.sibu_view .sibu_image img {
+  padding: 5px;
+  border: 1px solid var(--sibu-color3);
+  height: 100px;
+  width: auto;
+}
+.sibu_view .sibu_image.selected {
+  background-color: var(--sibu-color3);
+}
+.sibu_view .sibu_image:hover {
+  cursor: pointer;
+}
+.sibu_view .sibu_form {
+  padding: 2rem;
+  text-align: center;
+}
+.sibu_view .sibu_form .sibu_field {
+  width: 90%;
+  margin: 0 auto 2rem auto;
+}
+.sibu_view .sibu_form .sibu_field label {
+  display: inline-block;
+  width: 20%;
+  text-align: right;
+  padding-right: 1rem;
+  vertical-align: top;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  line-height: 1;
+}
+.sibu_view .sibu_form .sibu_field label + * {
+  display: inline-block;
+  width: 75%;
+}
+.sibu_view .sibu_form .sibu_field label + * > * {
+  display: inline-block;
+  width: 100%;
+}
+.sibu_view .sibu_form .sibu_field label + * small {
+  text-align: left;
+  font-style: italic;
+}
+.sibu_view .sibu_form .sibu_colors label {
+  vertical-align: top;
+}
+.sibu_view .sibu_form .sibu_colors label + div {
+  text-align: left;
+}
+.sibu_view .sibu_form .sibu_colors .sibu_color {
+  display: inline-block;
+  width: 4rem;
+  height: 4rem;
+  margin-right: 0.5rem;
+}
+.sibu_view .sibu_form .sibu_colors .sibu_color.selected {
+  border: 2px solid var(--sibu-color3);
+  outline: solid white 2px;
+  outline-offset: -3px;
+}
+.sibu_view .sibu_form .sibu_colors .sibu_color:hover {
+  cursor: pointer;
+}
+.sibu_view .sibu_edit_form {
+  padding: 2rem 0;
+  text-align: left;
+}
+.sibu_view .sibu_edit_form .sibu_actions {
+  text-align: center;
+}
+.sibu_view .sibu_edit_form .sibu_field {
+  width: 100%;
+  margin: 0 auto 2rem auto;
+}
+.sibu_view .sibu_edit_form .sibu_field p {
+  font-weight: bold;
+}
+.sibu_view .sibu_edit_form .sibu_field label {
+  text-align: left;
+  font-weight: bold;
+}
+.sibu_view .sibu_edit_form .sibu_field label + * {
+  display: block;
+  width: 100%;
+}
+.sibu_view .sibu_edit_form .sibu_field label + input[type='checkbox'] {
+  display: inline-block;
+  width: 2rem;
+  margin-right: 2rem;
+}
+.sibu_view .sibu_edit_form .sibu_image_selection {
+  display: flex;
+  flex-direction: row;
+}
+.sibu_view .sibu_edit_form .sibu_select_images {
+  width: 70%;
+  max-height: calc(100vh - 300px);
+  overflow: auto;
+}
+.sibu_view .sibu_edit_form .sibu_selected_image {
+  background-color: var(--sibu-color2);
+  width: 30%;
+  margin-bottom: 2rem;
+  text-align: center;
+  padding: 1rem;
+}
+.sibu_view .sibu_edit_form .sibu_selected_image .sibu_field {
+  margin-top: 1rem;
+}
+.sibu_view .sibu_edit_form .sibu_selected_image .sibu_field label {
+  font-weight: bold;
+}
+.sibu_view .sibu_edit_form .sibu_selected_image .sibu_center {
+  position: relative;
+}
+.sibu_view .sibu_edit_form .sibu_selected_image .sibu_center #sibu_center_pos {
+  position: absolute;
+  z-index: 3;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 2px grey;
+}
+.sibu_view .sibu_edit_form .sibu_selected_image .sibu_center #sibu_center_desc {
+  font-size: 10px;
+  line-height: 1.2;
+  margin-top: 5px;
+}
+.sibu_view .sibu_edit_form #editor-container .ql-editor {
+  color: var(--sibu-color2);
+}
+.sibu_view .sibu_actions {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.sibu_view .sibu_actions input, .sibu_view .sibu_actions a {
+  font-size: 18px;
+  padding: 0.5em 1em;
+}
+.sibu_view .sibu_template {
+  display: inline-block;
+  width: 33%;
+  vertical-align: top;
+  padding: 2rem;
+}
+.sibu_view .sibu_template img {
+  margin-bottom: 2rem;
+  border-top: 2px solid var(--sibu-color1);
+  box-shadow: 0 0 5px #ccc;
+}
+#sections_panel .sibu_site_content {
+  padding: 2rem;
+  max-height: 60vh;
+  overflow-y: scroll;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs {
+  height: 100%;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs {
+  height: 100%;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__list {
+  margin: 0;
+  padding: 0;
+  display: table;
+  width: 100%;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__list .tabs__item {
+  display: table-cell;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__list .tabs__item > a {
+  text-decoration: none;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__list .tabs__link {
+  display: inline-block;
+  cursor: pointer;
+  margin-bottom: -2px;
+  padding: 1rem 2.5rem;
+  border-bottom: 4px solid transparent;
+  color: var(--sibu-color1);
+  text-decoration: none;
+  border-radius: 0 0 0 0;
+  transition: 0.25s;
+  transition-property: color, border, background-color;
+  font-size: 2rem;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__list .tabs__link:focus {
+  border-bottom-color: var(--sibu-color2);
+  color: var(--sibu-color2);
+  outline: 0;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__list [aria-selected="true"].tabs__link {
+  border-bottom-color: var(--sibu-color2);
+  color: var(--sibu-color2);
+  outline: 0;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__content {
+  padding: 2rem 0;
+  background-color: white;
+  max-height: calc(100% - 40px);
+  overflow-y: scroll;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__content > * {
+  padding: 4px 0;
+  margin: 0 1rem 2rem 1rem;
+  min-height: auto;
+  box-shadow: 0 0 5px #cdcdcd;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__content > *:hover {
+  cursor: pointer;
+  outline: dashed var(--sibu-color2) 4px;
+  outline-offset: -5px;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__content > *.selected {
+  outline: solid var(--sibu-color1) 5px;
+  outline-offset: -5px;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__content > * > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+#sections_panel .sibu_site_content > .sibu_sections_tabs > .tabs > .tabs__content[aria-hidden="true"] {
+  display: none;
+}
+#sections_panel .sibu_actions {
+  text-align: center;
+  margin: 1rem 0;
+}
+#sections_panel form .sibu_panel.sibu_view {
+  border-top: 2px solid var(--sibu-color3);
+}
+#edit_panel {
+  background-color: white;
+  border-top: 1px solid var(--sibu-color3);
+  max-height: 100%;
+  overflow: auto;
+}
+#edit_panel #element_actions {
+  display: block;
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+}
+#edit_mode_overlay .overlay_top, #edit_mode_overlay .overlay_bottom, #edit_mode_overlay .overlay_left, #edit_mode_overlay .overlay_right {
+  background-color: var(--sibu-color2);
+}
+#edit_mode_overlay .edit_mode_actions {
+  display: flex;
+  color: white;
+  min-width: 300px;
+  align-items: flex-start;
+  padding: 1rem 0;
+}
+#edit_mode_overlay .edit_mode_actions p {
+  font-weight: bold;
+  font-size: 1.2rem;
+  flex: 1 1 0%;
+  margin: 0;
+}
