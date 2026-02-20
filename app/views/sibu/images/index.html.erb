@@ -14,7 +14,7 @@
     <tbody>
     <% @images.each do |image| %>
       <tr>
-        <td><%= link_to image_tag(image.file_url(:small)), edit_image_path(image.id), class: 'sibu_image', id: "sibu_image_#{image.id}", remote: true %></td>
+        <td><%= link_to image_tag(image.file_url(:small)), edit_image_path(image.id, format: :js), class: 'sibu_image', id: "sibu_image_#{image.id}", remote: true %></td>
         <td><%= image.alt %></td>
         <td><%= image.credits %></td>
       </tr>

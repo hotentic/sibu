@@ -143,6 +143,11 @@ module Sibu
 
     def create_section
       @created = @entity.create_section(*@section_id.split('|'), params[:after], section_params)
+      if @created
+        redirect_to site_page_edit_content_url(@entity.site_id, @entity.id), notice: "Le bloc a bien été créé."
+      else
+        redirect_to site_page_edit_content_url(@entity.site_id, @entity.id), alert: "Une erreur s'est produite lors de l'enregistrement."
+      end
     end
 
     def edit_section

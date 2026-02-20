@@ -27,7 +27,7 @@
       </div>
     </div>
   </div>
-  <%= form_tag(create_section_site_page_path(@site.id, @page.id), method: :post, remote: true) do |f| %>
+  <%= form_tag(create_section_site_page_path(@site.id, @page.id), method: :post, data: {remote: false, turbo: false}) do |f| %>
     <%= hidden_field_tag 'section[template]', '' %>
     <%= hidden_field_tag 'section[category]', '' %>
     <%= hidden_field_tag :section_id, @section_id %>

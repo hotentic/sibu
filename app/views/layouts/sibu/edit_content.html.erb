@@ -13,7 +13,8 @@
   <% end %>
   <%= javascript_include_tag "#{conf[:javascript]}-edit" %>
   <%= csrf_meta_tags %>
-  <%= yield :styles %>
+  <%= yield :included_styles %>
+  <%= yield :included_scripts %>
   <% if @site && !@site.header_code.blank? %>
     <%= raw @site.header_code %>
   <% end %>
@@ -50,11 +51,15 @@
     </div>
   <% end %>
 <% end %>
+<%= javascript_include_tag 'sibu/common' %>
+<%= javascript_include_tag 'quill/quill' %>
+<%= javascript_include_tag 'tabs/van11y-accessible-tab-panel-aria' %>
 <%= javascript_include_tag 'sibu/sibu' %>
 <script>
     var sectionsState = {};
 
     document.addEventListener("DOMContentLoaded", function() {
+        Turbo.session.drive = false;
         initOverlays("<%= @edit_section || '' %>");
         sibuCallback("editContent");
     });

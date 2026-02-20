@@ -1,7 +1,4 @@
-/*
- *= require ../quill/quill.snow
- *= require_self
- */
+@import url('/quill/quill.snow.css');
 
 body.sibu_edit_content, .sibu_content_panel {
     position: relative
